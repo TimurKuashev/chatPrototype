@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainPageViewController" customModule="chatPrototype" customModuleProvider="target">
+            <connections>
+                <outlet property="btnCreateGroupChat" destination="C7I-AG-3iw" id="SxV-8E-Yg3"/>
+                <outlet property="dialogsList" destination="bGi-00-Nq9" id="Q6r-za-OPr"/>
+                <outlet property="lblChatsTitle" destination="7vR-ZL-0jU" id="so5-as-WmA"/>
+                <outlet property="lblUsername" destination="fog-zd-BDC" id="DMv-Ht-6Uc"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C7I-AG-3iw" userLabel="Button Create Group Chat">
+                    <rect key="frame" x="344" y="52" width="30" height="48"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                    <state key="normal" title="+"/>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fog-zd-BDC" userLabel="Label Username">
+                    <rect key="frame" x="40" y="64" width="97" height="24"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chats" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7vR-ZL-0jU" userLabel="Label Chats Title">
+                    <rect key="frame" x="175" y="128" width="64.5" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="bGi-00-Nq9" userLabel="Dialogs Collection View">
+                    <rect key="frame" x="10" y="188" width="394" height="708"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Vho-xB-DFf">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="fog-zd-BDC" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="40" id="9CY-Cl-xrj"/>
+                <constraint firstItem="C7I-AG-3iw" firstAttribute="centerY" secondItem="fog-zd-BDC" secondAttribute="centerY" id="AiT-Jn-cDy"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="bGi-00-Nq9" secondAttribute="trailing" constant="10" id="MWy-8C-aqn"/>
+                <constraint firstItem="bGi-00-Nq9" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="10" id="Ozz-3t-lhA"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="C7I-AG-3iw" secondAttribute="trailing" constant="40" id="WIx-t4-Skq"/>
+                <constraint firstItem="7vR-ZL-0jU" firstAttribute="top" secondItem="fog-zd-BDC" secondAttribute="bottom" constant="40" id="Ym6-C2-Zw5"/>
+                <constraint firstAttribute="bottom" secondItem="bGi-00-Nq9" secondAttribute="bottom" id="cyh-Ix-U4g"/>
+                <constraint firstItem="7vR-ZL-0jU" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="hNd-06-NL7"/>
+                <constraint firstItem="bGi-00-Nq9" firstAttribute="top" secondItem="7vR-ZL-0jU" secondAttribute="bottom" constant="30" id="nvn-nB-Ew4"/>
+                <constraint firstItem="fog-zd-BDC" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="20" id="rUu-My-ztP"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="141" y="154"/>
+        </view>
+    </objects>
+</document>

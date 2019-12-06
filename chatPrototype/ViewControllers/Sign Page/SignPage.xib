@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SignPage" customModule="chatPrototype" customModuleProvider="target">
+            <connections>
+                <outlet property="btnAction" destination="geh-L5-z2A" id="ho0-p8-ILL"/>
+                <outlet property="containerView" destination="YJp-YI-3zT" id="ecP-UP-2Fr"/>
+                <outlet property="loginRegisterSegController" destination="Tcg-B3-Kum" id="jZ3-pv-aVt"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YJp-YI-3zT" userLabel="Container View">
+                    <rect key="frame" x="20" y="358" width="374" height="180"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="180" id="Qgj-J3-n0n"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="geh-L5-z2A" userLabel="Button Login Or Register">
+                    <rect key="frame" x="147" y="558" width="120" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="120" id="AS0-8d-gJV"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                    <state key="normal" title="Button"/>
+                </button>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Tcg-B3-Kum" userLabel="Login Register Seg Controller">
+                    <rect key="frame" x="20" y="297" width="374" height="32"/>
+                    <segments>
+                        <segment title="First"/>
+                        <segment title="Second"/>
+                    </segments>
+                </segmentedControl>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_logo" translatesAutoresizingMaskIntoConstraints="NO" id="x5z-so-D6b">
+                    <rect key="frame" x="107" y="44" width="200" height="200"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="200" id="dCm-FM-aCo"/>
+                        <constraint firstAttribute="width" constant="200" id="sIy-xr-YqM"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="YJp-YI-3zT" firstAttribute="top" secondItem="Tcg-B3-Kum" secondAttribute="bottom" constant="30" id="9Dv-kv-Qbm"/>
+                <constraint firstItem="geh-L5-z2A" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="HY4-hy-hLv"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="YJp-YI-3zT" secondAttribute="trailing" constant="20" id="Qqy-Wh-g3f"/>
+                <constraint firstItem="x5z-so-D6b" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="Rzm-G3-H0i"/>
+                <constraint firstItem="Tcg-B3-Kum" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="UGe-Te-unO"/>
+                <constraint firstItem="x5z-so-D6b" firstAttribute="centerX" secondItem="Tcg-B3-Kum" secondAttribute="centerX" id="Zf1-Hn-0zF"/>
+                <constraint firstItem="YJp-YI-3zT" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="bnS-fS-jNV"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Tcg-B3-Kum" secondAttribute="trailing" constant="20" id="cNl-PH-5JC"/>
+                <constraint firstItem="YJp-YI-3zT" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="hQO-8D-Ybx"/>
+                <constraint firstItem="geh-L5-z2A" firstAttribute="top" secondItem="YJp-YI-3zT" secondAttribute="bottom" constant="20" id="qho-T2-75F"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="137.68115942028987" y="153.34821428571428"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_logo" width="1025" height="1025"/>
+    </resources>
+</document>

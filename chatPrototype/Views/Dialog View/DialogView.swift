@@ -1,0 +1,84 @@
+//
+//  DialogView.swift
+//  chatPrototype
+//
+//  Created by Timur Kuashev on 04.12.2019.
+//  Copyright © 2019 Timur Kuashev. All rights reserved.
+//
+
+import UIKit
+
+class DialogView: UIView {
+    
+    // MARK: - @IBOutlets & Private Properties
+    @IBOutlet private var messagesCollectionView: UICollectionView!
+    private let dataSource = DialogViewDataSource()
+    var chatPartnerId: String? {
+        get { return dataSource.chatPartnerId }
+        set { dataSource.setChatPartnerId(id: newValue) }
+    }
+    
+    // MARK: - Lifecycle
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        initialConfigure()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        initialConfigure()
+    }
+    
+}
+
+// MARK: - Private Methods
+private extension DialogView {
+    
+    func initialConfigure() {
+        self.loadFromNib()
+        messagesCollectionView.backgroundColor = UIColor(red: 3.0 / 255.0, green: 37.0 / 255.0, blue: 71.0 / 255.0, alpha: 1.0)
+        messagesCollectionView.delegate = self
+        dataSource.delegate = self
+        dataSource.collectionView = messagesCollectionView
+        messagesCollectionView.dataSource = dataSource
+        messagesCollectionView.register(UINib(nibName: CellIdentifiers.textMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.textMessageCell)
+        messagesCollectionView.register(UINib(nibName: CellIdentifiers.imageMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.imageMessageCell)
+    }
+    
+}
+
+// MARK: - Public Methods
+extension DialogView {
+    
+    func send(message: String) {
+    }
+    
+}
+
+// MARK: - DialogViewDataSourceDelegate
+extension DialogView: DialogViewDataSourceDelegate {
+    func newMessagesComes() {
+        self.messagesCollectionView.reloadData()
+    }
+}
+
+// MARK: - UICollecitonViewDelegate
+extension DialogView: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.bounds.width - 30, height: 60)
+    }
+    
+}
+
+extension DialogView: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 5, left: 15, bottom: 5, right: 15)
+    }
+    
+    func update() {
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+    }
+}
