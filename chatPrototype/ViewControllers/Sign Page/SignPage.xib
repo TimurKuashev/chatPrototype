@@ -13,6 +13,7 @@
                 <outlet property="btnAction" destination="geh-L5-z2A" id="ho0-p8-ILL"/>
                 <outlet property="containerView" destination="YJp-YI-3zT" id="ecP-UP-2Fr"/>
                 <outlet property="loginRegisterSegController" destination="Tcg-B3-Kum" id="jZ3-pv-aVt"/>
+                <outlet property="scrollView" destination="IKo-re-g7Y" id="mmy-Ls-IvS"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -21,47 +22,73 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YJp-YI-3zT" userLabel="Container View">
-                    <rect key="frame" x="20" y="358" width="374" height="180"/>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IKo-re-g7Y">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PLl-dY-fz1" userLabel="Content View">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_logo" translatesAutoresizingMaskIntoConstraints="NO" id="x5z-so-D6b">
+                                    <rect key="frame" x="107" y="50" width="200" height="200"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="200" id="dCm-FM-aCo"/>
+                                        <constraint firstAttribute="width" constant="200" id="sIy-xr-YqM"/>
+                                    </constraints>
+                                </imageView>
+                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Tcg-B3-Kum" userLabel="Login Register Seg Controller">
+                                    <rect key="frame" x="20" y="307" width="374" height="32"/>
+                                    <segments>
+                                        <segment title="First"/>
+                                        <segment title="Second"/>
+                                    </segments>
+                                </segmentedControl>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YJp-YI-3zT" userLabel="Container View">
+                                    <rect key="frame" x="20" y="358" width="374" height="180"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="180" id="Qgj-J3-n0n"/>
+                                    </constraints>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="geh-L5-z2A" userLabel="Button Login Or Register">
+                                    <rect key="frame" x="147" y="558" width="120" height="42"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="120" id="AS0-8d-gJV"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="Button"/>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstItem="geh-L5-z2A" firstAttribute="top" secondItem="YJp-YI-3zT" secondAttribute="bottom" constant="20" id="0mo-KT-m5f"/>
+                                <constraint firstItem="YJp-YI-3zT" firstAttribute="top" secondItem="Tcg-B3-Kum" secondAttribute="bottom" constant="20" id="5Ga-fI-diR"/>
+                                <constraint firstItem="x5z-so-D6b" firstAttribute="top" secondItem="PLl-dY-fz1" secondAttribute="top" constant="50" id="BHF-kh-oqA"/>
+                                <constraint firstItem="Tcg-B3-Kum" firstAttribute="leading" secondItem="YJp-YI-3zT" secondAttribute="leading" id="EpD-lE-ZDS"/>
+                                <constraint firstAttribute="trailing" secondItem="YJp-YI-3zT" secondAttribute="trailing" constant="20" id="GIO-ua-rse"/>
+                                <constraint firstItem="Tcg-B3-Kum" firstAttribute="trailing" secondItem="YJp-YI-3zT" secondAttribute="trailing" id="QKw-SF-j3T"/>
+                                <constraint firstItem="YJp-YI-3zT" firstAttribute="centerY" secondItem="PLl-dY-fz1" secondAttribute="centerY" id="Xbd-pb-bvf"/>
+                                <constraint firstItem="YJp-YI-3zT" firstAttribute="centerX" secondItem="PLl-dY-fz1" secondAttribute="centerX" id="gDm-z4-r7n"/>
+                                <constraint firstItem="x5z-so-D6b" firstAttribute="centerX" secondItem="PLl-dY-fz1" secondAttribute="centerX" id="h0B-aA-dgu"/>
+                                <constraint firstItem="YJp-YI-3zT" firstAttribute="leading" secondItem="PLl-dY-fz1" secondAttribute="leading" constant="20" id="tBx-Hl-3OQ"/>
+                                <constraint firstItem="geh-L5-z2A" firstAttribute="centerX" secondItem="PLl-dY-fz1" secondAttribute="centerX" id="ufg-kc-aHc"/>
+                            </constraints>
+                        </view>
+                    </subviews>
                     <constraints>
-                        <constraint firstAttribute="height" constant="180" id="Qgj-J3-n0n"/>
+                        <constraint firstItem="PLl-dY-fz1" firstAttribute="width" secondItem="IKo-re-g7Y" secondAttribute="width" id="0sQ-Qb-S0e"/>
+                        <constraint firstItem="PLl-dY-fz1" firstAttribute="leading" secondItem="IKo-re-g7Y" secondAttribute="leading" id="6B1-oO-j5K"/>
+                        <constraint firstAttribute="bottom" secondItem="PLl-dY-fz1" secondAttribute="bottom" id="Dcq-0M-9Da"/>
+                        <constraint firstAttribute="trailing" secondItem="PLl-dY-fz1" secondAttribute="trailing" id="HaQ-ly-0sf"/>
+                        <constraint firstItem="PLl-dY-fz1" firstAttribute="height" secondItem="IKo-re-g7Y" secondAttribute="height" id="XXE-lR-RnO"/>
+                        <constraint firstItem="PLl-dY-fz1" firstAttribute="top" secondItem="IKo-re-g7Y" secondAttribute="top" id="vlI-b3-ZrF"/>
                     </constraints>
-                </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="geh-L5-z2A" userLabel="Button Login Or Register">
-                    <rect key="frame" x="147" y="558" width="120" height="42"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="120" id="AS0-8d-gJV"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                    <state key="normal" title="Button"/>
-                </button>
-                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Tcg-B3-Kum" userLabel="Login Register Seg Controller">
-                    <rect key="frame" x="20" y="297" width="374" height="32"/>
-                    <segments>
-                        <segment title="First"/>
-                        <segment title="Second"/>
-                    </segments>
-                </segmentedControl>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_logo" translatesAutoresizingMaskIntoConstraints="NO" id="x5z-so-D6b">
-                    <rect key="frame" x="107" y="44" width="200" height="200"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="200" id="dCm-FM-aCo"/>
-                        <constraint firstAttribute="width" constant="200" id="sIy-xr-YqM"/>
-                    </constraints>
-                </imageView>
+                </scrollView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="YJp-YI-3zT" firstAttribute="top" secondItem="Tcg-B3-Kum" secondAttribute="bottom" constant="30" id="9Dv-kv-Qbm"/>
-                <constraint firstItem="geh-L5-z2A" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="HY4-hy-hLv"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="YJp-YI-3zT" secondAttribute="trailing" constant="20" id="Qqy-Wh-g3f"/>
-                <constraint firstItem="x5z-so-D6b" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="Rzm-G3-H0i"/>
-                <constraint firstItem="Tcg-B3-Kum" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="UGe-Te-unO"/>
-                <constraint firstItem="x5z-so-D6b" firstAttribute="centerX" secondItem="Tcg-B3-Kum" secondAttribute="centerX" id="Zf1-Hn-0zF"/>
-                <constraint firstItem="YJp-YI-3zT" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="bnS-fS-jNV"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Tcg-B3-Kum" secondAttribute="trailing" constant="20" id="cNl-PH-5JC"/>
-                <constraint firstItem="YJp-YI-3zT" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="hQO-8D-Ybx"/>
-                <constraint firstItem="geh-L5-z2A" firstAttribute="top" secondItem="YJp-YI-3zT" secondAttribute="bottom" constant="20" id="qho-T2-75F"/>
+                <constraint firstItem="IKo-re-g7Y" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="K53-RD-FcL"/>
+                <constraint firstAttribute="bottom" secondItem="IKo-re-g7Y" secondAttribute="bottom" id="NVc-l4-8pS"/>
+                <constraint firstItem="IKo-re-g7Y" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="UZp-dI-eUG"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="IKo-re-g7Y" secondAttribute="trailing" id="pCh-dQ-fWN"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <point key="canvasLocation" x="137.68115942028987" y="153.34821428571428"/>

@@ -45,12 +45,12 @@ class SignInView: UIView {
     }
     
     private func initialConfigure() {
-        setupEmailTextField()
-        setupPasswordTextField()
         // For dismiss keyboard when we tap on UIView free space
         self.addGestureRecognizer(
             UITapGestureRecognizer(target: self, action: #selector(UIView.endEditing(_:)))
         )
+        setupEmailTextField()
+        setupPasswordTextField()
     }
     
     private func setupEmailTextField() {

@@ -9,15 +9,16 @@
 import UIKit
 import FirebaseAuth
 
-class SignPage: UIViewController {
+final class SignPage: UIViewController {
     
     // MARK: - @IBOutlets & Private Properties
     @IBOutlet private var loginRegisterSegController: UISegmentedControl!
+    @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var btnAction: UIButton!
     
-    var signInView: SignInView = SignInView()
-    lazy var signUpView: SignUpView = SignUpView()
+    private var signInView: SignInView = SignInView()
+    private lazy var signUpView: SignUpView = SignUpView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +35,7 @@ class SignPage: UIViewController {
     deinit {
         btnAction.removeTarget(self, action: #selector(signUp(_:)), for: .touchUpInside)
         btnAction.removeTarget(self, action: #selector(signIn(_:)), for: .touchUpInside)
+        NotificationCenter.default.removeObserver(self)
     }
     
 }
@@ -58,6 +60,11 @@ private extension SignPage {
         btnAction.tintColor = .white
         btnAction.addTarget(self, action: #selector(signIn(_:)), for: .touchUpInside)
         
+        // When keyboard is will appear, we should move to up all our views
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardDidShowNotification, object: nil)
+        // When keyboard is will disappear, we should move to down all our views
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
         addToContainer(view: signInView)
     }
     
@@ -77,6 +84,20 @@ private extension SignPage {
             btnAction.addTarget(self, action: #selector(signUp(_:)), for: .touchUpInside)
         default: break
         }
+    }
+    
+    @objc private func keyboardWillShow(notification: Notification) {
+        let info = notification.userInfo!
+        let keyboardFrame: CGRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        
+        scrollView.setContentOffset(CGPoint(x: scrollView.contentOffset.x, y: btnAction.frame.maxY - self.view.bounds.height + keyboardFrame.height + 30), animated: true)
+    }
+    
+    @objc private func keyboardWillHide(notification: Notification) {
+        let info = notification.userInfo!
+        let keyboardFrame: CGRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+
+        scrollView.setContentOffset(CGPoint(x: scrollView.contentOffset.x, y: btnAction.frame.maxY - self.view.bounds.height + keyboardFrame.height - scrollView.contentOffset.y), animated: true)
     }
     
     private func removeFromContainer(view: UIView) {

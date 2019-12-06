@@ -57,6 +57,10 @@ class SignUpView: UIView {
     }
     
     private func initialConfigure() {
+        // For dismiss keyboard when we tap on UIView free space
+        self.addGestureRecognizer(
+            UITapGestureRecognizer(target: self, action: #selector(UIView.endEditing(_:)))
+        )
         setupUsernameTextField()
         setupEmailTextField()
         setupPasswordTextField()
