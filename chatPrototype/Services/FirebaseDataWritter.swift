@@ -18,10 +18,6 @@ class FirebaseDataWritter {
         Database.database().reference().child(collectionName).child(uID).setValue(data)
     }
     
-    static func writeToRealtimeDatabase(data: inout [String: Any], toCollection collectionName: String) {
-        Database.database().reference().child(collectionName).childByAutoId().setValue(data)
-    }
-    
     static func writeToLongstoreDatabase(data: inout [String: String], toCollection collectionName: String, errorHandler: (() -> Void)? = nil) {
         Firestore.firestore().collection(collectionName).addDocument(data: data)
     }

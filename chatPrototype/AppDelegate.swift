@@ -17,7 +17,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     let gcmMessageIDKey = "gcm.message_id"
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
         FirebaseApp.configure()
+        
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let nav1 = UINavigationController()
+        let startedViewController = (UserDefaults.standard.value(forKey: CustomPropertiesForUserDefaults.isSignIn) as? Bool) ==  true ? MainPageViewController(nibName: XibNameHelpers.mainPage, bundle: nil) : SignPage(nibName: XibNameHelpers.signPage, bundle: nil)
+        nav1.viewControllers = [startedViewController]
+        self.window?.rootViewController = nav1
+        self.window?.makeKeyAndVisible()
+        
         //get application instance ID
         InstanceID.instanceID().instanceID {
             (result, error) in

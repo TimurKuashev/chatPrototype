@@ -85,14 +85,12 @@ private extension DialogViewDataSource {
             guard let self = self else {
                 return
             }
-//            print("snaphot: \(snapshot)")
             let converstainsId = snapshot.key
             Database.database().reference().child(FirebaseTableNames.messages).child(converstainsId).observe(.childAdded, with: {
                 [weak self] (messageSnapshot: DataSnapshot) in
                 guard let self = self else {
                     return
                 }
-//                print("snaphot: \(messageSnapshot)")
                 if let messageDictionary = messageSnapshot.value as? [String: AnyObject] {
                     let message = MessagesTable(dictionary: messageDictionary)
                     self.messages.append(message)
@@ -100,7 +98,6 @@ private extension DialogViewDataSource {
                 }
             })
         })
-        
     }
     
 }

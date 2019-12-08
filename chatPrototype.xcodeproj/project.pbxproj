@@ -25,6 +25,8 @@
 		4018C96D23978AED006ED81A /* TextMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4018C96B23978AED006ED81A /* TextMessageCell.xib */; };
 		4018C97023978D92006ED81A /* DialogViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018C96F23978D92006ED81A /* DialogViewDataSource.swift */; };
 		4018C9742397B060006ED81A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4018C9732397B060006ED81A /* GoogleService-Info.plist */; };
+		401921A6239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401921A5239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift */; };
+		401921A8239D09F60048BD71 /* UsersConversationsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401921A7239D09F60048BD71 /* UsersConversationsTable.swift */; };
 		40279A11239A3ABC008F9772 /* InsetsLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40279A10239A3ABC008F9772 /* InsetsLabel.swift */; };
 		4038DC772398CE2100ABFC24 /* FirebaseTableNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038DC762398CE2100ABFC24 /* FirebaseTableNames.swift */; };
 		4038DC7B2398CF4200ABFC24 /* UsersTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038DC7A2398CF4200ABFC24 /* UsersTable.swift */; };
@@ -75,6 +77,8 @@
 		4018C96F23978D92006ED81A /* DialogViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewDataSource.swift; sourceTree = "<group>"; };
 		4018C9712397A790006ED81A /* chatPrototype.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = chatPrototype.entitlements; sourceTree = "<group>"; };
 		4018C9732397B060006ED81A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		401921A5239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+PushVCCompletion.swift"; sourceTree = "<group>"; };
+		401921A7239D09F60048BD71 /* UsersConversationsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersConversationsTable.swift; sourceTree = "<group>"; };
 		40279A10239A3ABC008F9772 /* InsetsLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetsLabel.swift; sourceTree = "<group>"; };
 		4038DC762398CE2100ABFC24 /* FirebaseTableNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseTableNames.swift; sourceTree = "<group>"; };
 		4038DC7A2398CF4200ABFC24 /* UsersTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersTable.swift; sourceTree = "<group>"; };
@@ -182,6 +186,7 @@
 				4009449123964FC3005381A4 /* View+InstantiateFromXIB.swift */,
 				407C84952396A23C00B4F7E0 /* UIViewController+PresentAlert.swift */,
 				409F3EF5239A75C200333FDB /* UIColor+NewColors.swift */,
+				401921A5239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -247,6 +252,7 @@
 				4038DC7A2398CF4200ABFC24 /* UsersTable.swift */,
 				4038DC7E2398D44100ABFC24 /* ConverstaionsTable.swift */,
 				4038DC852398F89400ABFC24 /* MessagesTable.swift */,
+				401921A7239D09F60048BD71 /* UsersConversationsTable.swift */,
 			);
 			path = "Data Parsers";
 			sourceTree = "<group>";
@@ -513,6 +519,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				401921A8239D09F60048BD71 /* UsersConversationsTable.swift in Sources */,
 				4055E22A239678D300AFA3F8 /* DialogPreviewCell.swift in Sources */,
 				4055E221239674AD00AFA3F8 /* MainPageViewController.swift in Sources */,
 				4018C97023978D92006ED81A /* DialogViewDataSource.swift in Sources */,
@@ -524,6 +531,7 @@
 				4009447323964336005381A4 /* AppDelegate.swift in Sources */,
 				4018C95C239788EC006ED81A /* DialogView.swift in Sources */,
 				4018C96823978ACE006ED81A /* ImageMessageCell.swift in Sources */,
+				401921A6239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift in Sources */,
 				4018C96C23978AED006ED81A /* TextMessageCell.swift in Sources */,
 				4018C9542397843F006ED81A /* Notes.swift in Sources */,
 				4038DC7F2398D44100ABFC24 /* ConverstaionsTable.swift in Sources */,

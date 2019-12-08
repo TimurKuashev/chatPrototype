@@ -8,6 +8,7 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseDatabase
 
 final class SignPage: UIViewController {
     
@@ -160,12 +161,12 @@ private extension SignPage {
                 UserDefaults.standard.set(enteredData.email!, forKey:CustomPropertiesForUserDefaults.email)
                 UserDefaults.standard.set(enteredData.password, forKey: CustomPropertiesForUserDefaults.password)
                 UserDefaults.standard.set(enteredData.username!, forKey: CustomPropertiesForUserDefaults.username)
-                var data: [String: Any] = [
+                let data: [String: Any] = [
                     "id": uID,
                     "status": "online",
                     "username": enteredData.username!
                 ]
-                FirebaseDataWritter.writeToRealtimeDatabase(data: &data, toCollection: FirebaseTableNames.users)
+                Database.database().reference().child(FirebaseTableNames.users).child(uID).setValue(data)
                 FirebaseAuthService.signIn(
                     email: enteredData.email!,
                     password: enteredData.password!,

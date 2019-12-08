@@ -16,7 +16,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="473" height="148"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Username of sender" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3J1-X6-IZV" userLabel="Label Username Of Sender">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Username of chat partner" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3J1-X6-IZV" userLabel="Label Username Of Chat Partner">
                         <rect key="frame" x="10" y="5" width="453" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
@@ -59,8 +59,8 @@
             </constraints>
             <size key="customSize" width="473" height="148"/>
             <connections>
+                <outlet property="lblChatPartnerName" destination="3J1-X6-IZV" id="8j0-cH-zJG"/>
                 <outlet property="lblMessage" destination="ekP-cx-dFj" id="TGM-Re-nLD"/>
-                <outlet property="lblSenderName" destination="3J1-X6-IZV" id="G3b-fh-3q7"/>
                 <outlet property="lblSentDate" destination="kqO-I2-Gie" id="I1U-6y-Wav"/>
             </connections>
             <point key="canvasLocation" x="447.10144927536237" y="186.16071428571428"/>

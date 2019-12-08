@@ -28,6 +28,20 @@ final class MainPageViewController: UIViewController {
         super.viewDidLoad()
         initialConfigure()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if self.navigationController?.viewControllers.count == 1 {
+            self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        } else {
+            self.navigationController?.setNavigationBarHidden(false, animated: animated)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
 
 }
 
@@ -36,6 +50,9 @@ private extension MainPageViewController {
     
     private func initialConfigure() {
         model.delegate = self
+        
+        let navController = UINavigationController(rootViewController: self)
+        (UIApplication.shared.delegate as? AppDelegate)?.window?.rootViewController = navController
         
         self.view.backgroundColor = UIColor(68, 73, 87)
         lblUsername.textColor = .white
@@ -81,8 +98,8 @@ extension MainPageViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.dialogPreviewCell, for: indexPath) as? DialogPreviewCell else {
             return UICollectionViewCell()
         }
-        let user = model.dataForDialog(dialogIndex: indexPath.section)
-        cell.setup(lastSenderName: user.username, lastMessage: "message", lastMessageDate: "date")
+        let data = model.dataForPreviewOfTheDialog(dialogPosition: indexPath.section)
+        cell.setup(chatPartnerName: data.username!, lastMessage: data.lastMesageText!, lastMessageDate: data.lastMessageDate!)
         return cell
     }
     
@@ -91,10 +108,18 @@ extension MainPageViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension MainPageViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let username = (collectionView.cellForItem(at: indexPath) as? DialogPreviewCell)?.getDisplayedData().username else {
+            self.presentAlert(title: "Error", message: "Sorry, something went wrong. Please, try again later", actions: [], displayCloseButton: true)
+            return
+        }
+        guard let chatPartnerId = self.model.getUserId(byUsername: username) else {
+            self.presentAlert(title: "Error", message: "Sorry, something went wrong. Please, try again later", actions: [], displayCloseButton: true)
+            return
+        }
         let chatVC = ChatPageViewController(nibName: XibNameHelpers.chatPage, bundle: nil)
-        self.present(chatVC, animated: true, completion: {
-            chatVC.chatPartnerId = self.model.dataForDialog(dialogIndex: indexPath.section).id
-        })
+        chatVC.chatPartnerId = chatPartnerId
+        chatVC.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(chatVC, animated: true)
     }
 }
 
@@ -110,14 +135,8 @@ extension MainPageViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - MainPageModelDelegate
 extension MainPageViewController: MainPageModelDelegate {
     
-    func fetchingNewConversation() {
-
-    }
-    
-    func fetchingNewUser() {
-        DispatchQueue.main.async {
-            self.dialogsList.reloadData()
-        }
+    func usersConversationsWereSorted() {
+        dialogsList.reloadData()
     }
     
 }

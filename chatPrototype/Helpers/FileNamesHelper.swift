@@ -9,7 +9,7 @@
 import Foundation
 
 struct XibNameHelpers {
-    static let signUpPage = "SignUpPageViewController"
+    static let signPage = "SignPage"
     static let mainPage = "MainPageViewController"
     static let chatPage = "ChatPageViewController"
 }

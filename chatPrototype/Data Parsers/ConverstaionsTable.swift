@@ -1,5 +1,5 @@
 //
-//  ConverstaionsTable.swift
+//  ConversationsTable.swift
 //  chatPrototype
 //
 //  Created by Timur Kuashev on 05.12.2019.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ConverstaionsTable: NSObject {
+class ConversationsTable: NSObject {
     var createdAt: String?
     var participant0: String?
     var participant1: String?

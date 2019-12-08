@@ -11,7 +11,7 @@ import Firebase
 
 final class ChatPageViewController: UIViewController {
     
-    // MARK: - @IBOutlet & Private Properties
+    // MARK: - @IBOutlet  Private Properties
     @IBOutlet private var lblConversationName: UILabel!
     @IBOutlet private var btnOptions: UIButton!
     @IBOutlet private var dialogView: DialogView!
@@ -19,10 +19,7 @@ final class ChatPageViewController: UIViewController {
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var bottomConstraint: NSLayoutConstraint!
     
-    var chatPartnerId: String? {
-        get { dialogView.chatPartnerId }
-        set { dialogView.chatPartnerId = newValue }
-    }
+    var chatPartnerId: String?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -40,6 +37,8 @@ final class ChatPageViewController: UIViewController {
 private extension ChatPageViewController {
     
     func initialConfigure() {
+        dialogView.chatPartnerId = self.chatPartnerId
+        self.navigationItem.title = ""
         btnOptions.addTarget(self, action: #selector(openSettings(_:)), for: .touchUpInside)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -54,13 +53,15 @@ private extension ChatPageViewController {
         let info = notification.userInfo!
         let keyboardFrame: CGRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
 
-        UIView.animate(withDuration: 0.1, animations: { () -> Void in
+        UIView.animate(withDuration: 1.0, animations: { () -> Void in
             self.bottomConstraint.constant = keyboardFrame.size.height + 20
         })
     }
     
     @objc private func keyboardWillHide(notification: Notification) {
-        
+        UIView.animate(withDuration: 1.0, animations: { () -> Void in
+            self.bottomConstraint.constant = 0
+        })
     }
     
 }
@@ -73,20 +74,20 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
     }
     
     func send(message: String?) {
-        guard let message = message else {
+        guard let message = message, let myUid = FirebaseAuthService.getUserId() else {
             return
         }
-        
+        // Messages
         var data: Dictionary<String, Any> = [
             "createdAt": NSDate().timeIntervalSince1970.description,
             "sender": FirebaseAuthService.getUserId() ?? "!!!Error!!!",
             "text": message,
             "type": "text"
         ]
-//        FirebaseDataWritter.writeToRealtimeDatabase(data: &data, toCollection: FirebaseTableNames.messages)
-        let childRef = Database.database().reference().child(FirebaseTableNames.messages).child(FirebaseAuthService.getUserId()!).childByAutoId()
-        childRef.updateChildValues(data)
+        Database.database().reference().child(FirebaseTableNames.messages).child(myUid).childByAutoId().updateChildValues(data)
         
+        // Conversations
+        let conversationsRef = Database.database().reference().child(FirebaseTableNames.conversations).child(myUid).childByAutoId()
         data.removeAll()
         data["createdAt"] = Date().timeIntervalSince1970.description
         let tempData = [
@@ -94,22 +95,17 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
             "1": self.chatPartnerId!
         ]
         data["participants"] = tempData
-//        let conversationsRef = Database.database().reference().child(FirebaseTableNames.conversations).child(FirebaseAuthService.getUserId()!).child(childRef.key!)
-        // TODO: В общем, сейчас идёт обновление данных. Потом надо сделать так, что бы мы бежали по массиву с conversations и при помощи "0" и "1" поля проверяли, нет ли у нас уже этотго. Крч чекаем, существует ли чат с этим человеком
-        // Если у нас нет такого conversations, значит мы пушим новый. Только используем УНИКАЛЬНЫЙ (childByAutoId или как его там), а потом этот же уникальный пересылаем в users-converstaions
-        let conversationsRef = Database.database().reference().child(FirebaseTableNames.conversations).child(FirebaseAuthService.getUserId()!)
         conversationsRef.setValue(data)
-        let userConversationsRef = Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(FirebaseAuthService.getUserId()!)
-        userConversationsRef.setValue(1)
         
-        let anotherConverstaionsRef = Database.database().reference().child(FirebaseTableNames.conversations).child(chatPartnerId!)
-        anotherConverstaionsRef.setValue(1)
-        let anotherUserConversationsRef = Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId!)
-        anotherUserConversationsRef.setValue(1)
-        
-//        FirebaseDataWritter.updateDataToRealtimeDatabase(data: &data, toCollection: FirebaseTableNames.conversations)
-        // ЧТО БЫ ВЫГРУЗИТЬ СООБЩЕНИЯ, МЫ ДОЛЖНЫ ГДЕ-ТО СОХРАНИТЬ ЭТОТ childByAutoId, ПОТОМ ПРИ ЕГО ПОМОЩИ ВЫГРУЗИТЬ users-conversations --> conversations --> "0" и "1" поля?
-
+        // Users_Conversations
+        let userConversationsRef = Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).childByAutoId()
+        data.removeAll()
+        data = [
+            "conversation_id": conversationsRef.key!,
+            "last_message": message,
+            "updated_at": Date().timeIntervalSince1970.description
+        ]
+        userConversationsRef.setValue(data)
     }
     
     func recordVoiceMessage() {
