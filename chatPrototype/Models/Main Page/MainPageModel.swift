@@ -21,7 +21,8 @@ final class MainPageModel {
     private var conversations: [String: ConversationsTable] = [:]
     private var usersConversations: [UsersConversationsTable] = []
     
-    private var sortedIsFinished: Bool = false
+    private var tempName: [Bool] = [false, false]
+//    private var sortedIsFinished: Bool = false
     private var timer: Timer?
     // MARK; - Public Properties
     var delegate: MainPageModelDelegate?
@@ -50,7 +51,7 @@ extension MainPageModel {
         guard let neededConversation = self.conversations[conversationId] else { return (nil, nil, nil) }
         guard let chatPartnerId = neededConversation.participant0 == myUid ? neededConversation.participant1 : neededConversation.participant0
             else {return (nil, nil, nil) }
-        guard let userName = self.users.first(where: { $0.id == chatPartnerId })?.id else { return (nil, nil, nil) }
+        guard let userName = self.users.first(where: { $0.id == chatPartnerId })?.username else { return (nil, nil, nil) }
         
         return (userName, self.usersConversations[dialogPosition].lastMessage, usersConversations[dialogPosition].updatedAt)
     }
@@ -64,9 +65,7 @@ extension MainPageModel {
 // MARK: - Private Methods
 private extension MainPageModel {
     
-    
     func initialConfigure() {
-        setupAndStartTimer()
         fetchUsers()
         fetchData()
     }
@@ -88,7 +87,7 @@ private extension MainPageModel {
                 }
             }
             self.fetchConversations()
-            self.sortedIsFinished = false
+//            self.sortedIsFinished = false
             DispatchQueue.global(qos: .background).sync {
                 self.usersConversations = self.usersConversations.sorted(by: {
                     lhs, rhs -> Bool in
@@ -97,7 +96,8 @@ private extension MainPageModel {
                     }
                     return firstDate > secondDate
                 })
-                self.sortedIsFinished = true
+                self.tempName[0] = true
+//                self.sortedIsFinished = true
             }
         })
     }
@@ -114,6 +114,9 @@ private extension MainPageModel {
                 }
                 self.conversations[conversationId] = ConversationsTable(dictionary: dictionary)
                 conversationsLeft -= 1
+                if conversationsLeft == 0 {
+                    self.tempName[1] = true
+                }
             })
         }
     }
@@ -135,7 +138,7 @@ private extension MainPageModel {
     }
     
     @objc func allUsersWereFetched() {
-        if sortedIsFinished == true {
+        if tempName[0] && tempName[1] {
             delegate?.usersConversationsWereSorted()
         } else {
             setupAndStartTimer()

@@ -10,4 +10,6 @@ target 'chatPrototype' do
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'Firebase/Messaging'
+  pod 'Firebase/Storage'
+  pod 'SDWebImage', '~> 5.0'
 end

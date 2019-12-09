@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import FirebaseStorage
+import MobileCoreServices
 
 final class ChatPageViewController: UIViewController {
     
@@ -19,7 +21,25 @@ final class ChatPageViewController: UIViewController {
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var bottomConstraint: NSLayoutConstraint!
     
-    var chatPartnerId: String?
+    private lazy var imageAndCameraPicker: UIImagePickerController = {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = false
+        return picker
+    }()
+    
+    private lazy var documentPicker: UIDocumentPickerViewController = {
+        let picker = UIDocumentPickerViewController(documentTypes: [
+            String(kUTTypeText),
+            String(kUTTypeContent),
+            String(kUTTypeItem),
+            String(kUTTypeData)
+        ], in: .import)
+        picker.delegate = self
+        return picker
+    }()
+    
+    var chatPartnerId: String!
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -52,7 +72,7 @@ private extension ChatPageViewController {
     @objc private func keyboardWillShow(notification: Notification) {
         let info = notification.userInfo!
         let keyboardFrame: CGRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-
+        
         UIView.animate(withDuration: 1.0, animations: { () -> Void in
             self.bottomConstraint.constant = keyboardFrame.size.height + 20
         })
@@ -64,52 +84,173 @@ private extension ChatPageViewController {
         })
     }
     
+    func updateConversationsTables(withChildKey: String) {
+        
+    }
+    
 }
 
 // MARK: - DialogBottomPanelViewDelegate
 extension ChatPageViewController: DialogBottomPanelViewDelegate {
     
-    func attachFile() {
-        
+    func requestRecordVoiceMessage() {
     }
     
-    func send(message: String?) {
+    func requestSendFile() {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let attachImageAction = UIAlertAction(title: "Photo From Library", style: .default, handler: {
+            [weak self](action: UIAlertAction) in
+            defer { alertController.dismiss(animated: true, completion: nil) }
+            guard let self = self else { return }
+            self.selectImage()
+        })
+        
+        let createPhotoAction = UIAlertAction(title: "Camera", style: .default, handler: {
+            [weak self](action: UIAlertAction) in
+            defer { alertController.dismiss(animated: true, completion: nil) }
+            guard let self = self else { return }
+            self.openCameraAndTakePhoto()
+        })
+        
+        let attachFileAction = UIAlertAction(title: "File", style: .default, handler: {
+            [weak self](action: UIAlertAction) in
+            defer { alertController.dismiss(animated: true, completion: nil) }
+            guard let self = self else { return }
+            self.selectFile()
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: {
+            (action: UIAlertAction) in
+            alertController.dismiss(animated: true, completion: nil)
+        })
+        
+        alertController.addAction(attachImageAction)
+        alertController.addAction(attachFileAction)
+        alertController.addAction(createPhotoAction)
+        alertController.addAction(cancelAction)
+        
+        self.present(alertController, animated: true)
+    }
+    
+    func requestSend(message: String?) {
         guard let message = message, let myUid = FirebaseAuthService.getUserId() else {
             return
         }
-        // Messages
-        var data: Dictionary<String, Any> = [
+        // Send Data To Messages Table
+        let data: Dictionary<String, Any> = [
             "createdAt": NSDate().timeIntervalSince1970.description,
-            "sender": FirebaseAuthService.getUserId() ?? "!!!Error!!!",
+            "sender": myUid,
             "text": message,
             "type": "text"
         ]
         Database.database().reference().child(FirebaseTableNames.messages).child(myUid).childByAutoId().updateChildValues(data)
-        
-        // Conversations
+        updateConversations(message: message)
+    }
+    
+    private func updateConversations(message: String) {
+        guard let myUid = FirebaseAuthService.getUserId() else { return }
+        // Send Data To Conversations Table
         let conversationsRef = Database.database().reference().child(FirebaseTableNames.conversations).child(myUid).childByAutoId()
-        data.removeAll()
-        data["createdAt"] = Date().timeIntervalSince1970.description
+        var data: Dictionary<String, Any> = ["createdAt": Date().timeIntervalSince1970.description]
         let tempData = [
             "0": FirebaseAuthService.getUserId(),
             "1": self.chatPartnerId!
         ]
         data["participants"] = tempData
         conversationsRef.setValue(data)
+        let chatPartnerConversationRef = Database.database().reference().child(FirebaseTableNames.conversations).child(chatPartnerId).childByAutoId()
+        chatPartnerConversationRef.setValue(data)
         
-        // Users_Conversations
-        let userConversationsRef = Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).childByAutoId()
+        // Send Data To Users_Conversations Table
         data.removeAll()
         data = [
             "conversation_id": conversationsRef.key!,
             "last_message": message,
             "updated_at": Date().timeIntervalSince1970.description
         ]
-        userConversationsRef.setValue(data)
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).childByAutoId().setValue(data)
+        data["conversation_id"] = chatPartnerConversationRef.key!
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId).childByAutoId().setValue(data)
     }
     
-    func recordVoiceMessage() {
-        
+}
+
+// MARK: - UIImagePickerControllerDelegate & UINavigationControllerDelegate
+extension ChatPageViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        defer { picker.dismiss(animated: true, completion: nil) }
+        if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            DispatchQueue.global(qos: .background).async {
+                let imageName = UUID().uuidString
+                let ref = Storage.storage().reference().child(FirebaseTableNames.imageMessages).child(imageName)
+                
+                if let uploadData = pickedImage.jpegData(compressionQuality: 0.2) {
+                    ref.putData(uploadData, metadata: nil, completion: {
+                        [weak self](metadata, error) in
+                        guard let self = self else { return }
+                        guard error == nil, let myUid = FirebaseAuthService.getUserId() else {
+                            self.presentAlert(title: "", message: "Something went wrong. Please, try again later", actions: [], displayCloseButton: true)
+                            return
+                        }
+                        var messageData: Dictionary<String, Any> = [
+                            "createdAt": Date().timeIntervalSince1970.description,
+                            "sender": FirebaseAuthService.getUserId() ?? "Error",
+                            "text": "Image",
+                            "type": "image"
+                        ]
+                        ref.downloadURL(completion: {
+                            [weak self](url, error) in
+                            guard let self = self else { return }
+                            guard error == nil, let unwrappedUrl = url else {
+                                self.presentAlert(title: "Error", message: "Sorry, something went wrong", actions: [], displayCloseButton: true)
+                                return
+                            }
+                            messageData["image_url"] = String(describing: unwrappedUrl)
+                            Database.database().reference().child(FirebaseTableNames.messages).child(myUid).childByAutoId().setValue(messageData)
+                            self.updateConversations(message: "image")
+                        })
+                    })
+                }
+            }
+        }
+    }
+    
+}
+
+// MARK: - UIDocumentPickerDelegate
+extension ChatPageViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        print(urls)
+    }
+}
+
+// MARK: - Select & Attach File Methods
+private extension ChatPageViewController {
+    
+    func selectImage() {
+        if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
+            imageAndCameraPicker.sourceType = .savedPhotosAlbum
+            imageAndCameraPicker.allowsEditing = false
+            self.present(imageAndCameraPicker, animated: true)
+        } else {
+            self.presentAlert(title: "Error", message: "Allow the application to access the gallery in the phone settings", actions: [], displayCloseButton: true)
+        }
+    }
+    
+    func selectFile() {
+        self.present(documentPicker, animated: true)
+    }
+    
+    func openCameraAndTakePhoto() {
+        imageAndCameraPicker.sourceType = .camera
+        imageAndCameraPicker.allowsEditing = true
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            self.present(imageAndCameraPicker, animated: true)
+        } else {
+            self.presentAlert(title: "Error", message: "Allow the application to access the camera in the phone settings", actions: [], displayCloseButton: true)
+        }
     }
     
 }

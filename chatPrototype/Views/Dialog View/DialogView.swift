@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class DialogView: UIView {
     
@@ -57,9 +58,43 @@ extension DialogView {
 
 // MARK: - DialogViewDataSourceDelegate
 extension DialogView: DialogViewDataSourceDelegate {
-    func newMessagesComes() {
+    
+    func newImageMessageComes(stringImageUrl: String?) {
+        CacheManager.shared.loadAndSaveImage(
+            stringUrl: stringImageUrl,
+            dataType: .image,
+            successHandler: {
+                [weak self] in
+                guard let self = self else { return }
+                self.messagesCollectionView.reloadData()
+            }, errorHandler: {
+                (error: Error) in
+                print(error.localizedDescription)
+        })
+    }
+    
+    func newDocumentMessageComes(stringDocumentUrl: String?) {
+        CacheManager.shared.loadAndSaveImage(
+            stringUrl: stringDocumentUrl,
+            dataType: .document,
+            successHandler: {
+                [weak self] in
+                guard let self = self else { return }
+                self.messagesCollectionView.reloadData()
+            }, errorHandler: {
+                (error: Error) in
+                print(error.localizedDescription)
+        })
+    }
+    
+    
+    func newTextMessagesComes() {
         self.messagesCollectionView.reloadData()
     }
+    
+    func newVoiceMessageComes() {
+    }
+    
 }
 
 // MARK: - UICollecitonViewDelegate

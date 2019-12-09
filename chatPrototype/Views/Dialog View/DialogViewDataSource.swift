@@ -10,8 +10,10 @@ import Foundation
 import Firebase
 
 protocol DialogViewDataSourceDelegate {
-    func newMessagesComes()
-    func update()
+    func newTextMessagesComes()
+    func newImageMessageComes(stringImageUrl: String?)
+    func newDocumentMessageComes(stringDocumentUrl: String?)
+    func newVoiceMessageComes()
 }
 
 final class DialogViewDataSource: NSObject {
@@ -20,22 +22,12 @@ final class DialogViewDataSource: NSObject {
     private(set) var messages: [MessagesTable] = []
     var delegate: DialogViewDataSourceDelegate?
     var collectionView: UICollectionView?
-    private(set) var chatPartnerId: String?
+    private(set) var chatPartnerId: String!
     
     // MARK: - Methods
     override init() {
         super.init()
-        
-//        Database.database().reference().child(FirebaseTableNames.messages).observe(.childAdded, with: {
-//            [weak self] (snapshot: DataSnapshot) in
-//            guard let self = self else {
-//                return
-//            }
-//            if let dictionary = snapshot.value as? [String: AnyObject] {
-//                self.messages.append(MessagesTable(dictionary: dictionary))
-//                self.delegate?.newMessagesComes()
-//            }
-//        })
+        initialConfigure()
     }
     
     func setChatPartnerId(id: String?) {
@@ -43,7 +35,10 @@ final class DialogViewDataSource: NSObject {
             return
         }
         self.chatPartnerId = id
-        setListenerToMessages()
+        // Myself messages
+        setListenerToMessages(for: FirebaseAuthService.getUserId())
+        // Chat partner messages
+        setListenerToMessages(for: chatPartnerId)
     }
     
 }
@@ -55,32 +50,11 @@ private extension DialogViewDataSource {
         
     }
     
-    func setListenerToMessages() {
-        guard let myUid = FirebaseAuthService.getUserId() else {
+    func setListenerToMessages(for uid: String?) {
+        guard let uid = FirebaseAuthService.getUserId() else {
             return
         }
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observe(.value, with: {
-            [weak self] (snapshot: DataSnapshot) in
-            guard let self = self else {
-                return
-            }
-//            print("snaphot: \(snapshot)")
-            let converstainsId = snapshot.key
-            Database.database().reference().child(FirebaseTableNames.messages).child(converstainsId).observe(.childAdded, with: {
-                [weak self] (messageSnapshot: DataSnapshot) in
-                guard let self = self else {
-                    return
-                }
-//                print("snaphot: \(messageSnapshot)")
-                if let messageDictionary = messageSnapshot.value as? [String: AnyObject] {
-                    let message = MessagesTable(dictionary: messageDictionary)
-                    self.messages.append(message)
-                    self.delegate?.newMessagesComes()
-                }
-            })
-        })
-        
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId!).observe(.value, with: {
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(uid).observe(.value, with: {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self else {
                 return
@@ -92,9 +66,18 @@ private extension DialogViewDataSource {
                     return
                 }
                 if let messageDictionary = messageSnapshot.value as? [String: AnyObject] {
-                    let message = MessagesTable(dictionary: messageDictionary)
-                    self.messages.append(message)
-                    self.delegate?.newMessagesComes()
+                    let newMessage = MessagesTable(dictionary: messageDictionary)
+                    self.messages.append(newMessage)
+                    switch self.messages.last!.type {
+                    case .text:
+                        self.delegate?.newTextMessagesComes()
+                    case .image:
+                        self.delegate?.newImageMessageComes(stringImageUrl: newMessage.imageURL)
+                    case .document:
+                        self.delegate?.newDocumentMessageComes(stringDocumentUrl: newMessage.imageURL)
+                    default:
+                        break
+                    }
                 }
             })
         })
@@ -125,8 +108,11 @@ extension DialogViewDataSource: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.imageMessageCell, for: indexPath) as? ImageMessageCell else {
                 return UICollectionViewCell()
             }
-
-//            cell.set(image: self.messages[indexPath.section].imageURL)
+            if let image = CacheManager.shared.savedImages[messages[indexPath.section].imageURL ?? "qwertyqwerty"] {
+                cell.set(image: image)
+            } else {
+                cell.set(image: UIImage(named: "empty_image"))
+            }
             return cell
         default:
             return UICollectionViewCell()

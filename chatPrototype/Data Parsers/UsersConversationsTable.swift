@@ -14,7 +14,7 @@ class UsersConversationsTable {
     var updatedAt: String?
     init(dictionary: [String: AnyObject]) {
         self.conversationId = dictionary["conversation_id"] as? String
-        self.lastMessage = dictionary["last_mesage"] as? String
+        self.lastMessage = dictionary["last_message"] as? String
         self.updatedAt = dictionary["updated_at"] as? String
     }
 }

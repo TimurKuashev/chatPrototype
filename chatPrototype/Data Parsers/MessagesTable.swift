@@ -45,7 +45,7 @@ class MessagesTable {
         
     init(dictionary: Dictionary<String, AnyObject>) {
         self.createdAt = dictionary["createdAt"] as? String
-        self.imageURL = dictionary["imageURL"] as? String
+        self.imageURL = dictionary["image_url"] as? String
         self.isSeen = dictionary["isSeen"] as? Bool
         self.sender = dictionary["sender"] as? String
         self.text = dictionary["text"] as? String

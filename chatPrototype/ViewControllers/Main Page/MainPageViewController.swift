@@ -99,7 +99,7 @@ extension MainPageViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         let data = model.dataForPreviewOfTheDialog(dialogPosition: indexPath.section)
-        cell.setup(chatPartnerName: data.username!, lastMessage: data.lastMesageText!, lastMessageDate: data.lastMessageDate!)
+        cell.setup(chatPartnerName: data.username!, lastMessage: data.lastMesageText ?? "", lastMessageDate: data.lastMessageDate!)
         return cell
     }
     

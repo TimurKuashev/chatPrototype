@@ -14,4 +14,8 @@ enum FirebaseTableNames {
     static var conversations = "Conversations"
     static var usersConverstaions = "Users_Conversations"
     static var messages = "Messages"
+    
+    // MARK: - Storage
+    static var imageMessages = "Image_messages"
+    
 }

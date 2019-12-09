@@ -20,6 +20,5 @@ class ImageMessageCell: UICollectionViewCell {
         self.ivImage.image = image
     }
     
-    
 
 }

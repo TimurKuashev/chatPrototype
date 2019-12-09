@@ -34,8 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 print("Error fetching remote instance ID: \(error)")
             } else if let result = result {
                 print("Remote instance ID token: \(result.token)")
-                var data: [String: String] = ["token": result.token]
-                FirebaseDataWritter.writeToLongstoreDatabase(data: &data, toCollection: FirebaseTableNames.tokens)
+                Database.database().reference().child(FirebaseTableNames.tokens).childByAutoId().setValue(["token": result.token])
             }
         }
         
