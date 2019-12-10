@@ -36,6 +36,7 @@ final class MainPageViewController: UIViewController {
         } else {
             self.navigationController?.setNavigationBarHidden(false, animated: animated)
         }
+        dialogsList.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -99,7 +100,7 @@ extension MainPageViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         let data = model.dataForPreviewOfTheDialog(dialogPosition: indexPath.section)
-        cell.setup(chatPartnerName: data.username!, lastMessage: data.lastMesageText ?? "", lastMessageDate: data.lastMessageDate!)
+        cell.setup(chatPartnerName: data.username!, lastMessage: data.lastMesageText ?? "No messages", lastMessageDate: data.lastMessageDate ?? "Null Date")
         return cell
     }
     
@@ -109,11 +110,11 @@ extension MainPageViewController: UICollectionViewDataSource {
 extension MainPageViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let username = (collectionView.cellForItem(at: indexPath) as? DialogPreviewCell)?.getDisplayedData().username else {
-            self.presentAlert(title: "Error", message: "Sorry, something went wrong. Please, try again later", actions: [], displayCloseButton: true)
+            self.presentAlert(title: "Username error", message: "Sorry, something went wrong. Please, try again later", actions: [], displayCloseButton: true)
             return
         }
         guard let chatPartnerId = self.model.getUserId(byUsername: username) else {
-            self.presentAlert(title: "Error", message: "Sorry, something went wrong. Please, try again later", actions: [], displayCloseButton: true)
+            self.presentAlert(title: "User id error", message: "Sorry, something went wrong. Please, try again later", actions: [], displayCloseButton: true)
             return
         }
         let chatVC = ChatPageViewController(nibName: XibNameHelpers.chatPage, bundle: nil)

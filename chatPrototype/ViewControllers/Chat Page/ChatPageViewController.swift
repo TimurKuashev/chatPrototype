@@ -134,24 +134,24 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
     }
     
     func requestSend(message: String?) {
-        guard let message = message, let myUid = FirebaseAuthService.getUserId() else {
+        guard let myUid = FirebaseAuthService.getUserId() else {
             return
         }
         // Send Data To Messages Table
         let data: Dictionary<String, Any> = [
             "createdAt": NSDate().timeIntervalSince1970.description,
             "sender": myUid,
-            "text": message,
+            "text": message ?? "",
             "type": "text"
         ]
-        Database.database().reference().child(FirebaseTableNames.messages).child(myUid).childByAutoId().updateChildValues(data)
-        updateConversations(message: message)
+        send(message: data)
     }
     
-    private func updateConversations(message: String) {
+    
+    private func send(message: [String: Any]) {
         guard let myUid = FirebaseAuthService.getUserId() else { return }
         // Send Data To Conversations Table
-        let conversationsRef = Database.database().reference().child(FirebaseTableNames.conversations).child(myUid).childByAutoId()
+        let conversationsRef = Database.database().reference().child(FirebaseTableNames.conversations).child(myUid).child(chatPartnerId!)
         var data: Dictionary<String, Any> = ["createdAt": Date().timeIntervalSince1970.description]
         let tempData = [
             "0": FirebaseAuthService.getUserId(),
@@ -159,19 +159,23 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
         ]
         data["participants"] = tempData
         conversationsRef.setValue(data)
-        let chatPartnerConversationRef = Database.database().reference().child(FirebaseTableNames.conversations).child(chatPartnerId).childByAutoId()
+        let chatPartnerConversationRef = Database.database().reference().child(FirebaseTableNames.conversations).child(chatPartnerId).child(myUid)
         chatPartnerConversationRef.setValue(data)
         
         // Send Data To Users_Conversations Table
         data.removeAll()
         data = [
             "conversation_id": conversationsRef.key!,
-            "last_message": message,
+            "last_message": message["text"] ?? "",
             "updated_at": Date().timeIntervalSince1970.description
         ]
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).childByAutoId().setValue(data)
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).child(conversationsRef.key!).setValue(data)
         data["conversation_id"] = chatPartnerConversationRef.key!
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId).childByAutoId().setValue(data)
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId).child(chatPartnerConversationRef.key!).setValue(data)
+        
+        // Send Data to Messages Table
+        Database.database().reference().child(FirebaseTableNames.messages).child(myUid).child(conversationsRef.key!).setValue(message)
+        
     }
     
 }
@@ -190,7 +194,7 @@ extension ChatPageViewController: UIImagePickerControllerDelegate, UINavigationC
                     ref.putData(uploadData, metadata: nil, completion: {
                         [weak self](metadata, error) in
                         guard let self = self else { return }
-                        guard error == nil, let myUid = FirebaseAuthService.getUserId() else {
+                        guard error == nil else {
                             self.presentAlert(title: "", message: "Something went wrong. Please, try again later", actions: [], displayCloseButton: true)
                             return
                         }
@@ -208,8 +212,7 @@ extension ChatPageViewController: UIImagePickerControllerDelegate, UINavigationC
                                 return
                             }
                             messageData["image_url"] = String(describing: unwrappedUrl)
-                            Database.database().reference().child(FirebaseTableNames.messages).child(myUid).childByAutoId().setValue(messageData)
-                            self.updateConversations(message: "image")
+                            self.send(message: messageData)
                         })
                     })
                 }

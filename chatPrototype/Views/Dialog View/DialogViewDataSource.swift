@@ -23,11 +23,11 @@ final class DialogViewDataSource: NSObject {
     var delegate: DialogViewDataSourceDelegate?
     var collectionView: UICollectionView?
     private(set) var chatPartnerId: String!
+    private(set) var conversationId: String?
     
     // MARK: - Methods
     override init() {
         super.init()
-        initialConfigure()
     }
     
     func setChatPartnerId(id: String?) {
@@ -35,10 +35,14 @@ final class DialogViewDataSource: NSObject {
             return
         }
         self.chatPartnerId = id
-        // Myself messages
-        setListenerToMessages(for: FirebaseAuthService.getUserId())
-        // Chat partner messages
-        setListenerToMessages(for: chatPartnerId)
+        
+        fetchNeededConversationId {
+            [weak self] in
+            guard let self = self else { return }
+            self.setListenerToMessages(for: FirebaseAuthService.getUserId())
+            self.setListenerToMessages(for: self.chatPartnerId)
+        }
+        
     }
     
 }
@@ -46,41 +50,45 @@ final class DialogViewDataSource: NSObject {
 // MARK: - Private Methods
 private extension DialogViewDataSource {
     
-    func initialConfigure() {
-        
-    }
-    
-    func setListenerToMessages(for uid: String?) {
-        guard let uid = FirebaseAuthService.getUserId() else {
-            return
-        }
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(uid).observe(.value, with: {
+    private func fetchNeededConversationId(successCompletion: @escaping () -> Void) {
+        guard let myUid = FirebaseAuthService.getUserId() else { return }
+        Database.database().reference().child(FirebaseTableNames.conversations).child(myUid).observeSingleEvent(of: .value) {
             [weak self] (snapshot: DataSnapshot) in
-            guard let self = self else {
-                return
-            }
-            let converstainsId = snapshot.key
-            Database.database().reference().child(FirebaseTableNames.messages).child(converstainsId).observe(.childAdded, with: {
-                [weak self] (messageSnapshot: DataSnapshot) in
-                guard let self = self else {
-                    return
-                }
-                if let messageDictionary = messageSnapshot.value as? [String: AnyObject] {
-                    let newMessage = MessagesTable(dictionary: messageDictionary)
-                    self.messages.append(newMessage)
-                    switch self.messages.last!.type {
-                    case .text:
-                        self.delegate?.newTextMessagesComes()
-                    case .image:
-                        self.delegate?.newImageMessageComes(stringImageUrl: newMessage.imageURL)
-                    case .document:
-                        self.delegate?.newDocumentMessageComes(stringDocumentUrl: newMessage.imageURL)
-                    default:
-                        break
+            guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
+            for key in dictionary.keys {
+                if let keyData = dictionary[key] as? [String: AnyObject] {
+                    let conversation = ConversationsTable(dictionary: keyData)
+                    if (conversation.participant0 == self.chatPartnerId || conversation.participant1 == self.chatPartnerId) {
+                        self.conversationId = snapshot.key
+                        successCompletion()
+                        return
                     }
                 }
-            })
-        })
+            }
+        }
+    }
+    
+    func setListenerToMessages(for wrappedUid: String?) {
+        guard let convId = self.conversationId, let uid = wrappedUid else {
+            return
+        }
+        Database.database().reference().child(FirebaseTableNames.messages).child(uid).child(convId).observe(.value) {
+            [weak self] (snapshot: DataSnapshot) in
+            guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
+            
+            let newMessage = MessagesTable(dictionary: dictionary)
+            self.messages.append(newMessage)
+            switch self.messages.last!.type {
+            case .text:
+                self.delegate?.newTextMessagesComes()
+            case .image:
+                self.delegate?.newImageMessageComes(stringImageUrl: newMessage.imageURL)
+            case .document:
+                self.delegate?.newDocumentMessageComes(stringDocumentUrl: newMessage.imageURL)
+            default:
+                break
+            }
+        }
     }
     
 }

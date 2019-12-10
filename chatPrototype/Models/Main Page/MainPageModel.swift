@@ -21,9 +21,6 @@ final class MainPageModel {
     private var conversations: [String: ConversationsTable] = [:]
     private var usersConversations: [UsersConversationsTable] = []
     
-    private var tempName: [Bool] = [false, false]
-//    private var sortedIsFinished: Bool = false
-    private var timer: Timer?
     // MARK; - Public Properties
     var delegate: MainPageModelDelegate?
     
@@ -42,18 +39,8 @@ extension MainPageModel {
     }
     
     func dataForPreviewOfTheDialog(dialogPosition: Int) -> (username: String?, lastMesageText: String?, lastMessageDate: String?) {
-        if usersConversations.count <= dialogPosition {
-            return (users[dialogPosition].username, "No dialogs", "Null date")
-        }
-        
-        guard let myUid = FirebaseAuthService.getUserId() else { return (nil, nil, nil) }
-        guard let conversationId = self.usersConversations[dialogPosition].conversationId else { return (nil, nil, nil) }
-        guard let neededConversation = self.conversations[conversationId] else { return (nil, nil, nil) }
-        guard let chatPartnerId = neededConversation.participant0 == myUid ? neededConversation.participant1 : neededConversation.participant0
-            else {return (nil, nil, nil) }
-        guard let userName = self.users.first(where: { $0.id == chatPartnerId })?.username else { return (nil, nil, nil) }
-        
-        return (userName, self.usersConversations[dialogPosition].lastMessage, usersConversations[dialogPosition].updatedAt)
+        guard self.usersConversations.count > dialogPosition else { return (users[dialogPosition].username, nil, nil) }
+        return (users[dialogPosition].username, self.usersConversations[dialogPosition].lastMessage, self.usersConversations[dialogPosition].updatedAt)
     }
     
     func getUserId(byUsername username: String?) -> String? {
@@ -67,88 +54,94 @@ private extension MainPageModel {
     
     func initialConfigure() {
         fetchUsers()
-        fetchData()
     }
     
-    func fetchData() {
-        // Fetching the Users_Conversations data
+    // MARK: - Fetch Data
+    func fetchUsers() {
+        Database.database().reference().child(FirebaseTableNames.users).observe(.value) {
+            [weak self] (snapshot: DataSnapshot) in
+            guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
+            for key in dictionary.keys {
+                if let keyData = dictionary[key] as? [String: AnyObject] {
+                    self.users.append(UsersTable(dictionary: keyData) )
+                }
+            }
+            self.fetchUsersConversations()
+        }
+    }
+    
+    func fetchUsersConversations() {
         guard let myUid = FirebaseAuthService.getUserId() else { return }
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observe(.value, with: {
-            [weak self] (usersConverstaionsSnapshot: DataSnapshot) in
-            guard let self = self else {
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observeSingleEvent(of: .value) {
+            [weak self] (snapshot: DataSnapshot) in
+            guard let self = self else { return }
+            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                self.delegate?.usersConversationsWereSorted()
                 return
             }
-            if let userConversationData = usersConverstaionsSnapshot.value as? [String: AnyObject] {
-                for key in userConversationData.keys {
-                    guard let keyData = userConversationData[key] as? [String: AnyObject] else {
-                        continue
-                    }
+            for key in dictionary.keys {
+                if let keyData = dictionary[key] as? [String: AnyObject] {
                     self.usersConversations.append(UsersConversationsTable(dictionary: keyData))
                 }
             }
             self.fetchConversations()
-//            self.sortedIsFinished = false
-            DispatchQueue.global(qos: .background).sync {
-                self.usersConversations = self.usersConversations.sorted(by: {
-                    lhs, rhs -> Bool in
-                    guard let firstDate = lhs.updatedAt, let secondDate = rhs.updatedAt else {
-                        return true
-                    }
-                    return firstDate > secondDate
-                })
-                self.tempName[0] = true
-//                self.sortedIsFinished = true
-            }
-        })
+        }
     }
     
     func fetchConversations() {
         guard let myUid = FirebaseAuthService.getUserId() else { return }
-        var conversationsLeft = self.usersConversations.count
-        for userConversation in self.usersConversations {
-            guard let conversationId = userConversation.conversationId else { continue }
-            Database.database().reference().child(FirebaseTableNames.conversations).child(myUid).child(conversationId).observe(.value, with: {
-                [weak self](conversationSnapshot: DataSnapshot) in
-                guard let dictionary = conversationSnapshot.value as? [String: AnyObject], let self = self else {
-                    return
-                }
-                self.conversations[conversationId] = ConversationsTable(dictionary: dictionary)
+        var conversationsLeft = usersConversations.count
+        for usConv in usersConversations {
+            guard let convId = usConv.conversationId else { continue }
+            Database.database().reference().child(FirebaseTableNames.conversations).child(myUid).child(convId).observeSingleEvent(of: .value) {
+                [weak self] (snapshot: DataSnapshot) in
+                guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
                 conversationsLeft -= 1
+                self.conversations[convId] = ConversationsTable(dictionary: dictionary)
                 if conversationsLeft == 0 {
-                    self.tempName[1] = true
+                    self.sortUsersConversations()
+                    self.delegate?.usersConversationsWereSorted()
                 }
-            })
+            }
         }
     }
     
-    func fetchUsers() {
-        Database.database().reference().child(FirebaseTableNames.users).observe(.value, with: {
-            [weak self](usersSnapshot: DataSnapshot) in
-            guard let self = self, let dictionary = usersSnapshot.value as? [String: AnyObject] else {
-                return
+    // MARK: - Sort Data
+    func sortUsersConversations() {
+        usersConversations = usersConversations.sorted(by: {
+            lhs, rhs -> Bool in
+            guard let firstDate = lhs.updatedAt, let secondDate = rhs.updatedAt else {
+                return true
             }
-            for key in dictionary.keys {
-                guard let keyData = dictionary[key] as? [String: AnyObject] else {
-                    continue
-                }
-                self.users.append(UsersTable(dictionary: keyData))
-            }
-            self.allUsersWereFetched()
+            return firstDate > secondDate
         })
+        sortUsersByUsersConversations()
     }
     
-    @objc func allUsersWereFetched() {
-        if tempName[0] && tempName[1] {
-            delegate?.usersConversationsWereSorted()
-        } else {
-            setupAndStartTimer()
+    func sortUsersByUsersConversations() {
+        guard let myUid = FirebaseAuthService.getUserId(), conversations.count > 0 else { return }
+        var usersIdArray: [String?] = []
+        for userConv in self.usersConversations {
+            if let convId = userConv.conversationId, let conv = self.conversations[convId] {
+                usersIdArray.append(conv.participant0 == myUid ? conv.participant1 : conv.participant0)
+            }
         }
+        
+        var i: Int = 0
+        var j: Int = 0
+        while (i < users.count) {
+            while (j < usersIdArray.count) {
+                if (users[i].id == usersIdArray[j]) {
+                    let tempname = users[j]
+                    users[j] = users[i]
+                    users[i] = tempname
+                }
+                j += 1
+            }
+            j = 0
+            i += 1
+        }
+        
     }
-    
-    func setupAndStartTimer() {
-        timer?.invalidate()
-        timer = nil
-        timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(allUsersWereFetched), userInfo: nil, repeats: false)
-    }
-    
 }
+

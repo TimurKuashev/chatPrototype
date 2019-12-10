@@ -17,4 +17,8 @@ class ConversationsTable: NSObject {
         self.participant0 = (dictionary["participants"] as? Array<String>)?[0]
         self.participant1 = (dictionary["participants"] as? Array<String>)?[1]
     }
+    
+    func printMyself() {
+        print(participant0, participant1)
+    }
 }
