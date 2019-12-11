@@ -21,62 +21,45 @@ final class DialogViewDataSource: NSObject {
     // MARK: - Properties
     private(set) var messages: [MessagesTable] = []
     var delegate: DialogViewDataSourceDelegate?
-    var collectionView: UICollectionView?
-    private(set) var chatPartnerId: String!
-    private(set) var conversationId: String?
     
     // MARK: - Methods
     override init() {
         super.init()
     }
     
-    func setChatPartnerId(id: String?) {
-        guard let id = id else {
-            return
-        }
-        self.chatPartnerId = id
-        
-        fetchNeededConversationId {
-            [weak self] in
-            guard let self = self else { return }
-            self.setListenerToMessages(for: FirebaseAuthService.getUserId())
-            self.setListenerToMessages(for: self.chatPartnerId)
-        }
-        
-    }
-    
-}
-
-// MARK: - Private Methods
-private extension DialogViewDataSource {
-    
-    private func fetchNeededConversationId(successCompletion: @escaping () -> Void) {
-        guard let myUid = FirebaseAuthService.getUserId() else { return }
-        Database.database().reference().child(FirebaseTableNames.conversations).child(myUid).observeSingleEvent(of: .value) {
+    func loadDataWith(conversationId: String?) {
+        guard let convId = conversationId else { return }
+        Database.database().reference().child(FirebaseTableNames.messages).child(convId).observeSingleEvent(of: .value) {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
             for key in dictionary.keys {
                 if let keyData = dictionary[key] as? [String: AnyObject] {
-                    let conversation = ConversationsTable(dictionary: keyData)
-                    if (conversation.participant0 == self.chatPartnerId || conversation.participant1 == self.chatPartnerId) {
-                        self.conversationId = snapshot.key
-                        successCompletion()
-                        return
+                    let newMessage = MessagesTable(dictionary: keyData)
+                    guard self.isMessageExist(message: newMessage) == false else { return }
+                    self.messages.append(newMessage)
+                    switch self.messages.last!.type {
+                    case .text:
+                        self.delegate?.newTextMessagesComes()
+                    case .image:
+                        self.delegate?.newImageMessageComes(stringImageUrl: newMessage.imageURL)
+                    case .document:
+                        self.delegate?.newDocumentMessageComes(stringDocumentUrl: newMessage.imageURL)
+                    default:
+                        break
                     }
                 }
             }
+            self.messages.sort(by: {
+                lhs, rhs -> Bool in
+                return !(lhs.createdAt! > rhs.createdAt!)
+            })
         }
-    }
-    
-    func setListenerToMessages(for wrappedUid: String?) {
-        guard let convId = self.conversationId, let uid = wrappedUid else {
-            return
-        }
-        Database.database().reference().child(FirebaseTableNames.messages).child(uid).child(convId).observe(.value) {
+        
+        Database.database().reference().child(FirebaseTableNames.messages).child(convId).observe(.childAdded) {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
-            
             let newMessage = MessagesTable(dictionary: dictionary)
+            guard self.isMessageExist(message: newMessage) == false else { return }
             self.messages.append(newMessage)
             switch self.messages.last!.type {
             case .text:
@@ -89,6 +72,15 @@ private extension DialogViewDataSource {
                 break
             }
         }
+    }
+    
+    private func isMessageExist(message: MessagesTable) -> Bool {
+        for existingMessage in self.messages {
+            if existingMessage.isEqualTo(message: message) {
+                return true
+            }
+        }
+        return false
     }
     
 }

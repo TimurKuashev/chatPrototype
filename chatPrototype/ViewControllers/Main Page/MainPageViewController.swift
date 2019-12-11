@@ -109,17 +109,10 @@ extension MainPageViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension MainPageViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let username = (collectionView.cellForItem(at: indexPath) as? DialogPreviewCell)?.getDisplayedData().username else {
-            self.presentAlert(title: "Username error", message: "Sorry, something went wrong. Please, try again later", actions: [], displayCloseButton: true)
-            return
-        }
-        guard let chatPartnerId = self.model.getUserId(byUsername: username) else {
-            self.presentAlert(title: "User id error", message: "Sorry, something went wrong. Please, try again later", actions: [], displayCloseButton: true)
-            return
-        }
         let chatVC = ChatPageViewController(nibName: XibNameHelpers.chatPage, bundle: nil)
-        chatVC.chatPartnerId = chatPartnerId
         chatVC.modalPresentationStyle = .fullScreen
+        let chatInfo = model.chatInfoBy(dialogPosition: indexPath.section)
+        chatVC.chatInfo = (usersConversationId: nil, conversationId: chatInfo.conversationId, chatInfo.chatPartnerId)
         self.navigationController?.pushViewController(chatVC, animated: true)
     }
 }

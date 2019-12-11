@@ -17,7 +17,8 @@ class UsersConversationsTable {
         self.lastMessage = dictionary["last_message"] as? String
         self.updatedAt = dictionary["updated_at"] as? String
     }
-    func printMyself() {
-        print(conversationId, lastMessage, updatedAt)
+    
+    func isEqualTo(userConversation: UsersConversationsTable) -> Bool {
+        return (self.conversationId == userConversation.conversationId)
     }
 }

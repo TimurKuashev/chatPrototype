@@ -43,8 +43,17 @@ extension MainPageModel {
         return (users[dialogPosition].username, self.usersConversations[dialogPosition].lastMessage, self.usersConversations[dialogPosition].updatedAt)
     }
     
-    func getUserId(byUsername username: String?) -> String? {
-        return self.users.first(where: { $0.username == username })?.id
+    func chatInfoBy(dialogPosition: Int) -> (conversationId: String?, chatPartnerId: String?) {
+        guard dialogPosition < self.usersConversations.count else {
+            return (nil, self.users[dialogPosition].id)
+        }
+        if let convId = self.usersConversations[dialogPosition].conversationId {
+            let chatPartnerId = self.conversations[convId]?.participant0 == FirebaseAuthService.getUserId()
+                ? self.conversations[convId]?.participant0
+                : self.conversations[convId]?.participant1
+            return (convId, chatPartnerId)
+        }
+        return (nil, self.users[dialogPosition].id)
     }
     
 }
@@ -54,6 +63,15 @@ private extension MainPageModel {
     
     func initialConfigure() {
         fetchUsers()
+    }
+    
+    func isUserConversationExist(userConv: UsersConversationsTable) -> Bool {
+        for uc in self.usersConversations {
+            if uc.isEqualTo(userConversation: userConv) {
+                return true
+            }
+        }
+        return false
     }
     
     // MARK: - Fetch Data
@@ -81,19 +99,37 @@ private extension MainPageModel {
             }
             for key in dictionary.keys {
                 if let keyData = dictionary[key] as? [String: AnyObject] {
-                    self.usersConversations.append(UsersConversationsTable(dictionary: keyData))
+                    let userConversation = UsersConversationsTable(dictionary: keyData)
+                    self.usersConversations.append(userConversation)
                 }
             }
             self.fetchConversations()
         }
+        
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observe(.childChanged) {
+            [weak self] (snapshot: DataSnapshot) in
+            guard let self = self else { return }
+            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                self.delegate?.usersConversationsWereSorted()
+                return
+            }
+            let userConversation = UsersConversationsTable(dictionary: dictionary)
+            if let index = self.usersConversations.firstIndex(where: { $0.conversationId == userConversation.conversationId }) {
+                self.usersConversations[index].conversationId = userConversation.conversationId
+                self.usersConversations[index].lastMessage = userConversation.lastMessage
+                self.usersConversations[index].updatedAt = userConversation.updatedAt
+            } else {
+                self.usersConversations.append(userConversation)
+            }
+        }
+        
     }
     
     func fetchConversations() {
-        guard let myUid = FirebaseAuthService.getUserId() else { return }
         var conversationsLeft = usersConversations.count
         for usConv in usersConversations {
             guard let convId = usConv.conversationId else { continue }
-            Database.database().reference().child(FirebaseTableNames.conversations).child(myUid).child(convId).observeSingleEvent(of: .value) {
+            Database.database().reference().child(FirebaseTableNames.conversations).child(convId).observe(.value) {
                 [weak self] (snapshot: DataSnapshot) in
                 guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
                 conversationsLeft -= 1

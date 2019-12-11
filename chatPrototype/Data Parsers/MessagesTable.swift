@@ -51,4 +51,12 @@ class MessagesTable {
         self.text = dictionary["text"] as? String
         self.type = MessagesTypes.getType(typeDescription: dictionary["type"] as? String)
     }
+    
+    func isEqualTo(message: MessagesTable) -> Bool {
+        return (self.createdAt == message.createdAt
+            && self.imageURL == message.imageURL
+            && self.isSeen == message.isSeen
+            && self.sender == message.sender
+            && self.text == message.text)
+    }
 }

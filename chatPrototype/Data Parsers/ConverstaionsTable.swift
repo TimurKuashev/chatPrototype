@@ -18,7 +18,7 @@ class ConversationsTable: NSObject {
         self.participant1 = (dictionary["participants"] as? Array<String>)?[1]
     }
     
-    func printMyself() {
-        print(participant0, participant1)
+    func isEqualTo(conversation: ConversationsTable) -> Bool {
+        return (self.participant0 == conversation.participant0 && self.participant1 == conversation.participant1)
     }
 }

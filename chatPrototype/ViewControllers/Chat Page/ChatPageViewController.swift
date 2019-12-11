@@ -13,7 +13,7 @@ import MobileCoreServices
 
 final class ChatPageViewController: UIViewController {
     
-    // MARK: - @IBOutlet  Private Properties
+    // MARK: - @IBOutlet Properties
     @IBOutlet private var lblConversationName: UILabel!
     @IBOutlet private var btnOptions: UIButton!
     @IBOutlet private var dialogView: DialogView!
@@ -39,7 +39,7 @@ final class ChatPageViewController: UIViewController {
         return picker
     }()
     
-    var chatPartnerId: String!
+    var chatInfo: (usersConversationId: String?, conversationId: String?, chatPartnerId: String?) = (nil, nil, nil)
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -57,17 +57,17 @@ final class ChatPageViewController: UIViewController {
 private extension ChatPageViewController {
     
     func initialConfigure() {
-        dialogView.chatPartnerId = self.chatPartnerId
         self.navigationItem.title = ""
         btnOptions.addTarget(self, action: #selector(openSettings(_:)), for: .touchUpInside)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         dialogBottomPanel.delegate = self
+        if (chatInfo.conversationId != nil) {
+            dialogView.setConversation(id: chatInfo.conversationId)
+        }
     }
     
-    @objc private func openSettings(_ sender: UIButton?) {
-        
-    }
+    @objc private func openSettings(_ sender: UIButton?) {}
     
     @objc private func keyboardWillShow(notification: Notification) {
         let info = notification.userInfo!
@@ -77,15 +77,10 @@ private extension ChatPageViewController {
             self.bottomConstraint.constant = keyboardFrame.size.height + 20
         })
     }
-    
     @objc private func keyboardWillHide(notification: Notification) {
         UIView.animate(withDuration: 1.0, animations: { () -> Void in
             self.bottomConstraint.constant = 0
         })
-    }
-    
-    func updateConversationsTables(withChildKey: String) {
-        
     }
     
 }
@@ -149,33 +144,77 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
     
     
     private func send(message: [String: Any]) {
-        guard let myUid = FirebaseAuthService.getUserId() else { return }
+        guard let myUid = FirebaseAuthService.getUserId() else {
+            presentAlert(title: "Error", message: "It's look like you are not logged in. Please, reload your app", actions: [], displayCloseButton: true)
+            return
+        }
+        guard let chatPartnerId = self.chatInfo.chatPartnerId, let convId = self.chatInfo.conversationId else {
+            sendFirst(message: message)
+            return
+        }
+        
         // Send Data To Conversations Table
-        let conversationsRef = Database.database().reference().child(FirebaseTableNames.conversations).child(myUid).child(chatPartnerId!)
+        let convRef = Database.database().reference().child(FirebaseTableNames.conversations).child(convId)
         var data: Dictionary<String, Any> = ["createdAt": Date().timeIntervalSince1970.description]
         let tempData = [
-            "0": FirebaseAuthService.getUserId(),
-            "1": self.chatPartnerId!
+            "0": myUid,
+            "1": chatPartnerId
         ]
         data["participants"] = tempData
-        conversationsRef.setValue(data)
-        let chatPartnerConversationRef = Database.database().reference().child(FirebaseTableNames.conversations).child(chatPartnerId).child(myUid)
-        chatPartnerConversationRef.setValue(data)
+        convRef.setValue(data)
         
         // Send Data To Users_Conversations Table
         data.removeAll()
         data = [
-            "conversation_id": conversationsRef.key!,
+            "conversation_id": convId,
             "last_message": message["text"] ?? "",
             "updated_at": Date().timeIntervalSince1970.description
         ]
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).child(conversationsRef.key!).setValue(data)
-        data["conversation_id"] = chatPartnerConversationRef.key!
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId).child(chatPartnerConversationRef.key!).setValue(data)
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).child(convId).setValue(data)
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId).child(convId).setValue(data)
         
         // Send Data to Messages Table
-        Database.database().reference().child(FirebaseTableNames.messages).child(myUid).child(conversationsRef.key!).setValue(message)
-        
+        Database.database().reference().child(FirebaseTableNames.messages).child(convId).childByAutoId().setValue(message)
+    }
+    
+    private func sendFirst(message: [String: Any]) {
+        guard let myUid = FirebaseAuthService.getUserId() else {
+            presentAlert(title: "Error", message: "It's look like you are not logged in. Please, reload your app", actions: [], displayCloseButton: true)
+            return
+        }
+        guard let chatPartnerId = self.chatInfo.chatPartnerId else {
+            self.presentAlert(title: "Error", message: "We can't find the Chat Partner Id. Restart your chat, please", actions: [], displayCloseButton: true)
+            return
+        }
+        // Send Data To Conversations Table
+        let convRef = Database.database().reference().child(FirebaseTableNames.conversations).childByAutoId()
+        guard let convId = convRef.key else {
+            self.presentAlert(title: "Error", message: "ConvId by ConfRef.key - key doesn't exist", actions: [], displayCloseButton: true)
+            return
+        }
+        self.dialogView.setConversation(id: convId)
+        var data: Dictionary<String, Any> = ["createdAt": Date().timeIntervalSince1970.description]
+        let tempData = [
+            "0": myUid,
+            "1": chatPartnerId
+        ]
+        data["participants"] = tempData
+        convRef.setValue(data)
+
+        // Send Data To Users_Conversations Table
+        data.removeAll()
+        data = [
+            "conversation_id": convId,
+            "last_message": message["text"] ?? "",
+            "updated_at": Date().timeIntervalSince1970.description
+        ]
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).child(convId).setValue(data)
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId).child(convId).setValue(data)
+
+        // Send Data to Messages Table
+        Database.database().reference().child(FirebaseTableNames.messages).child(convId).childByAutoId().setValue(message)
+        self.chatInfo.chatPartnerId = chatPartnerId
+        self.chatInfo.conversationId = convId
     }
     
 }
