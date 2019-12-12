@@ -94,6 +94,10 @@ extension DialogView: DialogViewDataSourceDelegate {
     func newVoiceMessageComes() {
     }
     
+    func updateChat() {
+        self.messagesCollectionView.reloadData()
+    }
+    
 }
 
 // MARK: - UICollecitonViewDelegate

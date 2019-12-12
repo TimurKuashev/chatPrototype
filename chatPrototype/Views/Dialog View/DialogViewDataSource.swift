@@ -10,6 +10,7 @@ import Foundation
 import Firebase
 
 protocol DialogViewDataSourceDelegate {
+    func updateChat()
     func newTextMessagesComes()
     func newImageMessageComes(stringImageUrl: String?)
     func newDocumentMessageComes(stringDocumentUrl: String?)
@@ -29,41 +30,14 @@ final class DialogViewDataSource: NSObject {
     
     func loadDataWith(conversationId: String?) {
         guard let convId = conversationId else { return }
-        Database.database().reference().child(FirebaseTableNames.messages).child(convId).observeSingleEvent(of: .value) {
-            [weak self] (snapshot: DataSnapshot) in
-            guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
-            for key in dictionary.keys {
-                if var keyData = dictionary[key] as? [String: AnyObject] {
-                    keyData["keyInDatabase"] = key as AnyObject
-                    let newMessage = MessagesTable(dictionary: keyData)
-                    guard self.isMessageExist(message: newMessage) == false else { return }
-                    self.messages.append(newMessage)
-                    switch self.messages.last!.type {
-                    case .text:
-                        self.delegate?.newTextMessagesComes()
-                    case .image:
-                        self.delegate?.newImageMessageComes(stringImageUrl: newMessage.imageURL)
-                    case .document:
-                        self.delegate?.newDocumentMessageComes(stringDocumentUrl: newMessage.imageURL)
-                    default:
-                        break
-                    }
-                }
-            }
-            self.messages.sort(by: {
-                lhs, rhs -> Bool in
-                return !(lhs.createdAt! > rhs.createdAt!)
-            })
-        }
         
         Database.database().reference().child(FirebaseTableNames.messages).child(convId).observe(.childAdded) {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self, var dictionary = snapshot.value as? [String: AnyObject] else { return }
             dictionary["keyInDatabase"] = snapshot.key as AnyObject
             let newMessage = MessagesTable(dictionary: dictionary)
-            guard self.isMessageExist(message: newMessage) == false else { return }
             self.messages.append(newMessage)
-            switch self.messages.last!.type {
+            switch newMessage.type {
             case .text:
                 self.delegate?.newTextMessagesComes()
             case .image:
@@ -74,15 +48,44 @@ final class DialogViewDataSource: NSObject {
                 break
             }
         }
+        
+        Database.database().reference().child(FirebaseTableNames.messages).child(convId).observe(.childChanged) {
+            [weak self] (snapshot: DataSnapshot) in
+            guard let self = self, var dictionary = snapshot.value as? [String: AnyObject] else { return }
+            dictionary["keyInDatabase"] = snapshot.key as AnyObject
+            var changedMessage = MessagesTable(dictionary: dictionary)
+            self.update(message: &changedMessage)
+            self.sortMessages()
+            self.delegate?.updateChat()
+        }
+        
+        Database.database().reference().child(FirebaseTableNames.messages).child(convId).observe(.childRemoved) {
+            [weak self] (snapshot: DataSnapshot) in
+            guard let self = self else { return }
+            guard let indexOfRemovedMessage = self.messages.firstIndex(where: { $0.keyInDatabase == snapshot.key } ) else { return }
+            self.messages.remove(at: indexOfRemovedMessage)
+            self.sortMessages()
+            self.delegate?.updateChat()
+        }
     }
     
-    private func isMessageExist(message: MessagesTable) -> Bool {
-        for existingMessage in self.messages {
-            if existingMessage.isEqualTo(message: message) {
-                return true
+    private func update(message: inout MessagesTable) {
+        for i in 0..<self.messages.count {
+            if self.messages[i].keyInDatabase == message.keyInDatabase {
+                self.messages[i] = message
+                return
             }
         }
-        return false
+    }
+    
+    private func sortMessages() {
+        self.messages = self.messages.sorted(by: {
+            lhs, rhs -> Bool in
+            guard let firstDate = lhs.createdAt, let secondDate = rhs.createdAt else {
+                return true
+            }
+            return firstDate < secondDate
+        })
     }
     
 }

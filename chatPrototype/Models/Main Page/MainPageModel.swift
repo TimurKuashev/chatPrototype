@@ -11,7 +11,7 @@ import FirebaseDatabase
 import Firebase
 
 protocol MainPageModelDelegate: AnyObject {
-    func usersConversationsWereSorted()
+    func updateDialogs()
 }
 
 final class MainPageModel {
@@ -94,7 +94,7 @@ private extension MainPageModel {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self else { return }
             guard let dictionary = snapshot.value as? [String: AnyObject] else {
-                self.delegate?.usersConversationsWereSorted()
+                self.delegate?.updateDialogs()
                 return
             }
             for key in dictionary.keys {
@@ -114,7 +114,7 @@ private extension MainPageModel {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self else { return }
             guard let dictionary = snapshot.value as? [String: AnyObject] else {
-                self.delegate?.usersConversationsWereSorted()
+                self.delegate?.updateDialogs()
                 return
             }
             let userConversation = UsersConversationsTable(dictionary: dictionary)
@@ -138,7 +138,7 @@ private extension MainPageModel {
                 self.conversations[convId] = ConversationsTable(dictionary: dictionary)
                 if conversationsLeft == 0 {
                     self.sortUsersConversations()
-                    self.delegate?.usersConversationsWereSorted()
+                    self.delegate?.updateDialogs()
                 }
             }
         }

@@ -129,7 +129,7 @@ extension MainPageViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - MainPageModelDelegate
 extension MainPageViewController: MainPageModelDelegate {
     
-    func usersConversationsWereSorted() {
+    func updateDialogs() {
         dialogsList.reloadData()
     }
     
