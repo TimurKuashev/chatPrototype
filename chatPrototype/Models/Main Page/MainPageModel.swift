@@ -65,13 +65,13 @@ private extension MainPageModel {
         fetchUsers()
     }
     
-    func isUserConversationExist(userConv: UsersConversationsTable) -> Bool {
-        for uc in self.usersConversations {
-            if uc.isEqualTo(userConversation: userConv) {
-                return true
+    func isUserConversationExist(userConv: UsersConversationsTable) -> Int? {
+        for i in 0..<usersConversations.count {
+            if usersConversations[i].isEqualTo(userConversation: userConv) {
+                return i
             }
         }
-        return false
+        return nil
     }
     
     // MARK: - Fetch Data
@@ -100,13 +100,17 @@ private extension MainPageModel {
             for key in dictionary.keys {
                 if let keyData = dictionary[key] as? [String: AnyObject] {
                     let userConversation = UsersConversationsTable(dictionary: keyData)
-                    self.usersConversations.append(userConversation)
+                    if let index = self.isUserConversationExist(userConv: userConversation) {
+                        self.usersConversations[index] = userConversation
+                    } else {
+                        self.usersConversations.append(userConversation)
+                    }
                 }
             }
             self.fetchConversations()
         }
         
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observe(.childChanged) {
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observe(.childAdded) {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self else { return }
             guard let dictionary = snapshot.value as? [String: AnyObject] else {
@@ -114,15 +118,13 @@ private extension MainPageModel {
                 return
             }
             let userConversation = UsersConversationsTable(dictionary: dictionary)
-            if let index = self.usersConversations.firstIndex(where: { $0.conversationId == userConversation.conversationId }) {
-                self.usersConversations[index].conversationId = userConversation.conversationId
-                self.usersConversations[index].lastMessage = userConversation.lastMessage
-                self.usersConversations[index].updatedAt = userConversation.updatedAt
+            if let index = self.isUserConversationExist(userConv: userConversation) {
+                self.usersConversations[index] = userConversation
             } else {
                 self.usersConversations.append(userConversation)
             }
         }
-        
+
     }
     
     func fetchConversations() {

@@ -9,7 +9,7 @@
 import UIKit
 
 protocol DialogBottomPanelViewDelegate {
-    func requestSendFile()
+    func showAttachmentMenu()
     func requestSend(message: String?)
     func requestRecordVoiceMessage()
 }
@@ -46,7 +46,7 @@ final class DialogBottomPanelView: UIView {
     }
     
     @objc private func attachFilePressed(_ sender: UIButton!) {
-        delegate?.requestSendFile()
+        delegate?.showAttachmentMenu()
     }
     
     @objc private func sendMessageOrRecordVoiceMessagePressed(_ sender: UIButton!) {

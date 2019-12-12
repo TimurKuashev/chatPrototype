@@ -33,7 +33,8 @@ final class DialogViewDataSource: NSObject {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
             for key in dictionary.keys {
-                if let keyData = dictionary[key] as? [String: AnyObject] {
+                if var keyData = dictionary[key] as? [String: AnyObject] {
+                    keyData["keyInDatabase"] = key as AnyObject
                     let newMessage = MessagesTable(dictionary: keyData)
                     guard self.isMessageExist(message: newMessage) == false else { return }
                     self.messages.append(newMessage)
@@ -57,7 +58,8 @@ final class DialogViewDataSource: NSObject {
         
         Database.database().reference().child(FirebaseTableNames.messages).child(convId).observe(.childAdded) {
             [weak self] (snapshot: DataSnapshot) in
-            guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
+            guard let self = self, var dictionary = snapshot.value as? [String: AnyObject] else { return }
+            dictionary["keyInDatabase"] = snapshot.key as AnyObject
             let newMessage = MessagesTable(dictionary: dictionary)
             guard self.isMessageExist(message: newMessage) == false else { return }
             self.messages.append(newMessage)
@@ -113,6 +115,18 @@ extension DialogViewDataSource: UICollectionViewDataSource {
             } else {
                 cell.set(image: UIImage(named: "empty_image"))
             }
+            return cell
+        case .location:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.textMessageCell, for: indexPath) as? TextMessageCell else {
+                return UICollectionViewCell()
+            }
+            cell.set(text: self.messages[indexPath.section].text, senderID: self.messages[indexPath.section].sender)
+            return cell
+        case .document:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath) as? DocumentMessageCell else {
+                return UICollectionViewCell()
+            }
+            cell.set(documentName: "DASD", senderId: self.messages[indexPath.section].sender)
             return cell
         default:
             return UICollectionViewCell()

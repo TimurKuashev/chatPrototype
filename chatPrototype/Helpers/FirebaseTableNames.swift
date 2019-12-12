@@ -17,5 +17,6 @@ enum FirebaseTableNames {
     
     // MARK: - Storage
     static var imageMessages = "Image_messages"
+    static var documentMessages = "Document_messages"
     
 }

@@ -28,7 +28,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PLl-dY-fz1" userLabel="Content View">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_logo" translatesAutoresizingMaskIntoConstraints="NO" id="x5z-so-D6b">
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_logo" translatesAutoresizingMaskIntoConstraints="NO" id="x5z-so-D6b">
                                     <rect key="frame" x="107" y="50" width="200" height="200"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="200" id="dCm-FM-aCo"/>
@@ -95,6 +95,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_logo" width="1025" height="1025"/>
+        <image name="icon_logo" width="1025" height="1025"/>
     </resources>
 </document>

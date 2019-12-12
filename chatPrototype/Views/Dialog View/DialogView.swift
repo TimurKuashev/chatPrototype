@@ -7,13 +7,21 @@
 //
 
 import UIKit
-import SDWebImage
+import Firebase
+
+protocol DialogViewDelegate: AnyObject {
+    func onImageClicked(message: MessagesTable)
+    func onTextClicked(message: MessagesTable)
+}
 
 class DialogView: UIView {
     
-    // MARK: - @IBOutlets & Private Properties
+    // MARK: - @IBOutlets & Properties
     @IBOutlet private var messagesCollectionView: UICollectionView!
     private let dataSource = DialogViewDataSource()
+    
+    var delegate: DialogViewDelegate?
+    
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,6 +51,7 @@ private extension DialogView {
         messagesCollectionView.dataSource = dataSource
         messagesCollectionView.register(UINib(nibName: CellIdentifiers.textMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.textMessageCell)
         messagesCollectionView.register(UINib(nibName: CellIdentifiers.imageMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.imageMessageCell)
+        messagesCollectionView.register(UINib(nibName: CellIdentifiers.documentMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.documentMessageCell)
     }
     
 }
@@ -78,7 +87,6 @@ extension DialogView: DialogViewDataSourceDelegate {
         })
     }
     
-    
     func newTextMessagesComes() {
         self.messagesCollectionView.reloadData()
     }
@@ -95,6 +103,16 @@ extension DialogView: UICollectionViewDelegate {
         return CGSize(width: collectionView.bounds.width - 30, height: 60)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch self.dataSource.messages[indexPath.section].type {
+        case .image:
+            self.delegate?.onImageClicked(message: dataSource.messages[indexPath.section])
+        case .text:
+            self.delegate?.onTextClicked(message: dataSource.messages[indexPath.section])
+        default: break
+        }
+    }
+    
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
@@ -103,5 +121,5 @@ extension DialogView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 5, left: 15, bottom: 5, right: 15)
     }
-
+    
 }

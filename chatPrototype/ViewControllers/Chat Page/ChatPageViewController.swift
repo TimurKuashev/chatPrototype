@@ -8,12 +8,13 @@
 
 import UIKit
 import Firebase
+import CoreLocation
 import FirebaseStorage
 import MobileCoreServices
 
 final class ChatPageViewController: UIViewController {
     
-    // MARK: - @IBOutlet Properties
+    // MARK: - @IBOutlet & Private Properties
     @IBOutlet private var lblConversationName: UILabel!
     @IBOutlet private var btnOptions: UIButton!
     @IBOutlet private var dialogView: DialogView!
@@ -39,6 +40,13 @@ final class ChatPageViewController: UIViewController {
         return picker
     }()
     
+    private lazy var locationManager: LocationManager = {
+        let locManager = LocationManager()
+        locManager.delegate = self
+        return locManager
+    }()
+    
+    // MARK: - Public Properties
     var chatInfo: (usersConversationId: String?, conversationId: String?, chatPartnerId: String?) = (nil, nil, nil)
     
     // MARK: - Lifecycle
@@ -57,26 +65,32 @@ final class ChatPageViewController: UIViewController {
 private extension ChatPageViewController {
     
     func initialConfigure() {
+        dialogView.delegate = self
+        dialogBottomPanel.delegate = self
+        
         self.navigationItem.title = ""
         btnOptions.addTarget(self, action: #selector(openSettings(_:)), for: .touchUpInside)
+        
+        // Keyboard show/hide events
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        dialogBottomPanel.delegate = self
+        
         if (chatInfo.conversationId != nil) {
             dialogView.setConversation(id: chatInfo.conversationId)
         }
     }
     
-    @objc private func openSettings(_ sender: UIButton?) {}
+    @objc private func openSettings(_ sender: UIButton?) {
+    }
     
     @objc private func keyboardWillShow(notification: Notification) {
         let info = notification.userInfo!
         let keyboardFrame: CGRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        
         UIView.animate(withDuration: 1.0, animations: { () -> Void in
             self.bottomConstraint.constant = keyboardFrame.size.height + 20
         })
     }
+    
     @objc private func keyboardWillHide(notification: Notification) {
         UIView.animate(withDuration: 1.0, animations: { () -> Void in
             self.bottomConstraint.constant = 0
@@ -85,122 +99,108 @@ private extension ChatPageViewController {
     
 }
 
+// MARK: - Private Helpers Methods
+private extension ChatPageViewController {
+
+    private func getConversationId() -> String? {
+        if let convId = self.chatInfo.conversationId {
+            return convId
+        } else {
+            return Database.database().reference().child(FirebaseTableNames.conversations).childByAutoId().key
+        }
+    }
+    
+}
+
 // MARK: - DialogBottomPanelViewDelegate
 extension ChatPageViewController: DialogBottomPanelViewDelegate {
     
-    func requestRecordVoiceMessage() {
-    }
-    
-    func requestSendFile() {
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        let attachImageAction = UIAlertAction(title: "Photo From Library", style: .default, handler: {
-            [weak self](action: UIAlertAction) in
-            defer { alertController.dismiss(animated: true, completion: nil) }
-            guard let self = self else { return }
-            self.selectImage()
-        })
+    func showAttachmentMenu() {
+        let attachmentMenuController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let createPhotoAction = UIAlertAction(title: "Camera", style: .default, handler: {
             [weak self](action: UIAlertAction) in
-            defer { alertController.dismiss(animated: true, completion: nil) }
+            defer { attachmentMenuController.dismiss(animated: true, completion: nil) }
             guard let self = self else { return }
             self.openCameraAndTakePhoto()
         })
         
+        let attachImageAction = UIAlertAction(title: "Photo From Library", style: .default, handler: {
+            [weak self](action: UIAlertAction) in
+            defer { attachmentMenuController.dismiss(animated: true, completion: nil) }
+            guard let self = self else { return }
+            self.selectImage()
+        })
+        
         let attachFileAction = UIAlertAction(title: "File", style: .default, handler: {
             [weak self](action: UIAlertAction) in
-            defer { alertController.dismiss(animated: true, completion: nil) }
+            defer { attachmentMenuController.dismiss(animated: true, completion: nil) }
             guard let self = self else { return }
             self.selectFile()
         })
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: {
-            (action: UIAlertAction) in
-            alertController.dismiss(animated: true, completion: nil)
+        let sendCurrentLocationAction = UIAlertAction(title: "Current Location", style: .default, handler: {
+            [weak self](action: UIAlertAction) in
+            defer { attachmentMenuController.dismiss(animated: true, completion: nil) }
+            guard let self = self else { return }
+            self.shareCurrentLocation()
         })
         
-        alertController.addAction(attachImageAction)
-        alertController.addAction(attachFileAction)
-        alertController.addAction(createPhotoAction)
-        alertController.addAction(cancelAction)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: {
+            (action: UIAlertAction) in
+            attachmentMenuController.dismiss(animated: true, completion: nil)
+        })
         
-        self.present(alertController, animated: true)
+        attachmentMenuController.addAction(createPhotoAction)
+        attachmentMenuController.addAction(attachImageAction)
+        attachmentMenuController.addAction(attachFileAction)
+        attachmentMenuController.addAction(sendCurrentLocationAction)
+        attachmentMenuController.addAction(cancelAction)
+        
+        self.present(attachmentMenuController, animated: true)
+    }
+    
+    func requestRecordVoiceMessage() {
     }
     
     func requestSend(message: String?) {
-        guard let myUid = FirebaseAuthService.getUserId() else {
+        guard let myUid = FirebaseAuthService.getUserId(), let unwrappedMessage = message else {
             return
         }
-        // Send Data To Messages Table
+        // Prepare Data For Sending
         let data: Dictionary<String, Any> = [
-            "createdAt": NSDate().timeIntervalSince1970.description,
             "sender": myUid,
-            "text": message ?? "",
+            "createdAt": Date().timeIntervalSince1970.description,
+            "text": unwrappedMessage,
             "type": "text"
         ]
         send(message: data)
     }
-    
     
     private func send(message: [String: Any]) {
         guard let myUid = FirebaseAuthService.getUserId() else {
             presentAlert(title: "Error", message: "It's look like you are not logged in. Please, reload your app", actions: [], displayCloseButton: true)
             return
         }
-        guard let chatPartnerId = self.chatInfo.chatPartnerId, let convId = self.chatInfo.conversationId else {
-            sendFirst(message: message)
-            return
-        }
-        
-        // Send Data To Conversations Table
-        let convRef = Database.database().reference().child(FirebaseTableNames.conversations).child(convId)
-        var data: Dictionary<String, Any> = ["createdAt": Date().timeIntervalSince1970.description]
-        let tempData = [
-            "0": myUid,
-            "1": chatPartnerId
-        ]
-        data["participants"] = tempData
-        convRef.setValue(data)
-        
-        // Send Data To Users_Conversations Table
-        data.removeAll()
-        data = [
-            "conversation_id": convId,
-            "last_message": message["text"] ?? "",
-            "updated_at": Date().timeIntervalSince1970.description
-        ]
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).child(convId).setValue(data)
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId).child(convId).setValue(data)
-        
-        // Send Data to Messages Table
-        Database.database().reference().child(FirebaseTableNames.messages).child(convId).childByAutoId().setValue(message)
-    }
-    
-    private func sendFirst(message: [String: Any]) {
-        guard let myUid = FirebaseAuthService.getUserId() else {
-            presentAlert(title: "Error", message: "It's look like you are not logged in. Please, reload your app", actions: [], displayCloseButton: true)
+        guard let convId = self.getConversationId() else {
+            self.presentAlert(title: "Error", message: "Sorry, but we can't find the conversations id. Restart your dialog", actions: [], displayCloseButton: true)
             return
         }
         guard let chatPartnerId = self.chatInfo.chatPartnerId else {
-            self.presentAlert(title: "Error", message: "We can't find the Chat Partner Id. Restart your chat, please", actions: [], displayCloseButton: true)
+            self.presentAlert(title: "Error", message: "Sorry, but we the find your chat partner id. Please, restart this dialgo", actions: [], displayCloseButton: true)
             return
         }
+                
         // Send Data To Conversations Table
-        let convRef = Database.database().reference().child(FirebaseTableNames.conversations).childByAutoId()
-        guard let convId = convRef.key else {
-            self.presentAlert(title: "Error", message: "ConvId by ConfRef.key - key doesn't exist", actions: [], displayCloseButton: true)
-            return
-        }
-        self.dialogView.setConversation(id: convId)
+        let convRef = Database.database().reference().child(FirebaseTableNames.conversations).child(convId)
         var data: Dictionary<String, Any> = ["createdAt": Date().timeIntervalSince1970.description]
-        let tempData = [
+        let participants = [
             "0": myUid,
             "1": chatPartnerId
         ]
-        data["participants"] = tempData
+        data["participants"] = participants
         convRef.setValue(data)
-
+        
         // Send Data To Users_Conversations Table
         data.removeAll()
         data = [
@@ -210,11 +210,13 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
         ]
         Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).child(convId).setValue(data)
         Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId).child(convId).setValue(data)
-
+        
         // Send Data to Messages Table
         Database.database().reference().child(FirebaseTableNames.messages).child(convId).childByAutoId().setValue(message)
-        self.chatInfo.chatPartnerId = chatPartnerId
-        self.chatInfo.conversationId = convId
+        
+        if self.chatInfo.conversationId == nil {
+            self.chatInfo.conversationId = convId
+        }
     }
     
 }
@@ -263,12 +265,48 @@ extension ChatPageViewController: UIImagePickerControllerDelegate, UINavigationC
 
 // MARK: - UIDocumentPickerDelegate
 extension ChatPageViewController: UIDocumentPickerDelegate {
+    
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        print(urls)
+        guard urls.count > 0 else { return }
+        let stringUrl = urls[0].path
+        if FileManager.default.fileExists(atPath: stringUrl) {
+            do {
+                let uploadData = try Data(contentsOf: urls[0])
+                let documentName = UUID().uuidString
+                let ref = Storage.storage().reference().child(FirebaseTableNames.documentMessages).child(documentName)
+                ref.putData(uploadData, metadata: nil, completion: {
+                    [weak self] (metadata, error) in
+                    guard let self = self else { return }
+                    guard error == nil else {
+                        self.presentAlert(title: "Error", message: error!.localizedDescription, actions: [], displayCloseButton: true)
+                        return
+                    }
+                    var messageData: Dictionary<String, Any> = [
+                        "createdAt": Date().timeIntervalSince1970.description,
+                        "sender": FirebaseAuthService.getUserId() ?? "Error",
+                        "text": "Document",
+                        "type": "document"
+                    ]
+                    ref.downloadURL(completion: {
+                        [weak self] (url, error) in
+                        guard let self = self else { return }
+                        guard error == nil, let unwrappedUrl = url else {
+                            self.presentAlert(title: "Error", message: "Ref.DownloadUrl some error occured", actions: [], displayCloseButton: true)
+                            return
+                        }
+                        messageData["image_url"] = String(describing: unwrappedUrl)
+                        self.send(message: messageData)
+                    })
+                })
+            } catch {
+                self.presentAlert(title: "Error", message: "Sorry, but we can't get this document. Some error occured", actions: [], displayCloseButton: true)
+            }
+        }
     }
+    
 }
 
-// MARK: - Select & Attach File Methods
+// MARK: - Select & Attach Methods
 private extension ChatPageViewController {
     
     func selectImage() {
@@ -286,13 +324,78 @@ private extension ChatPageViewController {
     }
     
     func openCameraAndTakePhoto() {
-        imageAndCameraPicker.sourceType = .camera
-        imageAndCameraPicker.allowsEditing = true
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            imageAndCameraPicker.sourceType = .camera
+            imageAndCameraPicker.allowsEditing = true
             self.present(imageAndCameraPicker, animated: true)
         } else {
             self.presentAlert(title: "Error", message: "Allow the application to access the camera in the phone settings", actions: [], displayCloseButton: true)
         }
     }
     
+    func shareCurrentLocation() {
+        self.locationManager.requestLocation()
+    }
+    
 }
+
+// MARK: - LocationManagerDelegate
+extension ChatPageViewController: LocationManagerDelegate {
+    
+    func currentLocationFetchingSuccess(location: CLLocationCoordinate2D) {
+        let geocoder = CLGeocoder()
+        geocoder.reverseGeocodeLocation(CLLocation(latitude: location.latitude, longitude: location.longitude) ) {
+            [weak self] (placemarks, error) in
+            
+            guard let self = self else { return }
+            guard let placemark = placemarks?.first else {
+                self.presentAlert(title: "Error", message: "Can not get you'r location.", actions: [], displayCloseButton: true)
+                return
+            }
+            
+            var messageData: Dictionary<String, Any> = [
+                "createdAt": Date().timeIntervalSince1970.description,
+                "sender": FirebaseAuthService.getUserId() ?? "Error",
+                "type": "location"
+            ]
+            
+            if let cityName = placemark.subAdministrativeArea, let streetName = placemark.thoroughfare {
+                messageData["text"] = cityName + streetName
+            } else {
+                messageData["text"] = "lat: " + location.latitude.description + " lng: " + location.longitude.description
+            }
+            self.send(message: messageData)
+        }
+        
+    }
+    
+    func currentLocationFetchingFail(error: Error?) {
+        if let errorMessage = error?.localizedDescription {
+            self.presentAlert(title: "Error", message: errorMessage + ". Please, try again later", actions: [], displayCloseButton: true)
+        }
+    }
+    
+}
+
+// MARK: - DialogViewDelegate
+extension ChatPageViewController: DialogViewDelegate {
+    
+    func onImageClicked(message: MessagesTable) {
+        guard let imageUrl = message.imageURL, let image = CacheManager.shared.savedImages[imageUrl] else {
+            return
+        }
+        let vc = ImageViewerViewController()
+        vc.set(image: image)
+        vc.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func onTextClicked(message: MessagesTable) {
+        guard let conversationId = self.chatInfo.conversationId, let messageId = message.keyInDatabase else {
+            return
+        }
+        Database.database().reference().child(FirebaseTableNames.messages).child(conversationId).child(messageId).removeValue()
+    }
+    
+}
+

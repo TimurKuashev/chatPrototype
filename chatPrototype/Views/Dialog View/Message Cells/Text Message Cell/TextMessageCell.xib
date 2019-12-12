@@ -29,7 +29,7 @@
                         <color key="backgroundColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="mOR-pg-gR7" firstAttribute="top" secondItem="453-dP-Rg6" secondAttribute="top" constant="5" id="CCn-vs-wqR"/>
-                            <constraint firstItem="mOR-pg-gR7" firstAttribute="width" relation="lessThanOrEqual" secondItem="453-dP-Rg6" secondAttribute="width" multiplier="0.8" id="FUS-4R-7y2"/>
+                            <constraint firstItem="mOR-pg-gR7" firstAttribute="width" relation="lessThanOrEqual" secondItem="453-dP-Rg6" secondAttribute="width" multiplier="0.7" id="FUS-4R-7y2"/>
                             <constraint firstAttribute="bottom" secondItem="mOR-pg-gR7" secondAttribute="bottom" constant="5" id="K6a-Q4-HvZ"/>
                             <constraint firstAttribute="trailing" secondItem="mOR-pg-gR7" secondAttribute="trailing" constant="5" id="Rm3-gw-DuY"/>
                             <constraint firstItem="mOR-pg-gR7" firstAttribute="leading" secondItem="453-dP-Rg6" secondAttribute="leading" constant="5" id="mXf-PF-u25"/>

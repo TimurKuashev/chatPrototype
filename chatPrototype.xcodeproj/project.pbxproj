@@ -50,6 +50,10 @@
 		409F3EF6239A75C200333FDB /* UIColor+NewColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F3EF5239A75C200333FDB /* UIColor+NewColors.swift */; };
 		409F3EF8239A893500333FDB /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F3EF7239A893500333FDB /* LaunchScreenViewController.swift */; };
 		409F3EFA239A8B1B00333FDB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 409F3EF9239A8B1B00333FDB /* Main.storyboard */; };
+		40B8B0C523A203A800C60E9D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B8B0C423A203A800C60E9D /* LocationManager.swift */; };
+		40B8B0C923A2440F00C60E9D /* DocumentMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B8B0C723A2440F00C60E9D /* DocumentMessageCell.swift */; };
+		40B8B0CA23A2440F00C60E9D /* DocumentMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B8B0C823A2440F00C60E9D /* DocumentMessageCell.xib */; };
+		40B8B0D023A2632100C60E9D /* ImageViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B8B0CF23A2632100C60E9D /* ImageViewerViewController.swift */; };
 		40BDEE412397E0E70023F60C /* FirebaseAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40BDEE402397E0E70023F60C /* FirebaseAuthService.swift */; };
 		40BDEE432397E58D0023F60C /* FirebaseDataWritter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40BDEE422397E58D0023F60C /* FirebaseDataWritter.swift */; };
 		40BDEE452397E9890023F60C /* CustomPropertiesForUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40BDEE442397E9890023F60C /* CustomPropertiesForUserDefault.swift */; };
@@ -102,6 +106,10 @@
 		409F3EF5239A75C200333FDB /* UIColor+NewColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+NewColors.swift"; sourceTree = "<group>"; };
 		409F3EF7239A893500333FDB /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
 		409F3EF9239A8B1B00333FDB /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		40B8B0C423A203A800C60E9D /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		40B8B0C723A2440F00C60E9D /* DocumentMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentMessageCell.swift; sourceTree = "<group>"; };
+		40B8B0C823A2440F00C60E9D /* DocumentMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DocumentMessageCell.xib; sourceTree = "<group>"; };
+		40B8B0CF23A2632100C60E9D /* ImageViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewerViewController.swift; sourceTree = "<group>"; };
 		40BDEE402397E0E70023F60C /* FirebaseAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthService.swift; sourceTree = "<group>"; };
 		40BDEE422397E58D0023F60C /* FirebaseDataWritter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseDataWritter.swift; sourceTree = "<group>"; };
 		40BDEE442397E9890023F60C /* CustomPropertiesForUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPropertiesForUserDefault.swift; sourceTree = "<group>"; };
@@ -161,6 +169,7 @@
 		4009448623964445005381A4 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				40B8B0CE23A2630F00C60E9D /* Image Viewer View Contoller */,
 				409F3EFB239A919200333FDB /* New Main Page */,
 				405B6F9C239A4A6B008A4807 /* Sign Page */,
 				4055E21E2396744D00AFA3F8 /* Main Page */,
@@ -214,6 +223,7 @@
 		4018C95F23978A47006ED81A /* Message Cells */ = {
 			isa = PBXGroup;
 			children = (
+				40B8B0C623A243F000C60E9D /* Document Message Cell */,
 				4018C96523978A90006ED81A /* Image Message Cell */,
 				4018C96423978A82006ED81A /* Text Message Cell */,
 			);
@@ -269,6 +279,7 @@
 		4055E21B23966FED00AFA3F8 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				40B8B0C323A2039700C60E9D /* Location Manager */,
 				4055E21C2396700400AFA3F8 /* FileNamesHelper.swift */,
 				4055E22C23967C6000AFA3F8 /* CellIdentifiers.swift */,
 				40BDEE442397E9890023F60C /* CustomPropertiesForUserDefault.swift */,
@@ -366,6 +377,31 @@
 			children = (
 			);
 			path = "New Main Page";
+			sourceTree = "<group>";
+		};
+		40B8B0C323A2039700C60E9D /* Location Manager */ = {
+			isa = PBXGroup;
+			children = (
+				40B8B0C423A203A800C60E9D /* LocationManager.swift */,
+			);
+			path = "Location Manager";
+			sourceTree = "<group>";
+		};
+		40B8B0C623A243F000C60E9D /* Document Message Cell */ = {
+			isa = PBXGroup;
+			children = (
+				40B8B0C723A2440F00C60E9D /* DocumentMessageCell.swift */,
+				40B8B0C823A2440F00C60E9D /* DocumentMessageCell.xib */,
+			);
+			path = "Document Message Cell";
+			sourceTree = "<group>";
+		};
+		40B8B0CE23A2630F00C60E9D /* Image Viewer View Contoller */ = {
+			isa = PBXGroup;
+			children = (
+				40B8B0CF23A2632100C60E9D /* ImageViewerViewController.swift */,
+			);
+			path = "Image Viewer View Contoller";
 			sourceTree = "<group>";
 		};
 		40BDEE3F2397E0C50023F60C /* Services */ = {
@@ -466,6 +502,7 @@
 				4018C95E23978919006ED81A /* DialogView.xib in Resources */,
 				4055E222239674AD00AFA3F8 /* MainPageViewController.xib in Resources */,
 				4018C96D23978AED006ED81A /* TextMessageCell.xib in Resources */,
+				40B8B0CA23A2440F00C60E9D /* DocumentMessageCell.xib in Resources */,
 				4055E22B239678D300AFA3F8 /* DialogPreviewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -533,6 +570,7 @@
 				4018C96823978ACE006ED81A /* ImageMessageCell.swift in Sources */,
 				401921A6239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift in Sources */,
 				4018C96C23978AED006ED81A /* TextMessageCell.swift in Sources */,
+				40B8B0C523A203A800C60E9D /* LocationManager.swift in Sources */,
 				4038DC7F2398D44100ABFC24 /* ConverstaionsTable.swift in Sources */,
 				4038DC862398F89400ABFC24 /* MessagesTable.swift in Sources */,
 				405B6FAA239A5212008A4807 /* SignUpView.swift in Sources */,
@@ -540,6 +578,8 @@
 				4038DC772398CE2100ABFC24 /* FirebaseTableNames.swift in Sources */,
 				40BDEE432397E58D0023F60C /* FirebaseDataWritter.swift in Sources */,
 				4055E23123967F6700AFA3F8 /* MainPageModel.swift in Sources */,
+				40B8B0C923A2440F00C60E9D /* DocumentMessageCell.swift in Sources */,
+				40B8B0D023A2632100C60E9D /* ImageViewerViewController.swift in Sources */,
 				407C84902396998F00B4F7E0 /* SceneDelegate.swift in Sources */,
 				40279A11239A3ABC008F9772 /* InsetsLabel.swift in Sources */,
 				40BDEE452397E9890023F60C /* CustomPropertiesForUserDefault.swift in Sources */,

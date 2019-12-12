@@ -13,4 +13,5 @@ struct CellIdentifiers {
     // MARK: - Message Types
     static let textMessageCell = "TextMessageCell"
     static let imageMessageCell = "ImageMessageCell"
+    static let documentMessageCell = "DocumentMessageCell"
 }
