@@ -12,6 +12,7 @@ import Firebase
 protocol DialogViewDelegate: AnyObject {
     func onImageClicked(message: MessagesTable)
     func onTextClicked(message: MessagesTable)
+    func dialogStateChanged(lastMesage: MessagesTable)
 }
 
 class DialogView: UIView {
@@ -87,15 +88,13 @@ extension DialogView: DialogViewDataSourceDelegate {
         })
     }
     
-    func newTextMessagesComes() {
-        self.messagesCollectionView.reloadData()
-    }
-    
     func newVoiceMessageComes() {
     }
     
     func updateChat() {
         self.messagesCollectionView.reloadData()
+        guard let lastMessage = self.dataSource.messages.last else { return }
+        self.delegate?.dialogStateChanged(lastMesage: lastMessage)
     }
     
 }

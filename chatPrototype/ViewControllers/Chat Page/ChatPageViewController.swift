@@ -12,6 +12,10 @@ import CoreLocation
 import FirebaseStorage
 import MobileCoreServices
 
+protocol ChatPageDelegate: AnyObject {
+    func chatStateChanged(chatId: String?, lastMessage: MessagesTable)
+}
+
 final class ChatPageViewController: UIViewController {
     
     // MARK: - @IBOutlet & Private Properties
@@ -48,6 +52,7 @@ final class ChatPageViewController: UIViewController {
     
     // MARK: - Public Properties
     var chatInfo: (usersConversationId: String?, conversationId: String?, chatPartnerId: String?) = (nil, nil, nil)
+    var delegate: ChatPageDelegate?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -97,17 +102,38 @@ private extension ChatPageViewController {
         })
     }
     
-}
-
-// MARK: - Private Helpers Methods
-private extension ChatPageViewController {
-
     private func getConversationId() -> String? {
         if let convId = self.chatInfo.conversationId {
             return convId
         } else {
             return Database.database().reference().child(FirebaseTableNames.conversations).childByAutoId().key
         }
+    }
+    
+}
+
+// MARK: - DialogViewDelegate
+extension ChatPageViewController: DialogViewDelegate {
+    
+    func onImageClicked(message: MessagesTable) {
+        guard let imageUrl = message.imageURL, let image = CacheManager.shared.savedImages[imageUrl] else {
+            return
+        }
+        let vc = ImageViewerViewController()
+        vc.set(image: image)
+        vc.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func onTextClicked(message: MessagesTable) {
+        guard let conversationId = self.chatInfo.conversationId, let messageId = message.keyInDatabase else {
+            return
+        }
+        Database.database().reference().child(FirebaseTableNames.messages).child(conversationId).child(messageId).removeValue()
+    }
+    
+    func dialogStateChanged(lastMesage: MessagesTable) {
+        self.delegate?.chatStateChanged(chatId: self.chatInfo.usersConversationId   , lastMessage: lastMesage)
     }
     
 }
@@ -376,26 +402,3 @@ extension ChatPageViewController: LocationManagerDelegate {
     }
     
 }
-
-// MARK: - DialogViewDelegate
-extension ChatPageViewController: DialogViewDelegate {
-    
-    func onImageClicked(message: MessagesTable) {
-        guard let imageUrl = message.imageURL, let image = CacheManager.shared.savedImages[imageUrl] else {
-            return
-        }
-        let vc = ImageViewerViewController()
-        vc.set(image: image)
-        vc.modalPresentationStyle = .fullScreen
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func onTextClicked(message: MessagesTable) {
-        guard let conversationId = self.chatInfo.conversationId, let messageId = message.keyInDatabase else {
-            return
-        }
-        Database.database().reference().child(FirebaseTableNames.messages).child(conversationId).child(messageId).removeValue()
-    }
-    
-}
-

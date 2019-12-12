@@ -112,9 +112,24 @@ extension MainPageViewController: UICollectionViewDelegate {
         let chatVC = ChatPageViewController(nibName: XibNameHelpers.chatPage, bundle: nil)
         chatVC.modalPresentationStyle = .fullScreen
         let chatInfo = model.chatInfoBy(dialogPosition: indexPath.section)
-        chatVC.chatInfo = (usersConversationId: nil, conversationId: chatInfo.conversationId, chatInfo.chatPartnerId)
+        chatVC.chatInfo = (usersConversationId: chatInfo.userConvId, conversationId: chatInfo.conversationId, chatInfo.chatPartnerId)
+        chatVC.delegate = self
         self.navigationController?.pushViewController(chatVC, animated: true)
     }
+}
+
+// MARK: - ChatPageDelegate
+extension MainPageViewController: ChatPageDelegate {
+    func chatStateChanged(chatId: String?, lastMessage: MessagesTable) {
+        guard let userConvId = chatId, let myUid = FirebaseAuthService.getUserId(), let messageText = lastMessage.text, let messageDate = lastMessage.createdAt else { return }
+        let newData: Dictionary<String, Any> = [
+            "conversation_id": userConvId,
+            "last_message": messageText,
+            "updated_at": messageDate
+        ]
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).child(userConvId).updateChildValues(newData)
+    }
+    
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout

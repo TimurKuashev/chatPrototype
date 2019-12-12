@@ -43,17 +43,20 @@ extension MainPageModel {
         return (users[dialogPosition].username, self.usersConversations[dialogPosition].lastMessage, self.usersConversations[dialogPosition].updatedAt)
     }
     
-    func chatInfoBy(dialogPosition: Int) -> (conversationId: String?, chatPartnerId: String?) {
+    func chatInfoBy(dialogPosition: Int) -> (userConvId: String?, conversationId: String?, chatPartnerId: String?) {
         guard dialogPosition < self.usersConversations.count else {
-            return (nil, self.users[dialogPosition].id)
+            return (nil, nil, self.users[dialogPosition].id)
         }
+        
+        let userConvId = self.usersConversations[dialogPosition].conversationId
+        
         if let convId = self.usersConversations[dialogPosition].conversationId {
             let chatPartnerId = self.conversations[convId]?.participant0 == FirebaseAuthService.getUserId()
                 ? self.conversations[convId]?.participant0
                 : self.conversations[convId]?.participant1
-            return (convId, chatPartnerId)
+            return (userConvId, convId, chatPartnerId)
         }
-        return (nil, self.users[dialogPosition].id)
+        return (userConvId, nil, self.users[dialogPosition].id)
     }
     
 }
@@ -90,27 +93,38 @@ private extension MainPageModel {
     
     func fetchUsersConversations() {
         guard let myUid = FirebaseAuthService.getUserId() else { return }
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observeSingleEvent(of: .value) {
+//        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observeSingleEvent(of: .value) {
+//            [weak self] (snapshot: DataSnapshot) in
+//            guard let self = self else { return }
+//            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+//                self.delegate?.updateDialogs()
+//                return
+//            }
+//            for key in dictionary.keys {
+//                if let keyData = dictionary[key] as? [String: AnyObject] {
+//                    let userConversation = UsersConversationsTable(dictionary: keyData)
+//                    if let index = self.isUserConversationExist(userConv: userConversation) {
+//                        self.usersConversations[index] = userConversation
+//                    } else {
+//                        self.usersConversations.append(userConversation)
+//                    }
+//                }
+//            }
+//            self.fetchConversations()
+//        }
+        
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observe(.childAdded) {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self else { return }
-            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+            guard let dictionary = snapshot.value as? [String: AnyObject], let convId = dictionary["conversation_id"] as? String else {
                 self.delegate?.updateDialogs()
                 return
             }
-            for key in dictionary.keys {
-                if let keyData = dictionary[key] as? [String: AnyObject] {
-                    let userConversation = UsersConversationsTable(dictionary: keyData)
-                    if let index = self.isUserConversationExist(userConv: userConversation) {
-                        self.usersConversations[index] = userConversation
-                    } else {
-                        self.usersConversations.append(userConversation)
-                    }
-                }
-            }
-            self.fetchConversations()
+            self.usersConversations.append(UsersConversationsTable(dictionary: dictionary))
+            self.fetchConversation(for: convId)
         }
         
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observe(.childAdded) {
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observe(.childChanged) {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self else { return }
             guard let dictionary = snapshot.value as? [String: AnyObject] else {
@@ -118,29 +132,20 @@ private extension MainPageModel {
                 return
             }
             let userConversation = UsersConversationsTable(dictionary: dictionary)
-            if let index = self.isUserConversationExist(userConv: userConversation) {
-                self.usersConversations[index] = userConversation
-            } else {
-                self.usersConversations.append(userConversation)
-            }
+            guard let index = self.usersConversations.firstIndex(where: { $0.conversationId == userConversation.conversationId } ) else { return }
+            self.usersConversations[index] = userConversation
+            self.delegate?.updateDialogs()
         }
 
     }
     
-    func fetchConversations() {
-        var conversationsLeft = usersConversations.count
-        for usConv in usersConversations {
-            guard let convId = usConv.conversationId else { continue }
-            Database.database().reference().child(FirebaseTableNames.conversations).child(convId).observe(.value) {
-                [weak self] (snapshot: DataSnapshot) in
-                guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
-                conversationsLeft -= 1
-                self.conversations[convId] = ConversationsTable(dictionary: dictionary)
-                if conversationsLeft == 0 {
-                    self.sortUsersConversations()
-                    self.delegate?.updateDialogs()
-                }
-            }
+    func fetchConversation(for userConvId: String) {
+        Database.database().reference().child(FirebaseTableNames.conversations).child(userConvId).observeSingleEvent(of: .value) {
+            [weak self] (snapshot: DataSnapshot) in
+            guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
+            self.conversations[userConvId] = ConversationsTable(dictionary: dictionary)
+            self.sortUsersConversations()
+            self.delegate?.updateDialogs()
         }
     }
     

@@ -11,7 +11,6 @@ import Firebase
 
 protocol DialogViewDataSourceDelegate {
     func updateChat()
-    func newTextMessagesComes()
     func newImageMessageComes(stringImageUrl: String?)
     func newDocumentMessageComes(stringDocumentUrl: String?)
     func newVoiceMessageComes()
@@ -39,7 +38,7 @@ final class DialogViewDataSource: NSObject {
             self.messages.append(newMessage)
             switch newMessage.type {
             case .text:
-                self.delegate?.newTextMessagesComes()
+                self.delegate?.updateChat()
             case .image:
                 self.delegate?.newImageMessageComes(stringImageUrl: newMessage.imageURL)
             case .document:
