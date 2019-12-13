@@ -43,6 +43,10 @@ extension MainPageModel {
         return (users[dialogPosition].username, self.usersConversations[dialogPosition].lastMessage, self.usersConversations[dialogPosition].updatedAt)
     }
     
+    func getUsers() -> [UsersTable] {
+        return self.users
+    }
+    
     func chatInfoBy(dialogPosition: Int) -> (userConvId: String?, conversationId: String?, chatPartnerId: String?) {
         guard dialogPosition < self.usersConversations.count else {
             return (nil, nil, self.users[dialogPosition].id)
@@ -57,6 +61,26 @@ extension MainPageModel {
             return (userConvId, convId, chatPartnerId)
         }
         return (userConvId, nil, self.users[dialogPosition].id)
+    }
+    
+    func searchMessagesBy(phrase: String, completion: @escaping (_ messages: [MessagesTable]) -> Void) {
+        var convIdCounter: Int = 0
+        for userConv in self.usersConversations {
+            if let convId = userConv.conversationId {
+                convIdCounter += 1
+                Database.database().reference().child(FirebaseTableNames.messages).child(convId).queryOrdered(byChild: "text").queryStarting(atValue: phrase).queryEnding(atValue: phrase + "\u{f8ff}").observeSingleEvent(of: .value) {
+                    (snapshot: DataSnapshot) in
+                    guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
+                    var messages: [MessagesTable] = []
+                    for key in dictionary.keys {
+                        if let keyData = dictionary[key] as? [String: AnyObject] {
+                            messages.append(MessagesTable(dictionary: keyData))
+                        }
+                    }
+                    completion(messages)
+                }
+            }
+        }
     }
     
 }
@@ -93,25 +117,6 @@ private extension MainPageModel {
     
     func fetchUsersConversations() {
         guard let myUid = FirebaseAuthService.getUserId() else { return }
-//        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observeSingleEvent(of: .value) {
-//            [weak self] (snapshot: DataSnapshot) in
-//            guard let self = self else { return }
-//            guard let dictionary = snapshot.value as? [String: AnyObject] else {
-//                self.delegate?.updateDialogs()
-//                return
-//            }
-//            for key in dictionary.keys {
-//                if let keyData = dictionary[key] as? [String: AnyObject] {
-//                    let userConversation = UsersConversationsTable(dictionary: keyData)
-//                    if let index = self.isUserConversationExist(userConv: userConversation) {
-//                        self.usersConversations[index] = userConversation
-//                    } else {
-//                        self.usersConversations.append(userConversation)
-//                    }
-//                }
-//            }
-//            self.fetchConversations()
-//        }
         
         Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observe(.childAdded) {
             [weak self] (snapshot: DataSnapshot) in

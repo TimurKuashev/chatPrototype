@@ -39,6 +39,12 @@ class DialogView: UIView {
         dataSource.loadDataWith(conversationId: id)
     }
     
+    
+    func getImagesUrls(writeSpace: inout [String?]) {
+        for message in dataSource.messages {
+            writeSpace.append(message.imageURL)
+        }
+    }
 }
 
 // MARK: - Private Methods

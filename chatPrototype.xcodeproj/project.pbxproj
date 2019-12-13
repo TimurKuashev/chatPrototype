@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		3885139C216B7C6AE559DAE2 /* Pods_chatPrototype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F313405CC9421AE14CE92E35 /* Pods_chatPrototype.framework */; };
+		4006636823A3060F00988A0B /* FindedMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636723A3060F00988A0B /* FindedMessagesViewController.swift */; };
+		4006636B23A3134F00988A0B /* SharedImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636A23A3134F00988A0B /* SharedImagesViewController.swift */; };
+		4006636E23A33AE700988A0B /* UsersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636D23A33AE700988A0B /* UsersListViewController.swift */; };
 		4009447323964336005381A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4009447223964336005381A4 /* AppDelegate.swift */; };
 		4009447C23964337005381A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4009447B23964337005381A4 /* Assets.xcassets */; };
 		4009447F23964337005381A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4009447D23964337005381A4 /* LaunchScreen.storyboard */; };
@@ -61,6 +64,9 @@
 
 /* Begin PBXFileReference section */
 		05807087EC07BD42CDAB1302 /* Pods-chatPrototype.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatPrototype.debug.xcconfig"; path = "Target Support Files/Pods-chatPrototype/Pods-chatPrototype.debug.xcconfig"; sourceTree = "<group>"; };
+		4006636723A3060F00988A0B /* FindedMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindedMessagesViewController.swift; sourceTree = "<group>"; };
+		4006636A23A3134F00988A0B /* SharedImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedImagesViewController.swift; sourceTree = "<group>"; };
+		4006636D23A33AE700988A0B /* UsersListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersListViewController.swift; sourceTree = "<group>"; };
 		4009446F23964336005381A4 /* chatPrototype.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chatPrototype.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4009447223964336005381A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4009447B23964337005381A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -129,6 +135,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4006636623A305FE00988A0B /* Finded Messages View */ = {
+			isa = PBXGroup;
+			children = (
+				4006636723A3060F00988A0B /* FindedMessagesViewController.swift */,
+			);
+			path = "Finded Messages View";
+			sourceTree = "<group>";
+		};
+		4006636923A3133A00988A0B /* Shared Images View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				4006636A23A3134F00988A0B /* SharedImagesViewController.swift */,
+			);
+			path = "Shared Images View Controller";
+			sourceTree = "<group>";
+		};
+		4006636C23A33AD300988A0B /* Users List View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				4006636D23A33AE700988A0B /* UsersListViewController.swift */,
+			);
+			path = "Users List View Controller";
+			sourceTree = "<group>";
+		};
 		4009446623964336005381A4 = {
 			isa = PBXGroup;
 			children = (
@@ -181,6 +211,9 @@
 		4009448B239644CB005381A4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4006636C23A33AD300988A0B /* Users List View Controller */,
+				4006636923A3133A00988A0B /* Shared Images View Controller */,
+				4006636623A305FE00988A0B /* Finded Messages View */,
 				40279A0F239A3AAB008F9772 /* Insets Label */,
 				4038DC802398EB9C00ABFC24 /* Dialog Bottom Panel View */,
 				4018C95A239788DA006ED81A /* Dialog View */,
@@ -560,6 +593,8 @@
 				4055E22A239678D300AFA3F8 /* DialogPreviewCell.swift in Sources */,
 				4055E221239674AD00AFA3F8 /* MainPageViewController.swift in Sources */,
 				4018C97023978D92006ED81A /* DialogViewDataSource.swift in Sources */,
+				4006636823A3060F00988A0B /* FindedMessagesViewController.swift in Sources */,
+				4006636E23A33AE700988A0B /* UsersListViewController.swift in Sources */,
 				4018C9582397873C006ED81A /* ChatPageViewController.swift in Sources */,
 				409F3EF6239A75C200333FDB /* UIColor+NewColors.swift in Sources */,
 				4038DC7B2398CF4200ABFC24 /* UsersTable.swift in Sources */,
@@ -582,6 +617,7 @@
 				40B8B0D023A2632100C60E9D /* ImageViewerViewController.swift in Sources */,
 				407C84902396998F00B4F7E0 /* SceneDelegate.swift in Sources */,
 				40279A11239A3ABC008F9772 /* InsetsLabel.swift in Sources */,
+				4006636B23A3134F00988A0B /* SharedImagesViewController.swift in Sources */,
 				40BDEE452397E9890023F60C /* CustomPropertiesForUserDefault.swift in Sources */,
 				40BDEE412397E0E70023F60C /* FirebaseAuthService.swift in Sources */,
 				4009449223964FC3005381A4 /* View+InstantiateFromXIB.swift in Sources */,

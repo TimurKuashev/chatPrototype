@@ -10,6 +10,9 @@ import Foundation
 
 struct CellIdentifiers {
     static let dialogPreviewCell = "DialogPreviewCell"
+    static let findedMessageCell = "FindedMessageCell"
+    static let sharedImageCell = "SharedImageCell"
+    static let userInfoCell = "UserInfoCell"
     // MARK: - Message Types
     static let textMessageCell = "TextMessageCell"
     static let imageMessageCell = "ImageMessageCell"

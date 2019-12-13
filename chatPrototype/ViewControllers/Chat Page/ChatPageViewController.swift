@@ -75,6 +75,7 @@ private extension ChatPageViewController {
         
         self.navigationItem.title = ""
         btnOptions.addTarget(self, action: #selector(openSettings(_:)), for: .touchUpInside)
+        btnOptions.setTitle("Media", for: .normal)
         
         // Keyboard show/hide events
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardDidShowNotification, object: nil)
@@ -86,6 +87,12 @@ private extension ChatPageViewController {
     }
     
     @objc private func openSettings(_ sender: UIButton?) {
+        let vc = SharedImagesViewController()
+        var imagesUrls: [String?] = []
+        dialogView.getImagesUrls(writeSpace: &imagesUrls)
+        vc.imagesUrls = imagesUrls
+        vc.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func keyboardWillShow(notification: Notification) {

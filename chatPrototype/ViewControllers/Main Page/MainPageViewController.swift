@@ -19,6 +19,8 @@ final class MainPageViewController: UIViewController {
     @IBOutlet private var btnCreateGroupChat: UIButton!
     @IBOutlet private var lblChatsTitle: UILabel!
     @IBOutlet private var dialogsList: UICollectionView!
+    @IBOutlet private var btnSearch: UIButton!
+    @IBOutlet private var tfSearch: UITextField!
     
     private var model: MainPageModel = MainPageModel()
     private let flowLayout = UICollectionViewFlowLayout()
@@ -52,6 +54,7 @@ private extension MainPageViewController {
     private func initialConfigure() {
         model.delegate = self
         
+        btnSearch.addTarget(self, action: #selector(btnSearchTapped(_:)), for: .touchUpInside)
         let navController = UINavigationController(rootViewController: self)
         (UIApplication.shared.delegate as? AppDelegate)?.window?.rootViewController = navController
         
@@ -80,6 +83,24 @@ private extension MainPageViewController {
     }
     
     @objc private func onCreateGroupChatTapped(_ sender: UIButton?) {
+        let vc = UsersListViewController()
+        vc.users = model.getUsers()
+        vc.delegate = self
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func btnSearchTapped(_ sender: UIButton?) {
+        guard let searchPhrase = tfSearch.text else { return }
+        model.searchMessagesBy(phrase: searchPhrase) {
+            [weak self] (messages: [MessagesTable]) in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                let vc = FindedMessagesViewController()
+                vc.messages = messages
+                vc.modalPresentationStyle = .fullScreen
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        }
     }
     
 }
@@ -114,6 +135,7 @@ extension MainPageViewController: UICollectionViewDelegate {
         let chatInfo = model.chatInfoBy(dialogPosition: indexPath.section)
         chatVC.chatInfo = (usersConversationId: chatInfo.userConvId, conversationId: chatInfo.conversationId, chatInfo.chatPartnerId)
         chatVC.delegate = self
+        
         self.navigationController?.pushViewController(chatVC, animated: true)
     }
 }
@@ -148,4 +170,10 @@ extension MainPageViewController: MainPageModelDelegate {
         dialogsList.reloadData()
     }
     
+}
+
+// MARK: - UsersListDelegate
+extension MainPageViewController: UsersListDelegate {
+    func createChatPressed(with selectedUsersId: [String?]) {
+    }
 }
