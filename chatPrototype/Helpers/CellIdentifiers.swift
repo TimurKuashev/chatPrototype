@@ -17,4 +17,5 @@ struct CellIdentifiers {
     static let textMessageCell = "TextMessageCell"
     static let imageMessageCell = "ImageMessageCell"
     static let documentMessageCell = "DocumentMessageCell"
+    static let voiceMessageCell = "VoiceMessageCell"
 }

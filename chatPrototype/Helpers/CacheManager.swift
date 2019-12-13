@@ -13,11 +13,11 @@ class CacheManager {
     
     static let shared = CacheManager()
     private init() { }
-    
     var savedImages: Dictionary<String, UIImage?> = [:]
     var savedDocuments: Dictionary<String, Data> = [:]
+    var savedVoiceMessages: Dictionary<String, Data> = [:]
     
-    func loadAndSaveImage(stringUrl: String?, dataType: MessagesTable.MessagesTypes, successHandler: @escaping () -> Void, errorHandler: @escaping (_ error: Error) -> Void) {
+    func loadAndSaveData(stringUrl: String?, dataType: MessagesTable.MessagesTypes, successHandler: @escaping () -> Void, errorHandler: @escaping (_ error: Error) -> Void) {
         guard let stringUrl = stringUrl else { return }
         Storage.storage().reference(forURL: stringUrl).getData(maxSize: INT64_MAX) {
             (data: Data?, error: Error?) in
@@ -25,16 +25,21 @@ class CacheManager {
                 errorHandler(error!)
                 return
             }
+            
             if let unwrappedData = data {
                 switch dataType {
                 case .image:
-                    self.savedImages[String(describing: stringUrl)] = UIImage(data: unwrappedData)
+                    self.savedImages[stringUrl] = UIImage(data: unwrappedData)
                 case .document:
-                    self.savedDocuments[String(describing: stringUrl)] = unwrappedData
+                    self.savedDocuments[stringUrl] = unwrappedData
+                case .voice:
+                    self.savedVoiceMessages[stringUrl] = unwrappedData
                 default: break
                 }
             } else {
-                self.savedImages[String(describing: stringUrl)] = UIImage(named: "empty_image")
+                if dataType == .image {
+                    self.savedImages[stringUrl] = UIImage(named: "empty_image")
+                }
             }
             successHandler()
         }

@@ -59,15 +59,20 @@ private extension DialogView {
         messagesCollectionView.register(UINib(nibName: CellIdentifiers.textMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.textMessageCell)
         messagesCollectionView.register(UINib(nibName: CellIdentifiers.imageMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.imageMessageCell)
         messagesCollectionView.register(UINib(nibName: CellIdentifiers.documentMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.documentMessageCell)
+        messagesCollectionView.register(VoiceMessageCell.self, forCellWithReuseIdentifier: CellIdentifiers.voiceMessageCell)
     }
     
 }
 
 // MARK: - DialogViewDataSourceDelegate
 extension DialogView: DialogViewDataSourceDelegate {
+    func newVoiceMessageComes() {
+        
+    }
+    
     
     func newImageMessageComes(stringImageUrl: String?) {
-        CacheManager.shared.loadAndSaveImage(
+        CacheManager.shared.loadAndSaveData(
             stringUrl: stringImageUrl,
             dataType: .image,
             successHandler: {
@@ -81,7 +86,7 @@ extension DialogView: DialogViewDataSourceDelegate {
     }
     
     func newDocumentMessageComes(stringDocumentUrl: String?) {
-        CacheManager.shared.loadAndSaveImage(
+        CacheManager.shared.loadAndSaveData(
             stringUrl: stringDocumentUrl,
             dataType: .document,
             successHandler: {
@@ -94,7 +99,19 @@ extension DialogView: DialogViewDataSourceDelegate {
         })
     }
     
-    func newVoiceMessageComes() {
+    func newVoiceMessageComes(stringVoiceMessageUrl: String?) {
+        CacheManager.shared.loadAndSaveData(
+            stringUrl: stringVoiceMessageUrl,
+            dataType: .voice,
+            successHandler: {
+                [weak self] in
+                guard let self = self else { return }
+                self.messagesCollectionView.reloadData()
+        },
+            errorHandler: {
+                (error: Error) in
+                print(error.localizedDescription)
+        })
     }
     
     func updateChat() {

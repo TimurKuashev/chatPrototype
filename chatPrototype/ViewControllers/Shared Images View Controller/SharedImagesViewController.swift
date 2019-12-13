@@ -51,11 +51,15 @@ extension SharedImagesViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let imageIndex = indexPath.section * 2 + indexPath.row
+        guard imageIndex < self.imagesUrls.count else {
+            return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.sharedImageCell, for: indexPath)
+        }
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.sharedImageCell, for: indexPath) as? SharedImageCell else {
-            return UICollectionViewCell()
+            return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.sharedImageCell, for: indexPath)
         }
         // section * items_in_line + row_number
-        cell.set(image: CacheManager.shared.savedImages[self.imagesUrls[indexPath.section * 2 + indexPath.row] ?? ""] ?? UIImage(named: "empty_image"))
+        cell.set(image: CacheManager.shared.savedImages[self.imagesUrls[imageIndex] ?? ""] ?? UIImage(named: "empty_image"))
         return cell
     }
     

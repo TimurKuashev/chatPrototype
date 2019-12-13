@@ -11,6 +11,7 @@
 		4006636823A3060F00988A0B /* FindedMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636723A3060F00988A0B /* FindedMessagesViewController.swift */; };
 		4006636B23A3134F00988A0B /* SharedImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636A23A3134F00988A0B /* SharedImagesViewController.swift */; };
 		4006636E23A33AE700988A0B /* UsersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636D23A33AE700988A0B /* UsersListViewController.swift */; };
+		4006637123A3769000988A0B /* VoiceMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006637023A3769000988A0B /* VoiceMessageCell.swift */; };
 		4009447323964336005381A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4009447223964336005381A4 /* AppDelegate.swift */; };
 		4009447C23964337005381A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4009447B23964337005381A4 /* Assets.xcassets */; };
 		4009447F23964337005381A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4009447D23964337005381A4 /* LaunchScreen.storyboard */; };
@@ -30,7 +31,6 @@
 		401921A6239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401921A5239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift */; };
 		401921A8239D09F60048BD71 /* UsersConversationsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401921A7239D09F60048BD71 /* UsersConversationsTable.swift */; };
 		402665F4239E6EA4002721E9 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402665F3239E6EA4002721E9 /* CacheManager.swift */; };
-		40279A11239A3ABC008F9772 /* InsetsLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40279A10239A3ABC008F9772 /* InsetsLabel.swift */; };
 		4038DC772398CE2100ABFC24 /* FirebaseTableNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038DC762398CE2100ABFC24 /* FirebaseTableNames.swift */; };
 		4038DC7B2398CF4200ABFC24 /* UsersTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038DC7A2398CF4200ABFC24 /* UsersTable.swift */; };
 		4038DC7F2398D44100ABFC24 /* ConverstaionsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038DC7E2398D44100ABFC24 /* ConverstaionsTable.swift */; };
@@ -67,6 +67,7 @@
 		4006636723A3060F00988A0B /* FindedMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindedMessagesViewController.swift; sourceTree = "<group>"; };
 		4006636A23A3134F00988A0B /* SharedImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedImagesViewController.swift; sourceTree = "<group>"; };
 		4006636D23A33AE700988A0B /* UsersListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersListViewController.swift; sourceTree = "<group>"; };
+		4006637023A3769000988A0B /* VoiceMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceMessageCell.swift; sourceTree = "<group>"; };
 		4009446F23964336005381A4 /* chatPrototype.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chatPrototype.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4009447223964336005381A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4009447B23964337005381A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -89,7 +90,6 @@
 		401921A5239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+PushVCCompletion.swift"; sourceTree = "<group>"; };
 		401921A7239D09F60048BD71 /* UsersConversationsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersConversationsTable.swift; sourceTree = "<group>"; };
 		402665F3239E6EA4002721E9 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
-		40279A10239A3ABC008F9772 /* InsetsLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetsLabel.swift; sourceTree = "<group>"; };
 		4038DC762398CE2100ABFC24 /* FirebaseTableNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseTableNames.swift; sourceTree = "<group>"; };
 		4038DC7A2398CF4200ABFC24 /* UsersTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersTable.swift; sourceTree = "<group>"; };
 		4038DC7E2398D44100ABFC24 /* ConverstaionsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverstaionsTable.swift; sourceTree = "<group>"; };
@@ -135,12 +135,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4006636623A305FE00988A0B /* Finded Messages View */ = {
+		4006636623A305FE00988A0B /* Finded Messages View Conroller */ = {
 			isa = PBXGroup;
 			children = (
 				4006636723A3060F00988A0B /* FindedMessagesViewController.swift */,
 			);
-			path = "Finded Messages View";
+			path = "Finded Messages View Conroller";
 			sourceTree = "<group>";
 		};
 		4006636923A3133A00988A0B /* Shared Images View Controller */ = {
@@ -157,6 +157,14 @@
 				4006636D23A33AE700988A0B /* UsersListViewController.swift */,
 			);
 			path = "Users List View Controller";
+			sourceTree = "<group>";
+		};
+		4006636F23A3767D00988A0B /* Voice Message Cell */ = {
+			isa = PBXGroup;
+			children = (
+				4006637023A3769000988A0B /* VoiceMessageCell.swift */,
+			);
+			path = "Voice Message Cell";
 			sourceTree = "<group>";
 		};
 		4009446623964336005381A4 = {
@@ -199,6 +207,9 @@
 		4009448623964445005381A4 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4006636623A305FE00988A0B /* Finded Messages View Conroller */,
+				4006636923A3133A00988A0B /* Shared Images View Controller */,
+				4006636C23A33AD300988A0B /* Users List View Controller */,
 				40B8B0CE23A2630F00C60E9D /* Image Viewer View Contoller */,
 				409F3EFB239A919200333FDB /* New Main Page */,
 				405B6F9C239A4A6B008A4807 /* Sign Page */,
@@ -211,10 +222,6 @@
 		4009448B239644CB005381A4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4006636C23A33AD300988A0B /* Users List View Controller */,
-				4006636923A3133A00988A0B /* Shared Images View Controller */,
-				4006636623A305FE00988A0B /* Finded Messages View */,
-				40279A0F239A3AAB008F9772 /* Insets Label */,
 				4038DC802398EB9C00ABFC24 /* Dialog Bottom Panel View */,
 				4018C95A239788DA006ED81A /* Dialog View */,
 				4055E2232396765900AFA3F8 /* Request Account Credentials View */,
@@ -256,6 +263,7 @@
 		4018C95F23978A47006ED81A /* Message Cells */ = {
 			isa = PBXGroup;
 			children = (
+				4006636F23A3767D00988A0B /* Voice Message Cell */,
 				40B8B0C623A243F000C60E9D /* Document Message Cell */,
 				4018C96523978A90006ED81A /* Image Message Cell */,
 				4018C96423978A82006ED81A /* Text Message Cell */,
@@ -279,14 +287,6 @@
 				4018C96723978ACE006ED81A /* ImageMessageCell.xib */,
 			);
 			path = "Image Message Cell";
-			sourceTree = "<group>";
-		};
-		40279A0F239A3AAB008F9772 /* Insets Label */ = {
-			isa = PBXGroup;
-			children = (
-				40279A10239A3ABC008F9772 /* InsetsLabel.swift */,
-			);
-			path = "Insets Label";
 			sourceTree = "<group>";
 		};
 		4038DC782398CF2E00ABFC24 /* Data Parsers */ = {
@@ -607,6 +607,7 @@
 				4018C96C23978AED006ED81A /* TextMessageCell.swift in Sources */,
 				40B8B0C523A203A800C60E9D /* LocationManager.swift in Sources */,
 				4038DC7F2398D44100ABFC24 /* ConverstaionsTable.swift in Sources */,
+				4006637123A3769000988A0B /* VoiceMessageCell.swift in Sources */,
 				4038DC862398F89400ABFC24 /* MessagesTable.swift in Sources */,
 				405B6FAA239A5212008A4807 /* SignUpView.swift in Sources */,
 				4038DC842398EBE400ABFC24 /* DialogBottomPanelView.swift in Sources */,
@@ -616,7 +617,6 @@
 				40B8B0C923A2440F00C60E9D /* DocumentMessageCell.swift in Sources */,
 				40B8B0D023A2632100C60E9D /* ImageViewerViewController.swift in Sources */,
 				407C84902396998F00B4F7E0 /* SceneDelegate.swift in Sources */,
-				40279A11239A3ABC008F9772 /* InsetsLabel.swift in Sources */,
 				4006636B23A3134F00988A0B /* SharedImagesViewController.swift in Sources */,
 				40BDEE452397E9890023F60C /* CustomPropertiesForUserDefault.swift in Sources */,
 				40BDEE412397E0E70023F60C /* FirebaseAuthService.swift in Sources */,

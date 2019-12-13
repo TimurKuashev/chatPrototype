@@ -11,7 +11,8 @@ import UIKit
 protocol DialogBottomPanelViewDelegate {
     func showAttachmentMenu()
     func requestSend(message: String?)
-    func requestRecordVoiceMessage()
+    func requestStartRecordVoiceMessage()
+    func requestCompleteRecordVoiceMessage()
 }
 
 final class DialogBottomPanelView: UIView {
@@ -22,6 +23,7 @@ final class DialogBottomPanelView: UIView {
     @IBOutlet private var btnSendMessage: UIButton!
     
     var delegate: DialogBottomPanelViewDelegate?
+    private var qwe: Bool = false
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -43,6 +45,9 @@ final class DialogBottomPanelView: UIView {
         tvTypeMessage.layer.borderColor = UIColor.black.cgColor
         tvTypeMessage.layer.borderWidth = 1.0
         tvTypeMessage.layer.cornerRadius = 20
+        
+        btnSendMessage.setTitle(nil, for: .normal)
+        btnSendMessage.setImage(UIImage(named: "icon_startRecord"), for: .normal)
     }
     
     @objc private func attachFilePressed(_ sender: UIButton!) {
@@ -51,10 +56,22 @@ final class DialogBottomPanelView: UIView {
     
     @objc private func sendMessageOrRecordVoiceMessagePressed(_ sender: UIButton!) {
         if tvTypeMessage.text == nil || tvTypeMessage.text == String() {
-            delegate?.requestRecordVoiceMessage()
+            if qwe == false {
+                btnSendMessage.setTitle(nil, for: .normal)
+                btnSendMessage.setImage(UIImage(named: "icon_stopRecord"), for: .normal)
+                delegate?.requestStartRecordVoiceMessage()
+                qwe = true
+            } else {
+                btnSendMessage.setImage(UIImage(named: "icon_startRecord"), for: .normal)
+                delegate?.requestCompleteRecordVoiceMessage()
+                qwe = false
+            }
         } else {
+            btnSendMessage.setImage(nil, for: .normal)
+            btnSendMessage.setTitle("Send", for: .normal)
             delegate?.requestSend(message: tvTypeMessage.text)
             tvTypeMessage.text = nil
+            qwe = false
         }
     }
     

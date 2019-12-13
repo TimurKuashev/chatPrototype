@@ -13,7 +13,7 @@ protocol DialogViewDataSourceDelegate {
     func updateChat()
     func newImageMessageComes(stringImageUrl: String?)
     func newDocumentMessageComes(stringDocumentUrl: String?)
-    func newVoiceMessageComes()
+    func newVoiceMessageComes(stringVoiceMessageUrl: String?)
 }
 
 final class DialogViewDataSource: NSObject {
@@ -43,6 +43,8 @@ final class DialogViewDataSource: NSObject {
                 self.delegate?.newImageMessageComes(stringImageUrl: newMessage.imageURL)
             case .document:
                 self.delegate?.newDocumentMessageComes(stringDocumentUrl: newMessage.imageURL)
+            case .voice:
+                self.delegate?.newVoiceMessageComes(stringVoiceMessageUrl: newMessage.imageURL)
             default:
                 break
             }
@@ -104,15 +106,15 @@ extension DialogViewDataSource: UICollectionViewDataSource {
         switch self.messages[indexPath.section].type {
         case .text:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.textMessageCell, for: indexPath) as? TextMessageCell else {
-                return UICollectionViewCell()
+                return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath)
             }
             cell.set(text: self.messages[indexPath.section].text, senderID: self.messages[indexPath.section].sender)
             return cell
         case .image:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.imageMessageCell, for: indexPath) as? ImageMessageCell else {
-                return UICollectionViewCell()
+                return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath)
             }
-            if let image = CacheManager.shared.savedImages[messages[indexPath.section].imageURL ?? "qwertyqwerty"] {
+            if let image = CacheManager.shared.savedImages[messages[indexPath.section].imageURL ?? "qwerty"] {
                 cell.set(image: image)
             } else {
                 cell.set(image: UIImage(named: "empty_image"))
@@ -120,18 +122,27 @@ extension DialogViewDataSource: UICollectionViewDataSource {
             return cell
         case .location:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.textMessageCell, for: indexPath) as? TextMessageCell else {
-                return UICollectionViewCell()
+                return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath)
             }
             cell.set(text: self.messages[indexPath.section].text, senderID: self.messages[indexPath.section].sender)
             return cell
         case .document:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath) as? DocumentMessageCell else {
-                return UICollectionViewCell()
+                return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath)
             }
-            cell.set(documentName: "DASD", senderId: self.messages[indexPath.section].sender)
+            cell.set(documentName: "Document", senderId: self.messages[indexPath.section].sender)
+            return cell
+        case .voice:
+            guard var voiceData = CacheManager.shared.savedVoiceMessages[messages[indexPath.section].imageURL ?? "qwerty"] else {
+                return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.voiceMessageCell, for: indexPath)
+            }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.voiceMessageCell, for: indexPath) as? VoiceMessageCell else {
+                return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.voiceMessageCell, for: indexPath)
+            }
+            cell.set(audioData: &voiceData)
             return cell
         default:
-            return UICollectionViewCell()
+            return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.textMessageCell, for: indexPath)
         }
     }
     

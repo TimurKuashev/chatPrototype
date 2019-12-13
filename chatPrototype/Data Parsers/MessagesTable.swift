@@ -15,6 +15,7 @@ class MessagesTable {
         case image = "image"
         case location = "location"
         case document = "document"
+        case voice = "voice"
         case unknown = "unknown"
         
         static func getType(typeDescription: String?) -> MessagesTypes {
@@ -30,6 +31,8 @@ class MessagesTable {
                 return .location
             case "document":
                 return .document
+            case "voice":
+                return .voice
             default:
                 return .unknown
             }
@@ -55,10 +58,12 @@ class MessagesTable {
     }
     
     func isEqualTo(message: MessagesTable) -> Bool {
-        return (self.createdAt == message.createdAt
+        return (self.keyInDatabase == message.keyInDatabase
+            && self.createdAt == message.createdAt
             && self.imageURL == message.imageURL
             && self.isSeen == message.isSeen
             && self.sender == message.sender
-            && self.text == message.text)
+            && self.text == message.text
+            && self.type == message.type)
     }
 }

@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import AVFoundation
 import CoreLocation
 import FirebaseStorage
 import MobileCoreServices
@@ -50,6 +51,10 @@ final class ChatPageViewController: UIViewController {
         return locManager
     }()
     
+    private var recordingSession: AVAudioSession!
+    private var audioRecorder: AVAudioRecorder!
+    private var audioPlayer: AVAudioPlayer!
+    
     // MARK: - Public Properties
     var chatInfo: (usersConversationId: String?, conversationId: String?, chatPartnerId: String?) = (nil, nil, nil)
     var delegate: ChatPageDelegate?
@@ -70,6 +75,17 @@ final class ChatPageViewController: UIViewController {
 private extension ChatPageViewController {
     
     func initialConfigure() {
+        if self.recordingSession == nil {
+            self.recordingSession = AVAudioSession.sharedInstance()
+        }
+        do {
+            try recordingSession.setCategory(AVAudioSession.Category(rawValue: AVAudioSession.Category.playAndRecord.rawValue), mode: AVAudioSession.Mode.spokenAudio)
+            try recordingSession.setActive(true)
+            try recordingSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
+        } catch {
+            return
+        }
+        
         dialogView.delegate = self
         dialogBottomPanel.delegate = self
         
@@ -193,7 +209,74 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
         self.present(attachmentMenuController, animated: true)
     }
     
-    func requestRecordVoiceMessage() {
+    func requestStartRecordVoiceMessage() {
+        if self.recordingSession == nil {
+            self.recordingSession = AVAudioSession.sharedInstance()
+        }
+        do {
+            try recordingSession.setCategory(AVAudioSession.Category(rawValue: AVAudioSession.Category.playAndRecord.rawValue), mode: AVAudioSession.Mode.spokenAudio)
+            try recordingSession.setActive(true)
+            try recordingSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
+        } catch {
+            return
+        }
+        
+        recordingSession.requestRecordPermission() {_ in}
+        let audioFilename = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]).appendingPathComponent("recording.mp4")
+        
+        let settings = [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+            AVSampleRateKey: 16000,
+            AVNumberOfChannelsKey: 1,
+            AVLinearPCMBitDepthKey: 16,
+            AVLinearPCMIsFloatKey: false,
+            AVLinearPCMIsBigEndianKey: false,
+            AVEncoderAudioQualityKey: AVAudioQuality.low.rawValue
+        ] as [String: Any]
+        
+        do {
+            audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
+            audioRecorder?.record()
+        } catch {
+            print("Ну, не получилось что-то с записью")
+        }
+    }
+    
+    func requestCompleteRecordVoiceMessage() {
+        self.audioRecorder.stop()
+        audioRecorder = nil
+        let fileUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("recording.mp4")
+        do {
+            let voiceMessageRowData = try Data(contentsOf: fileUrl)
+            let voiceMessageName = UUID().uuidString
+            let ref = Storage.storage().reference().child(FirebaseTableNames.voiceMessages).child(voiceMessageName)
+            ref.putData(voiceMessageRowData, metadata: nil) {
+                [weak self] (metadata, error) in
+                guard let self = self else { return }
+                guard error == nil else {
+                    self.presentAlert(title: "Error", message: error?.localizedDescription, actions: [], displayCloseButton: true)
+                    return
+                }
+                var messagesData: Dictionary<String, Any> = [
+                    "createdAt": Date().timeIntervalSince1970,
+                    "sender": FirebaseAuthService.getUserId() ?? "Error",
+                    "text": "Voice message",
+                    "type": "voice"
+                ]
+                ref.downloadURL(completion: {
+                    [weak self] (url, error) in
+                    guard let self = self else { return }
+                    guard error == nil, let unwrappedUrl = url else {
+                        self.presentAlert(title: "Error", message: error?.localizedDescription, actions: [], displayCloseButton: true)
+                        return
+                    }
+                    messagesData["image_url"] = String(describing: unwrappedUrl)
+                    self.send(message: messagesData)
+                })
+            }
+        } catch {
+            print("Не задалось")
+        }
     }
     
     func requestSend(message: String?) {
@@ -223,7 +306,7 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
             self.presentAlert(title: "Error", message: "Sorry, but we the find your chat partner id. Please, restart this dialgo", actions: [], displayCloseButton: true)
             return
         }
-                
+        
         // Send Data To Conversations Table
         let convRef = Database.database().reference().child(FirebaseTableNames.conversations).child(convId)
         var data: Dictionary<String, Any> = ["createdAt": Date().timeIntervalSince1970.description]
