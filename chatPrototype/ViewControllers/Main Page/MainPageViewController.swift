@@ -60,7 +60,6 @@ private extension MainPageViewController {
         
         self.view.backgroundColor = UIColor(68, 73, 87)
         lblUsername.textColor = .white
-        lblUsername.text = UserDefaults.standard.value(forKey: CustomPropertiesForUserDefaults.username) as? String
         lblChatsTitle.textColor = .yellow
         if let newDescriptor = UIFont.systemFont(ofSize: 16).fontDescriptor.withSymbolicTraits(.traitBold) {
             lblChatsTitle.font = UIFont(descriptor: newDescriptor, size: 16)
@@ -72,6 +71,17 @@ private extension MainPageViewController {
         btnCreateGroupChat.addTarget(self, action: #selector(onCreateGroupChatTapped(_:)), for: .touchUpInside)
         
         setupDialogPreviewList()
+        guard let username = UserDefaults.standard.value(forKey: CustomPropertiesForUserDefaults.username) as? String else {
+            return
+        }
+        lblUsername.text = username
+        guard let id = FirebaseAuthService.getUserId() as? String else { return }
+        let data: Dictionary<String, String> = [
+            "id": id,
+            "status": "online",
+            "username": username
+        ]
+        Database.database().reference().child(FirebaseTableNames.users).child(id).setValue(data)
     }
     
     private func setupDialogPreviewList() {

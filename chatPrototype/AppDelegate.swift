@@ -59,6 +59,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         return true
     }
     
+    func applicationWillTerminate(_ application: UIApplication) {
+        guard let username = UserDefaults.standard.value(forKey: CustomPropertiesForUserDefaults.username) as? String, let id = FirebaseAuthService.getUserId() else {
+            return
+        }
+        let data: Dictionary<String, String> = [
+            "id": id,
+            "status": "offline",
+            "username": username
+        ]
+        Database.database().reference().child(FirebaseTableNames.users).child(id).setValue(data)
+    }
+    
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")

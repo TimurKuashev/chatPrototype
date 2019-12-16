@@ -9,8 +9,8 @@
 import Foundation
 
 struct CustomPropertiesForUserDefaults {
-    static let email = "email"
-    static let password = "password"
-    static let username = "username"
-    static let isSignIn = "isSignIn"
+    static let email: String = "email"
+    static let password: String = "password"
+    static let username: String = "username"
+    static let isSignIn: String = "isSignIn"
 }

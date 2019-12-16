@@ -111,6 +111,7 @@ private extension MainPageModel {
                     self.users.append(UsersTable(dictionary: keyData) )
                 }
             }
+            self.delegate?.updateDialogs()
             self.fetchUsersConversations()
         }
     }
