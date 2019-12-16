@@ -36,6 +36,9 @@ final class DialogViewDataSource: NSObject {
             dictionary["keyInDatabase"] = snapshot.key as AnyObject
             let newMessage = MessagesTable(dictionary: dictionary)
             self.messages.append(newMessage)
+            if (newMessage.sender != FirebaseAuthService.getUserId() && newMessage.isSeen == false) {
+                self.setMessageAsSeen(message: newMessage, convId: convId)
+            }
             switch newMessage.type {
             case .text:
                 self.delegate?.updateChat()
@@ -89,6 +92,21 @@ final class DialogViewDataSource: NSObject {
         })
     }
     
+    private func setMessageAsSeen(message: MessagesTable, convId: String) {
+        var data: Dictionary<String, String> = [
+            "createdAt": message.createdAt ?? "",
+            "isSeen": "true",
+            "sender": message.sender ?? "",
+            "text": message.text ?? "",
+            "type": message.type.rawValue
+        ]
+        if message.imageURL != nil {
+            data["image_url"] = message.imageURL
+        }
+        Database.database().reference().child(FirebaseTableNames.messages).child(convId).child(message.keyInDatabase).setValue(data)
+        
+    }
+    
 }
 
 // MARK: - UICOllectionViewDataSource
@@ -108,7 +126,8 @@ extension DialogViewDataSource: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.textMessageCell, for: indexPath) as? TextMessageCell else {
                 return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath)
             }
-            cell.set(text: self.messages[indexPath.section].text, senderID: self.messages[indexPath.section].sender)
+            cell.set(message: self.messages[indexPath.section])
+//            cell.set(text: self.messages[indexPath.section].text, senderID: self.messages[indexPath.section].sender)
             return cell
         case .image:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.imageMessageCell, for: indexPath) as? ImageMessageCell else {
@@ -124,7 +143,8 @@ extension DialogViewDataSource: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.textMessageCell, for: indexPath) as? TextMessageCell else {
                 return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath)
             }
-            cell.set(text: self.messages[indexPath.section].text, senderID: self.messages[indexPath.section].sender)
+//            cell.set(text: self.messages[indexPath.section].text, senderID: self.messages[indexPath.section].sender)
+            cell.set(message: self.messages[indexPath.section])
             return cell
         case .document:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath) as? DocumentMessageCell else {

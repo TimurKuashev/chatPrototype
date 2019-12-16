@@ -45,13 +45,14 @@ class MessagesTable {
     var isSeen: Bool?
     var sender: String?
     var text: String?
-    var keyInDatabase: String?
+    var keyInDatabase: String
         
     init(dictionary: Dictionary<String, AnyObject>) {
-        self.keyInDatabase = dictionary["keyInDatabase"] as? String
+        self.keyInDatabase = (dictionary["keyInDatabase"] as? String) ?? ""
         self.createdAt = dictionary["createdAt"] as? String
         self.imageURL = dictionary["image_url"] as? String
-        self.isSeen = dictionary["isSeen"] as? Bool
+        let stringIsSeen = dictionary["isSeen"] as? String
+        self.isSeen = stringIsSeen == "true" ? true : false
         self.sender = dictionary["sender"] as? String
         self.text = dictionary["text"] as? String
         self.type = MessagesTypes.getType(typeDescription: dictionary["type"] as? String)

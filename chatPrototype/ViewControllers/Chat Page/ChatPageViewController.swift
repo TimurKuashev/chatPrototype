@@ -151,10 +151,10 @@ extension ChatPageViewController: DialogViewDelegate {
     }
     
     func onTextClicked(message: MessagesTable) {
-        guard let conversationId = self.chatInfo.conversationId, let messageId = message.keyInDatabase else {
+        guard let conversationId = self.chatInfo.conversationId else {
             return
         }
-        Database.database().reference().child(FirebaseTableNames.messages).child(conversationId).child(messageId).removeValue()
+        Database.database().reference().child(FirebaseTableNames.messages).child(conversationId).child(message.keyInDatabase).removeValue()
     }
     
     func dialogStateChanged(lastMesage: MessagesTable?) {
@@ -263,6 +263,7 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
                     "createdAt": Date().timeIntervalSince1970,
                     "sender": FirebaseAuthService.getUserId() ?? "Error",
                     "text": "Voice message",
+                    "isSeen": "false",
                     "type": "voice"
                 ]
                 ref.downloadURL(completion: {
@@ -289,6 +290,7 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
         let data: Dictionary<String, Any> = [
             "sender": myUid,
             "createdAt": Date().timeIntervalSince1970.description,
+            "isSeen": "false",
             "text": unwrappedMessage,
             "type": "text"
         ]
@@ -360,6 +362,7 @@ extension ChatPageViewController: UIImagePickerControllerDelegate, UINavigationC
                         var messageData: Dictionary<String, Any> = [
                             "createdAt": Date().timeIntervalSince1970.description,
                             "sender": FirebaseAuthService.getUserId() ?? "Error",
+                            "isSeen": "false",
                             "text": "Image",
                             "type": "image"
                         ]
@@ -402,6 +405,7 @@ extension ChatPageViewController: UIDocumentPickerDelegate {
                     var messageData: Dictionary<String, Any> = [
                         "createdAt": Date().timeIntervalSince1970.description,
                         "sender": FirebaseAuthService.getUserId() ?? "Error",
+                        "isSeen": "false",
                         "text": "Document",
                         "type": "document"
                     ]
@@ -474,6 +478,7 @@ extension ChatPageViewController: LocationManagerDelegate {
             var messageData: Dictionary<String, Any> = [
                 "createdAt": Date().timeIntervalSince1970.description,
                 "sender": FirebaseAuthService.getUserId() ?? "Error",
+                "isSeen": "false",
                 "type": "location"
             ]
             

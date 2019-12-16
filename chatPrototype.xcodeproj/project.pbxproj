@@ -48,7 +48,6 @@
 		405B6FA0239A4A9F008A4807 /* SignPage.xib in Resources */ = {isa = PBXBuildFile; fileRef = 405B6F9E239A4A9F008A4807 /* SignPage.xib */; };
 		405B6FA7239A4E63008A4807 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405B6FA6239A4E63008A4807 /* SignInView.swift */; };
 		405B6FAA239A5212008A4807 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405B6FA9239A5212008A4807 /* SignUpView.swift */; };
-		407C84902396998F00B4F7E0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407C848F2396998F00B4F7E0 /* SceneDelegate.swift */; };
 		407C84962396A23C00B4F7E0 /* UIViewController+PresentAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407C84952396A23C00B4F7E0 /* UIViewController+PresentAlert.swift */; };
 		409F3EF6239A75C200333FDB /* UIColor+NewColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F3EF5239A75C200333FDB /* UIColor+NewColors.swift */; };
 		409F3EF8239A893500333FDB /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F3EF7239A893500333FDB /* LaunchScreenViewController.swift */; };
@@ -107,7 +106,6 @@
 		405B6F9E239A4A9F008A4807 /* SignPage.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignPage.xib; sourceTree = "<group>"; };
 		405B6FA6239A4E63008A4807 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		405B6FA9239A5212008A4807 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
-		407C848F2396998F00B4F7E0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = /Users/timurkuashev/swift/chatPrototype/chatPrototype/SceneDelegate.swift; sourceTree = "<absolute>"; };
 		407C84952396A23C00B4F7E0 /* UIViewController+PresentAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PresentAlert.swift"; sourceTree = "<group>"; };
 		409F3EF5239A75C200333FDB /* UIColor+NewColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+NewColors.swift"; sourceTree = "<group>"; };
 		409F3EF7239A893500333FDB /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
@@ -396,7 +394,6 @@
 		409C7D7F2396A94900029495 /* Trash */ = {
 			isa = PBXGroup;
 			children = (
-				407C848F2396998F00B4F7E0 /* SceneDelegate.swift */,
 				4009447B23964337005381A4 /* Assets.xcassets */,
 				4009447D23964337005381A4 /* LaunchScreen.storyboard */,
 				409F3EF7239A893500333FDB /* LaunchScreenViewController.swift */,
@@ -616,7 +613,6 @@
 				4055E23123967F6700AFA3F8 /* MainPageModel.swift in Sources */,
 				40B8B0C923A2440F00C60E9D /* DocumentMessageCell.swift in Sources */,
 				40B8B0D023A2632100C60E9D /* ImageViewerViewController.swift in Sources */,
-				407C84902396998F00B4F7E0 /* SceneDelegate.swift in Sources */,
 				4006636B23A3134F00988A0B /* SharedImagesViewController.swift in Sources */,
 				40BDEE452397E9890023F60C /* CustomPropertiesForUserDefault.swift in Sources */,
 				40BDEE412397E0E70023F60C /* FirebaseAuthService.swift in Sources */,
@@ -694,7 +690,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -748,7 +744,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

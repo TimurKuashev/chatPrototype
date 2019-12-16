@@ -34,14 +34,19 @@ class TextMessageCell: UICollectionViewCell {
     private func initialConfigure() {
     }
     
-    func set(text: String?, senderID: String?) {
-        self.lblMessage.text = text
+    func set(message: MessagesTable) {
+        self.lblMessage.text = message.text
         self.lblMessage.textColor = .white
         self.customContentView.layer.cornerRadius = 10
-        if senderID == FirebaseAuthService.getUserId() {
+        if message.sender == FirebaseAuthService.getUserId() {
             moveToRightSide()
         } else {
             moveToLeftSide()
+        }
+        if message.isSeen == true {
+            self.backgroundColor = .green
+        } else {
+            self.backgroundColor = .orange
         }
     }
     
