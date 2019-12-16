@@ -9,14 +9,14 @@
 import Foundation
 import CoreLocation
 
-protocol LocationManagerDelegate {
+protocol LocationManagerDelegate: AnyObject {
     func currentLocationFetchingSuccess(location: CLLocationCoordinate2D)
     func currentLocationFetchingFail(error: Error?)
 }
 
 class LocationManager: NSObject {
     
-    var delegate: LocationManagerDelegate?
+    weak var delegate: LocationManagerDelegate?
     private lazy var locManager = CLLocationManager()
     
     override init() {

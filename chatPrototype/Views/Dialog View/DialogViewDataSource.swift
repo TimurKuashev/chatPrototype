@@ -9,7 +9,7 @@
 import Foundation
 import Firebase
 
-protocol DialogViewDataSourceDelegate {
+protocol DialogViewDataSourceDelegate: AnyObject {
     func updateChat()
     func newImageMessageComes(stringImageUrl: String?)
     func newDocumentMessageComes(stringDocumentUrl: String?)
@@ -20,11 +20,15 @@ final class DialogViewDataSource: NSObject {
     
     // MARK: - Properties
     private(set) var messages: [MessagesTable] = []
-    var delegate: DialogViewDataSourceDelegate?
+    weak var delegate: DialogViewDataSourceDelegate?
     
     // MARK: - Methods
     override init() {
         super.init()
+    }
+    
+    deinit {
+        Database.database().reference().child(FirebaseTableNames.messages).removeAllObservers()
     }
     
     func loadDataWith(conversationId: String?) {

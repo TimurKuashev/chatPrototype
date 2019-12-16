@@ -761,6 +761,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = chatPrototype/chatPrototype.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = G8UP4869LM;
 				INFOPLIST_FILE = chatPrototype/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
@@ -782,6 +783,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = chatPrototype/chatPrototype.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = G8UP4869LM;
 				INFOPLIST_FILE = chatPrototype/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;

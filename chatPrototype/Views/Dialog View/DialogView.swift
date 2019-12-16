@@ -21,7 +21,7 @@ class DialogView: UIView {
     @IBOutlet private var messagesCollectionView: UICollectionView!
     private let dataSource = DialogViewDataSource()
     
-    var delegate: DialogViewDelegate?
+    weak var delegate: DialogViewDelegate?
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {

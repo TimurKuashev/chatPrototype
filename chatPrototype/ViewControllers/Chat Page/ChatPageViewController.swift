@@ -58,7 +58,7 @@ final class ChatPageViewController: UIViewController {
     // MARK: - Public Properties
     var chatInfo: (usersConversationId: String?, conversationId: String?, chatPartnerId: String?) = (nil, nil, nil)
     var chatPartnerName: String?
-    var delegate: ChatPageDelegate?
+    weak var delegate: ChatPageDelegate?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {

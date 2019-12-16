@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol DialogBottomPanelViewDelegate {
+protocol DialogBottomPanelViewDelegate: AnyObject {
     func showAttachmentMenu()
     func requestSend(message: String?)
     func requestStartRecordVoiceMessage()
@@ -22,7 +22,7 @@ final class DialogBottomPanelView: UIView {
     @IBOutlet private var tvTypeMessage: UITextView!
     @IBOutlet private var btnSendMessage: UIButton!
     
-    var delegate: DialogBottomPanelViewDelegate?
+    weak var delegate: DialogBottomPanelViewDelegate?
     private var isRecordActive: Bool = false
     
     // MARK: - Lifecycle

@@ -22,7 +22,7 @@ final class MainPageModel {
     private var usersConversations: [UsersConversationsTable] = []
     
     // MARK; - Public Properties
-    var delegate: MainPageModelDelegate?
+    weak var delegate: MainPageModelDelegate?
     
     // MARK: - Lifecycle
     init() {

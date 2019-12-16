@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol UsersListDelegate {
+protocol UsersListDelegate: AnyObject {
     func createChatPressed(with selectedUsersId: [String?])
 }
 
 class UsersListViewController: UIViewController {
     
     var users: [UsersTable] = []
-    var delegate: UsersListDelegate?
+    weak var delegate: UsersListDelegate?
     private var selectedUsersId: [String?] = []
     
     private var tableView: UITableView = {
@@ -111,7 +111,7 @@ protocol UserInfoCellDelegate: AnyObject {
 }
 class UserInfoCell: UITableViewCell {
     
-    var delegate: UserInfoCellDelegate?
+    weak var delegate: UserInfoCellDelegate?
     private var isCheckboxSelected: Bool = false
     private var userId: String?
     
