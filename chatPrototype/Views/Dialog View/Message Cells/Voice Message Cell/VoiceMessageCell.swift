@@ -52,9 +52,17 @@ class VoiceMessageCell: UICollectionViewCell {
     func set(audioData: inout Data) {
         do {
             try self.audioPlayer = AVAudioPlayer(data: audioData)
+            audioPlayer.delegate = self
         } catch {
             print("Не удалось создать аудиоплеер на дате")
         }
     }
     
+}
+
+// MARK: - AVAudioPlayerDelegate
+extension VoiceMessageCell: AVAudioPlayerDelegate {
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        self.btnPlay.setImage(UIImage(named: "icon_startVoiceMessage"), for: .normal)
+    }
 }

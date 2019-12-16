@@ -26,7 +26,6 @@ class SharedImagesViewController: UIViewController {
     }
     
     private func initialConfigure() {
-        self.view.backgroundColor = .orange
         self.view.addSubview(collectionView)
         collectionView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: 0).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0).isActive = true

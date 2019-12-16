@@ -23,7 +23,7 @@ final class DialogBottomPanelView: UIView {
     @IBOutlet private var btnSendMessage: UIButton!
     
     var delegate: DialogBottomPanelViewDelegate?
-    private var qwe: Bool = false
+    private var isRecordActive: Bool = false
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -45,9 +45,8 @@ final class DialogBottomPanelView: UIView {
         tvTypeMessage.layer.borderColor = UIColor.black.cgColor
         tvTypeMessage.layer.borderWidth = 1.0
         tvTypeMessage.layer.cornerRadius = 20
-        
-        btnSendMessage.setTitle(nil, for: .normal)
-        btnSendMessage.setImage(UIImage(named: "icon_startRecord"), for: .normal)
+        tvTypeMessage.delegate = self
+        updateButtonTitle()
     }
     
     @objc private func attachFilePressed(_ sender: UIButton!) {
@@ -55,24 +54,23 @@ final class DialogBottomPanelView: UIView {
     }
     
     @objc private func sendMessageOrRecordVoiceMessagePressed(_ sender: UIButton!) {
-        if tvTypeMessage.text == nil || tvTypeMessage.text == String() {
-            if qwe == false {
-                btnSendMessage.setTitle(nil, for: .normal)
-                btnSendMessage.setImage(UIImage(named: "icon_stopRecord"), for: .normal)
+        if (tvTypeMessage.text.count == 0) {
+            if isRecordActive == false {
                 delegate?.requestStartRecordVoiceMessage()
-                qwe = true
-            } else {
-                btnSendMessage.setImage(UIImage(named: "icon_startRecord"), for: .normal)
+                tvTypeMessage.isUserInteractionEnabled = false
+                isRecordActive = true
+            }
+            else {
                 delegate?.requestCompleteRecordVoiceMessage()
-                qwe = false
+                tvTypeMessage.isUserInteractionEnabled = true
+                isRecordActive = false
             }
         } else {
-            btnSendMessage.setImage(nil, for: .normal)
-            btnSendMessage.setTitle("Send", for: .normal)
             delegate?.requestSend(message: tvTypeMessage.text)
             tvTypeMessage.text = nil
-            qwe = false
+            isRecordActive = false
         }
+        updateButtonTitle()
     }
     
     // MARK: - Public Methods
@@ -80,4 +78,25 @@ final class DialogBottomPanelView: UIView {
         return tvTypeMessage.text
     }
     
+    private func updateButtonTitle() {
+        if (tvTypeMessage.text.count == 0) {
+            if isRecordActive == true {
+                btnSendMessage.setTitle(nil, for: .normal)
+                btnSendMessage.setImage(UIImage(named: "icon_stopRecord"), for: .normal)
+            } else {
+                btnSendMessage.setTitle(nil, for: .normal)
+                btnSendMessage.setImage(UIImage(named: "icon_startRecord"), for: .normal)
+            }
+        } else {
+            btnSendMessage.setTitle("Send", for: .normal)
+            btnSendMessage.setImage(nil, for: .normal)
+        }
+    }
+    
+}
+
+extension DialogBottomPanelView: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        updateButtonTitle()
+    }
 }

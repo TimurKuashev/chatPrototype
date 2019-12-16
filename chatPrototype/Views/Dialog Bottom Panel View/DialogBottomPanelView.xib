@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
@@ -20,32 +20,43 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1oY-dg-q7W" userLabel="Button Attach File">
-                    <rect key="frame" x="10" y="73" width="46" height="30"/>
+                    <rect key="frame" x="5" y="53" width="41.5" height="30"/>
                     <state key="normal" title="+"/>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BFY-jJ-ddY" userLabel="Button Send Message Or Record Voice Message">
-                    <rect key="frame" x="386" y="73" width="36" height="30"/>
+                    <rect key="frame" x="395.5" y="53" width="41.5" height="30"/>
                     <state key="normal" title="Send"/>
                 </button>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="TkF-aF-qva" userLabel="TextView Type Message">
-                    <rect key="frame" x="76" y="5" width="290" height="98"/>
+                    <rect key="frame" x="66.5" y="0.0" width="309" height="103"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TpR-jQ-n0h" userLabel="Separator View">
+                    <rect key="frame" x="0.0" y="0.0" width="442" height="2"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="2" id="GQM-UA-HzQ"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="BFY-jJ-ddY" firstAttribute="leading" secondItem="TkF-aF-qva" secondAttribute="trailing" constant="20" id="0Ca-P3-jRt"/>
                 <constraint firstAttribute="bottom" secondItem="TkF-aF-qva" secondAttribute="bottom" constant="20" id="1K2-s1-YLf"/>
                 <constraint firstItem="TkF-aF-qva" firstAttribute="leading" secondItem="1oY-dg-q7W" secondAttribute="trailing" constant="20" id="5yQ-ZJ-3in"/>
-                <constraint firstItem="TkF-aF-qva" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="5" id="OY9-ip-VL1"/>
-                <constraint firstAttribute="bottom" secondItem="BFY-jJ-ddY" secondAttribute="bottom" constant="20" id="Q71-xM-lBq"/>
+                <constraint firstItem="TkF-aF-qva" firstAttribute="top" secondItem="TpR-jQ-n0h" secondAttribute="top" id="OY9-ip-VL1"/>
+                <constraint firstAttribute="bottom" secondItem="BFY-jJ-ddY" secondAttribute="bottom" constant="40" id="Q71-xM-lBq"/>
                 <constraint firstItem="TkF-aF-qva" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Sp4-66-XdA"/>
-                <constraint firstAttribute="trailing" secondItem="BFY-jJ-ddY" secondAttribute="trailing" constant="20" id="ZYb-Tz-Iwl"/>
-                <constraint firstAttribute="bottom" secondItem="1oY-dg-q7W" secondAttribute="bottom" constant="20" id="cPn-W2-GLd"/>
-                <constraint firstItem="1oY-dg-q7W" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="uSn-e8-gEY"/>
+                <constraint firstItem="TkF-aF-qva" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.7" id="YgY-cz-QEI"/>
+                <constraint firstAttribute="trailing" secondItem="BFY-jJ-ddY" secondAttribute="trailing" constant="5" id="ZYb-Tz-Iwl"/>
+                <constraint firstItem="TpR-jQ-n0h" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="bx7-lY-2bC"/>
+                <constraint firstAttribute="bottom" secondItem="1oY-dg-q7W" secondAttribute="bottom" constant="40" id="cPn-W2-GLd"/>
+                <constraint firstItem="TpR-jQ-n0h" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="oUx-UK-y8w"/>
+                <constraint firstItem="1oY-dg-q7W" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="5" id="uSn-e8-gEY"/>
+                <constraint firstAttribute="trailing" secondItem="TpR-jQ-n0h" secondAttribute="trailing" id="yMA-1P-5cv"/>
             </constraints>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

@@ -12,7 +12,7 @@ import Firebase
 protocol DialogViewDelegate: AnyObject {
     func onImageClicked(message: MessagesTable)
     func onTextClicked(message: MessagesTable)
-    func dialogStateChanged(lastMesage: MessagesTable)
+    func dialogStateChanged(lastMesage: MessagesTable?)
 }
 
 class DialogView: UIView {
@@ -52,7 +52,8 @@ private extension DialogView {
     
     func initialConfigure() {
         self.loadFromNib()
-        messagesCollectionView.backgroundColor = UIColor(red: 3.0 / 255.0, green: 37.0 / 255.0, blue: 71.0 / 255.0, alpha: 1.0)
+//        messagesCollectionView.backgroundColor = UIColor(red: 3.0 / 255.0, green: 37.0 / 255.0, blue: 71.0 / 255.0, alpha: 1.0)
+        messagesCollectionView.backgroundColor = .white
         messagesCollectionView.delegate = self
         dataSource.delegate = self
         messagesCollectionView.dataSource = dataSource
@@ -116,8 +117,7 @@ extension DialogView: DialogViewDataSourceDelegate {
     
     func updateChat() {
         self.messagesCollectionView.reloadData()
-        guard let lastMessage = self.dataSource.messages.last else { return }
-        self.delegate?.dialogStateChanged(lastMesage: lastMessage)
+        self.delegate?.dialogStateChanged(lastMesage: self.dataSource.messages.last)
     }
     
 }

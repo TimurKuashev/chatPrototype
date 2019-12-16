@@ -14,7 +14,7 @@ import FirebaseStorage
 import MobileCoreServices
 
 protocol ChatPageDelegate: AnyObject {
-    func chatStateChanged(chatId: String?, lastMessage: MessagesTable)
+    func chatStateChanged(chatId: String?, lastMessage: MessagesTable?)
 }
 
 final class ChatPageViewController: UIViewController {
@@ -57,6 +57,7 @@ final class ChatPageViewController: UIViewController {
     
     // MARK: - Public Properties
     var chatInfo: (usersConversationId: String?, conversationId: String?, chatPartnerId: String?) = (nil, nil, nil)
+    var chatPartnerName: String?
     var delegate: ChatPageDelegate?
     
     // MARK: - Lifecycle
@@ -86,6 +87,7 @@ private extension ChatPageViewController {
             return
         }
         
+        lblConversationName.text = self.chatPartnerName
         dialogView.delegate = self
         dialogBottomPanel.delegate = self
         
@@ -155,8 +157,8 @@ extension ChatPageViewController: DialogViewDelegate {
         Database.database().reference().child(FirebaseTableNames.messages).child(conversationId).child(messageId).removeValue()
     }
     
-    func dialogStateChanged(lastMesage: MessagesTable) {
-        self.delegate?.chatStateChanged(chatId: self.chatInfo.usersConversationId   , lastMessage: lastMesage)
+    func dialogStateChanged(lastMesage: MessagesTable?) {
+        self.delegate?.chatStateChanged(chatId: self.chatInfo.usersConversationId, lastMessage: lastMesage)
     }
     
 }

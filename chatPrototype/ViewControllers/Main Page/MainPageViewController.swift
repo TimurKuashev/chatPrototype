@@ -13,7 +13,7 @@ import Firebase
 
 
 final class MainPageViewController: UIViewController {
-
+    
     // MARK: - @IBOutlets & Private Properties
     @IBOutlet private var lblUsername: UILabel!
     @IBOutlet private var btnCreateGroupChat: UIButton!
@@ -45,7 +45,7 @@ final class MainPageViewController: UIViewController {
         super.viewWillDisappear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
-
+    
 }
 
 // MARK: - Private Methods
@@ -135,15 +135,22 @@ extension MainPageViewController: UICollectionViewDelegate {
         let chatInfo = model.chatInfoBy(dialogPosition: indexPath.section)
         chatVC.chatInfo = (usersConversationId: chatInfo.userConvId, conversationId: chatInfo.conversationId, chatInfo.chatPartnerId)
         chatVC.delegate = self
-        
+        chatVC.chatPartnerName = self.model.getUsers()[indexPath.section].username
         self.navigationController?.pushViewController(chatVC, animated: true)
     }
 }
 
 // MARK: - ChatPageDelegate
 extension MainPageViewController: ChatPageDelegate {
-    func chatStateChanged(chatId: String?, lastMessage: MessagesTable) {
-        guard let userConvId = chatId, let myUid = FirebaseAuthService.getUserId(), let messageText = lastMessage.text, let messageDate = lastMessage.createdAt else { return }
+    func chatStateChanged(chatId: String?, lastMessage: MessagesTable?) {
+        guard let userConvId = chatId, let myUid = FirebaseAuthService.getUserId() else {
+            return
+        }
+        guard let messageText = lastMessage?.text, let messageDate = lastMessage?.createdAt else {
+            Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).child(userConvId).removeValue()
+            return
+        }
+        
         let newData: Dictionary<String, Any> = [
             "conversation_id": userConvId,
             "last_message": messageText,
