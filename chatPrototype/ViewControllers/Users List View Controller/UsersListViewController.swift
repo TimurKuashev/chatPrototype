@@ -9,15 +9,18 @@
 import UIKit
 
 protocol UsersListDelegate: AnyObject {
-    func createChatPressed(with selectedUsersId: [String?])
+    func createChatPressed(with selectedUsersId: [String])
 }
 
 class UsersListViewController: UIViewController {
     
+    // MARK: - Public Properties
     var users: [UsersTable] = []
     weak var delegate: UsersListDelegate?
-    private var selectedUsersId: [String?] = []
     
+    // MARK: - Private Properties
+    private var selectedUsersId: [String?] = []
+
     private var tableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -37,11 +40,23 @@ class UsersListViewController: UIViewController {
         return btn
     }()
     
+    // MARK: - Lifecycle & Public Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         initialConfigure()
     }
     
+    func set(users usersArray: [UsersTable]) {
+        self.users = usersArray
+        let myId = FirebaseAuthService.getUserId()
+        if let selfIdIndex = self.users.firstIndex(where: { $0.id == myId }) {
+            self.users.remove(at: selfIdIndex)
+        }
+    }
+}
+
+// MARK: - Private Methods
+private extension UsersListViewController {
     private func initialConfigure() {
         self.view.backgroundColor = .white
         self.view.addSubview(tableView)
@@ -60,9 +75,17 @@ class UsersListViewController: UIViewController {
     
     @objc private func createChat(_ sender: UIButton?) {
         self.dismiss(animated: true, completion: nil)
-        self.delegate?.createChatPressed(with: self.selectedUsersId)
+        var temp: Array<String> = []
+        temp.reserveCapacity(self.selectedUsersId.count)
+        for i in 0..<self.selectedUsersId.count {
+            if let userId = self.selectedUsersId[i] {
+                temp.append(userId)
+            } else {
+                temp.append("Username")
+            }
+        }
+        self.delegate?.createChatPressed(with: temp)
     }
-    
 }
 
 // MARK: - UITableViewDataSource

@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-import UserNotificationsUI
+import FirebaseMessaging
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
@@ -93,8 +93,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         let dataDict:[String: String] = ["token": fcmToken]
         NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
-        var data: [String: String] = ["token": fcmToken]
-        FirebaseDataWritter.writeToLongstoreDatabase(data: &data, toCollection: "tokens")
+        let data: [String: String] = ["token": fcmToken]
+        Database.database().reference().child(FirebaseTableNames.tokens).child(FirebaseAuthService.getUserId() ?? "Error, can't get user ID").setValue(data)
         // TODO: If necessary send token to application server.
         // Note: This callback is fired at each app startup and whenever a new token is generated.
     }

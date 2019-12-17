@@ -10,15 +10,23 @@ import Foundation
 
 class ConversationsTable: NSObject {
     var createdAt: String?
-    var participant0: String?
-    var participant1: String?
+    var participants: Array<String> = []
     init(dictionary: [String: AnyObject]) {
         self.createdAt = dictionary["createdAt"] as? String
-        self.participant0 = (dictionary["participants"] as? Array<String>)?[0]
-        self.participant1 = (dictionary["participants"] as? Array<String>)?[1]
+        if let arr = (dictionary["participants"] as? Array<String>) {
+            self.participants = arr
+        }
     }
     
     func isEqualTo(conversation: ConversationsTable) -> Bool {
-        return (self.participant0 == conversation.participant0 && self.participant1 == conversation.participant1)
+        if self.participants.count != conversation.participants.count {
+            return false
+        }
+        for i in 0..<self.participants.count {
+            if self.participants[i] != conversation.participants[i] {
+                return false
+            }
+        }
+        return true
     }
 }

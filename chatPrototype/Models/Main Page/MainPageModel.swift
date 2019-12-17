@@ -11,6 +11,7 @@ import FirebaseDatabase
 import Firebase
 
 protocol MainPageModelDelegate: AnyObject {
+    func usersWereFetched()
     func updateDialogs()
 }
 
@@ -34,6 +35,16 @@ final class MainPageModel {
 // MARK: - Public Methods
 extension MainPageModel {
     
+    func getUsername(by id: String?) -> String? {
+        guard let uId = id else { return nil }
+        return self.users.first(where: { $0.id == uId } )?.username
+    }
+    
+    func getUsername(at offset: Int) -> String? {
+        guard self.users.count > offset else { return nil }
+        return self.users[offset].username
+    }
+    
     func chatsCount() -> Int {
         return users.count
     }
@@ -47,20 +58,23 @@ extension MainPageModel {
         return self.users
     }
     
-    func chatInfoBy(dialogPosition: Int) -> (userConvId: String?, conversationId: String?, chatPartnerId: String?) {
+    func chatInfoBy(dialogPosition: Int) -> (userConvId: String?, conversationId: String?, chatPartnersId: Array<String>?) {
         guard dialogPosition < self.usersConversations.count else {
-            return (nil, nil, self.users[dialogPosition].id)
+            guard let userId = self.users[dialogPosition].id else {
+                return (nil, nil, nil)
+            }
+            return (nil, nil, [userId])
         }
         
         let userConvId = self.usersConversations[dialogPosition].conversationId
         
         if let convId = self.usersConversations[dialogPosition].conversationId {
-            let chatPartnerId = self.conversations[convId]?.participant0 == FirebaseAuthService.getUserId()
-                ? self.conversations[convId]?.participant0
-                : self.conversations[convId]?.participant1
-            return (userConvId, convId, chatPartnerId)
+            if var ids = self.conversations[convId]?.participants {
+                ids.removeAll(where: { $0 == FirebaseAuthService.getUserId() } )
+                return (userConvId, convId, ids)
+            }
         }
-        return (userConvId, nil, self.users[dialogPosition].id)
+        return (userConvId, nil, [self.users[dialogPosition].id ?? "Error"] )
     }
     
     func searchMessagesBy(phrase: String, completion: @escaping (_ messages: [MessagesTable]) -> Void) {
@@ -111,6 +125,7 @@ private extension MainPageModel {
                     self.users.append(UsersTable(dictionary: keyData) )
                 }
             }
+            self.delegate?.usersWereFetched()
             self.delegate?.updateDialogs()
             self.fetchUsersConversations()
         }
@@ -164,33 +179,6 @@ private extension MainPageModel {
             }
             return firstDate > secondDate
         })
-        sortUsersByUsersConversations()
-    }
-    
-    func sortUsersByUsersConversations() {
-        guard let myUid = FirebaseAuthService.getUserId(), conversations.count > 0 else { return }
-        var usersIdArray: [String?] = []
-        for userConv in self.usersConversations {
-            if let convId = userConv.conversationId, let conv = self.conversations[convId] {
-                usersIdArray.append(conv.participant0 == myUid ? conv.participant1 : conv.participant0)
-            }
-        }
-        
-        var i: Int = 0
-        var j: Int = 0
-        while (i < users.count) {
-            while (j < usersIdArray.count) {
-                if (users[i].id == usersIdArray[j]) {
-                    let tempname = users[j]
-                    users[j] = users[i]
-                    users[i] = tempname
-                }
-                j += 1
-            }
-            j = 0
-            i += 1
-        }
-        
     }
 }
 

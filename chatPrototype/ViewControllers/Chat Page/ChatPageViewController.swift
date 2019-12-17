@@ -56,7 +56,7 @@ final class ChatPageViewController: UIViewController {
     private var audioPlayer: AVAudioPlayer!
     
     // MARK: - Public Properties
-    var chatInfo: (usersConversationId: String?, conversationId: String?, chatPartnerId: String?) = (nil, nil, nil)
+    var chatInfo: (usersConversationId: String?, conversationId: String?, chatPartnersIds: Array<String>?) = (nil, nil, nil)
     var chatPartnerName: String?
     weak var delegate: ChatPageDelegate?
     
@@ -76,16 +76,13 @@ final class ChatPageViewController: UIViewController {
 private extension ChatPageViewController {
     
     func initialConfigure() {
-        if self.recordingSession == nil {
-            self.recordingSession = AVAudioSession.sharedInstance()
-        }
+        
+        self.recordingSession = AVAudioSession.sharedInstance()
         do {
             try recordingSession.setCategory(AVAudioSession.Category(rawValue: AVAudioSession.Category.playAndRecord.rawValue), mode: AVAudioSession.Mode.spokenAudio)
             try recordingSession.setActive(true)
             try recordingSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
-        } catch {
-            return
-        }
+        } catch { print("Audio error") }
         
         lblConversationName.text = self.chatPartnerName
         dialogView.delegate = self
@@ -306,7 +303,7 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
             self.presentAlert(title: "Error", message: "Sorry, but we can't find the conversations id. Restart your dialog", actions: [], displayCloseButton: true)
             return
         }
-        guard let chatPartnerId = self.chatInfo.chatPartnerId else {
+        guard let partnersId = self.chatInfo.chatPartnersIds else {
             self.presentAlert(title: "Error", message: "Sorry, but we the find your chat partner id. Please, restart this dialgo", actions: [], displayCloseButton: true)
             return
         }
@@ -314,10 +311,13 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
         // Send Data To Conversations Table
         let convRef = Database.database().reference().child(FirebaseTableNames.conversations).child(convId)
         var data: Dictionary<String, Any> = ["createdAt": Date().timeIntervalSince1970.description]
-        let participants = [
-            "0": myUid,
-            "1": chatPartnerId
+        var participants: Dictionary<String, Any> = [
+            "0": myUid
         ]
+        for i in 0..<partnersId.count {
+            participants[i.description] = partnersId[i]
+        }
+        participants[partnersId.count.description] = myUid
         data["participants"] = participants
         convRef.setValue(data)
         
@@ -329,7 +329,9 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
             "updated_at": Date().timeIntervalSince1970.description
         ]
         Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).child(convId).setValue(data)
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId).child(convId).setValue(data)
+        for chatPartnerId in partnersId {
+            Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(chatPartnerId).child(convId).setValue(data)
+        }
         
         // Send Data to Messages Table
         Database.database().reference().child(FirebaseTableNames.messages).child(convId).childByAutoId().setValue(message)

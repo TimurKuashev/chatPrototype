@@ -52,7 +52,6 @@ private extension DialogView {
     
     func initialConfigure() {
         self.loadFromNib()
-//        messagesCollectionView.backgroundColor = UIColor(red: 3.0 / 255.0, green: 37.0 / 255.0, blue: 71.0 / 255.0, alpha: 1.0)
         messagesCollectionView.backgroundColor = .white
         messagesCollectionView.delegate = self
         dataSource.delegate = self

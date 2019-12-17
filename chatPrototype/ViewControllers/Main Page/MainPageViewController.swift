@@ -75,7 +75,7 @@ private extension MainPageViewController {
             return
         }
         lblUsername.text = username
-        guard let id = FirebaseAuthService.getUserId() as? String else { return }
+        guard let id = FirebaseAuthService.getUserId() else { return }
         let data: Dictionary<String, String> = [
             "id": id,
             "status": "online",
@@ -94,7 +94,7 @@ private extension MainPageViewController {
     
     @objc private func onCreateGroupChatTapped(_ sender: UIButton?) {
         let vc = UsersListViewController()
-        vc.users = model.getUsers()
+        vc.set(users: self.model.getUsers() )
         vc.delegate = self
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -143,9 +143,9 @@ extension MainPageViewController: UICollectionViewDelegate {
         let chatVC = ChatPageViewController(nibName: XibNameHelpers.chatPage, bundle: nil)
         chatVC.modalPresentationStyle = .fullScreen
         let chatInfo = model.chatInfoBy(dialogPosition: indexPath.section)
-        chatVC.chatInfo = (usersConversationId: chatInfo.userConvId, conversationId: chatInfo.conversationId, chatInfo.chatPartnerId)
+        chatVC.chatInfo = (usersConversationId: chatInfo.userConvId, conversationId: chatInfo.conversationId, chatInfo.chatPartnersId)
         chatVC.delegate = self
-        chatVC.chatPartnerName = self.model.getUsers()[indexPath.section].username
+        chatVC.chatPartnerName = self.model.getUsername(at: indexPath.section)
         self.navigationController?.pushViewController(chatVC, animated: true)
     }
 }
@@ -183,6 +183,10 @@ extension MainPageViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - MainPageModelDelegate
 extension MainPageViewController: MainPageModelDelegate {
     
+    func usersWereFetched() {
+        self.lblUsername.text = self.model.getUsername(by: FirebaseAuthService.getUserId())
+    }
+    
     func updateDialogs() {
         dialogsList.reloadData()
     }
@@ -191,6 +195,13 @@ extension MainPageViewController: MainPageModelDelegate {
 
 // MARK: - UsersListDelegate
 extension MainPageViewController: UsersListDelegate {
-    func createChatPressed(with selectedUsersId: [String?]) {
+    func createChatPressed(with selectedUsersId: [String]) {
+        let chatVC = ChatPageViewController()
+        chatVC.modalPresentationStyle = .fullScreen
+        chatVC.delegate = self
+        chatVC.chatInfo = (nil, nil, selectedUsersId)
+        self.navigationController?.pushViewController(chatVC, animated: true)
+        
     }
+    
 }

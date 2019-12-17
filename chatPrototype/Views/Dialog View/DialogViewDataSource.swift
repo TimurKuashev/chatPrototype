@@ -131,7 +131,6 @@ extension DialogViewDataSource: UICollectionViewDataSource {
                 return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath)
             }
             cell.set(message: self.messages[indexPath.section])
-//            cell.set(text: self.messages[indexPath.section].text, senderID: self.messages[indexPath.section].sender)
             return cell
         case .image:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.imageMessageCell, for: indexPath) as? ImageMessageCell else {
@@ -147,7 +146,6 @@ extension DialogViewDataSource: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.textMessageCell, for: indexPath) as? TextMessageCell else {
                 return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath)
             }
-//            cell.set(text: self.messages[indexPath.section].text, senderID: self.messages[indexPath.section].sender)
             cell.set(message: self.messages[indexPath.section])
             return cell
         case .document:

@@ -3,34 +3,36 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>360022478618-1ecj1vsebo6istjtsmk6d5umao56nikg.apps.googleusercontent.com</string>
+	<string>811544195915-vajonf5di9jgcj3os4g4db8s0gaputle.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.360022478618-1ecj1vsebo6istjtsmk6d5umao56nikg</string>
+	<string>com.googleusercontent.apps.811544195915-vajonf5di9jgcj3os4g4db8s0gaputle</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>811544195915-hrd457mvlnouhe4qqfg3bbc5udqpvpsj.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCREeYd0cCN1zhQ1nNfNuvjUT-pU1OBHvA</string>
+	<string>AIzaSyDiBdhNqJmt7ouWgMpGj7TMA8SMubzmWig</string>
 	<key>GCM_SENDER_ID</key>
-	<string>360022478618</string>
+	<string>811544195915</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.synkers.chatDemo</string>
+	<string>com.yalematta.samplechat</string>
 	<key>PROJECT_ID</key>
-	<string>chat-prototype-ios</string>
+	<string>samplechat-4d7a1</string>
 	<key>STORAGE_BUCKET</key>
-	<string>chat-prototype-ios.appspot.com</string>
+	<string>samplechat-4d7a1.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:360022478618:ios:95a984e94badaa9427e6a3</string>
+	<string>1:811544195915:ios:805cdd737513cb28bf2ece</string>
 	<key>DATABASE_URL</key>
-	<string>https://chat-prototype-ios.firebaseio.com</string>
+	<string>https://samplechat-4d7a1.firebaseio.com</string>
 </dict>
 </plist>

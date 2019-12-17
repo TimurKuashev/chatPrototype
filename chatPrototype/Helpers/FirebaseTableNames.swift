@@ -9,15 +9,17 @@
 import Foundation
 
 enum FirebaseTableNames {
-    static var users = "Users"
-    static var tokens = "Tokens"
-    static var conversations = "Conversations"
-    static var usersConverstaions = "Users_Conversations"
-    static var messages = "Messages"
+    private static let rootTableName = "v2/"
+    
+    static var users = FirebaseTableNames.rootTableName + "users"
+    static var tokens = FirebaseTableNames.rootTableName + "tokens"
+    static var conversations = FirebaseTableNames.rootTableName + "conversations"
+    static var usersConverstaions = FirebaseTableNames.rootTableName + "users_Conversations"
+    static var messages = FirebaseTableNames.rootTableName + "messages"
     
     // MARK: - Storage
-    static var imageMessages = "Image_messages"
-    static var documentMessages = "Document_messages"
-    static var voiceMessages = "Voice_messages"
+    static var imageMessages = FirebaseTableNames.rootTableName + "image_messages"
+    static var documentMessages = FirebaseTableNames.rootTableName + "document_messages"
+    static var voiceMessages = FirebaseTableNames.rootTableName + "voice_messages"
     
 }
