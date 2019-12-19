@@ -9,11 +9,12 @@
 import UIKit
 
 protocol ContextMenuViewDelegate: AnyObject {
-    func didSelectItem(at: IndexPath)
+    func didSelectItem(at indexPath: IndexPath)
 }
 
 class ContextMenuView: UIView {
     
+    // MARK: - Private Properties
     private let contextMenuCellIdentifier = "ContextMenuCell"
     weak var delegate: ContextMenuViewDelegate?
     private var items: Array<(title: String, icon: UIImage?)> = []
@@ -23,6 +24,7 @@ class ContextMenuView: UIView {
     
     private var tableView: UITableView = UITableView()
     
+    // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -33,6 +35,7 @@ class ContextMenuView: UIView {
         setupView()
     }
     
+    // MARK: - Methods
     private func setupView() {
         self.addSubview(tableView)
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -57,10 +60,8 @@ class ContextMenuView: UIView {
             self.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: 0).isActive = true
         } else {
             parent.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 20).isActive = true
-//            self.trailingAnchor.constraint(equalTo: parent.trailingAnchor, constant: 20).isActive = true
         }
     }
-    
     
     func addItem(title: String, icon: UIImage?) {
         self.items.append( (title: title, icon: icon) )

@@ -47,7 +47,6 @@ class ContextMenuCell: UITableViewCell {
         self.lblTitle.removeFromSuperview()
         self.addSubview(lblTitle)
         lblTitle.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 10).isActive = true
-//        lblTitle.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 5).isActive = true
         lblTitle.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 5).isActive = true
         lblTitle.topAnchor.constraint(equalTo: self.topAnchor, constant: 5).isActive = true
     }

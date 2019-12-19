@@ -93,16 +93,10 @@ private extension MainPageViewController {
     }
     
     @objc private func onCreateGroupChatTapped(_ sender: UIButton?) {
-        let contextMenu = ContextMenuView()
-        self.view.addSubview(contextMenu)
-        contextMenu.attachTo(parent: self.btnCreateGroupChat, toLeftSide: false)
-        contextMenu.addItem(title: "First", icon: nil)
-        contextMenu.addItem(title: "Second", icon: nil)
-        contextMenu.addItem(title: "Third", icon: nil)
-//        let vc = UsersListViewController()
-//        vc.set(users: self.model.getUsers() )
-//        vc.delegate = self
-//        self.navigationController?.pushViewController(vc, animated: true)
+        let vc = UsersListViewController()
+        vc.set(users: self.model.getUsers() )
+        vc.delegate = self
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func btnSearchTapped(_ sender: UIButton?) {
