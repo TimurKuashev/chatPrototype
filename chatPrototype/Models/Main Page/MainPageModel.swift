@@ -35,33 +35,54 @@ final class MainPageModel {
 // MARK: - Public Methods
 extension MainPageModel {
     
-    func getUsername(by id: String?) -> String? {
-        guard let uId = id else { return nil }
-        return self.users.first(where: { $0.id == uId } )?.username
-    }
-    
-    func getUsername(at offset: Int) -> String? {
-        guard self.users.count > offset else { return nil }
-        return self.users[offset].username
+    func getUsernames(by usersId: Array<String>) -> Array<String> {
+        guard usersId.count > 0 else {
+            return []
+        }
+        var result: Array<String> = []
+        for userId in usersId {
+            if let userName = self.users.first(where: { $0.id == userId } )?.username {
+                result.append(userName)
+            }
+        }
+        return result
     }
     
     func chatsCount() -> Int {
         return users.count
     }
     
-    func dataForPreviewOfTheDialog(dialogPosition: Int) -> (username: String?, lastMesageText: String?, lastMessageDate: String?) {
-        guard self.usersConversations.count > dialogPosition else { return (users[dialogPosition].username, nil, nil) }
-        return (users[dialogPosition].username, self.usersConversations[dialogPosition].lastMessage, self.usersConversations[dialogPosition].updatedAt)
+    func dataForPreviewOfTheDialog(dialogPosition: Int) -> (participantName: String, lastMesageText: String?, lastMessageDate: String?) {
+        var participantName: String = String()
+        guard self.usersConversations.count > dialogPosition else {
+            return (users[dialogPosition].username ?? participantName, nil, nil)
+        }
+        guard let myUsername = self.users.first(where: { $0.id == FirebaseAuthService.getUserId() } )?.username else {
+            return (users[dialogPosition].username ?? participantName, nil, nil)
+        }
+        
+        if let conv = self.conversations[self.usersConversations[dialogPosition].conversationId ?? "some doesn't existing key"] {
+            for participantId in conv.participants {
+                if let username = self.users.first(where: { $0.id == participantId })?.username {
+                    guard username != myUsername else { continue }
+                    participantName += username + " "
+                }
+            }
+        }
+        if participantName.isEmpty == true {
+            participantName.append(myUsername)
+        }
+        return (participantName, self.usersConversations[dialogPosition].lastMessage, self.usersConversations[dialogPosition].updatedAt)
     }
     
     func getUsers() -> [UsersTable] {
         return self.users
     }
     
-    func chatInfoBy(dialogPosition: Int) -> (userConvId: String?, conversationId: String?, chatPartnersId: Array<String>?) {
+    func chatInfoBy(dialogPosition: Int) -> (userConvId: String?, conversationId: String?, participantsId: Array<String>) {
         guard dialogPosition < self.usersConversations.count else {
             guard let userId = self.users[dialogPosition].id else {
-                return (nil, nil, nil)
+                return (nil, nil, [])
             }
             return (nil, nil, [userId])
         }

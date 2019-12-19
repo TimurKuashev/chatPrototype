@@ -93,10 +93,16 @@ private extension MainPageViewController {
     }
     
     @objc private func onCreateGroupChatTapped(_ sender: UIButton?) {
-        let vc = UsersListViewController()
-        vc.set(users: self.model.getUsers() )
-        vc.delegate = self
-        self.navigationController?.pushViewController(vc, animated: true)
+        let contextMenu = ContextMenuView()
+        self.view.addSubview(contextMenu)
+        contextMenu.attachTo(parent: self.btnCreateGroupChat, toLeftSide: false)
+        contextMenu.addItem(title: "First", icon: nil)
+        contextMenu.addItem(title: "Second", icon: nil)
+        contextMenu.addItem(title: "Third", icon: nil)
+//        let vc = UsersListViewController()
+//        vc.set(users: self.model.getUsers() )
+//        vc.delegate = self
+//        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func btnSearchTapped(_ sender: UIButton?) {
@@ -128,10 +134,10 @@ extension MainPageViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.dialogPreviewCell, for: indexPath) as? DialogPreviewCell else {
-            return UICollectionViewCell()
+            return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.dialogPreviewCell, for: indexPath)
         }
         let data = model.dataForPreviewOfTheDialog(dialogPosition: indexPath.section)
-        cell.setup(chatPartnerName: data.username!, lastMessage: data.lastMesageText ?? "No messages", lastMessageDate: data.lastMessageDate ?? "Null Date")
+        cell.setup(chatPartnerName: data.participantName, lastMessage: data.lastMesageText ?? "No messages", lastMessageDate: data.lastMessageDate ?? "Null Date")
         return cell
     }
     
@@ -140,12 +146,16 @@ extension MainPageViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension MainPageViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // Data for chat from model
+        let chatInfo = self.model.chatInfoBy(dialogPosition: indexPath.section)
+        guard chatInfo.participantsId.count > 0 else {
+            return
+        }
         let chatVC = ChatPageViewController(nibName: XibNameHelpers.chatPage, bundle: nil)
-        chatVC.modalPresentationStyle = .fullScreen
-        let chatInfo = model.chatInfoBy(dialogPosition: indexPath.section)
-        chatVC.chatInfo = (usersConversationId: chatInfo.userConvId, conversationId: chatInfo.conversationId, chatInfo.chatPartnersId)
+        chatVC.participantsNames = self.model.getUsernames(by: chatInfo.participantsId)
+        chatVC.chatInfo = (chatInfo.userConvId, chatInfo.conversationId, chatInfo.participantsId)
         chatVC.delegate = self
-        chatVC.chatPartnerName = self.model.getUsername(at: indexPath.section)
+        chatVC.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(chatVC, animated: true)
     }
 }
@@ -184,7 +194,7 @@ extension MainPageViewController: UICollectionViewDelegateFlowLayout {
 extension MainPageViewController: MainPageModelDelegate {
     
     func usersWereFetched() {
-        self.lblUsername.text = self.model.getUsername(by: FirebaseAuthService.getUserId())
+        self.lblUsername.text = self.model.getUsernames(by: [FirebaseAuthService.getUserId() ?? "Error"]).first
     }
     
     func updateDialogs() {
@@ -196,6 +206,9 @@ extension MainPageViewController: MainPageModelDelegate {
 // MARK: - UsersListDelegate
 extension MainPageViewController: UsersListDelegate {
     func createChatPressed(with selectedUsersId: [String]) {
+        // Pop UsersListViewController
+        self.navigationController?.popViewController(animated: true)
+        // Creating the chat
         let chatVC = ChatPageViewController()
         chatVC.modalPresentationStyle = .fullScreen
         chatVC.delegate = self

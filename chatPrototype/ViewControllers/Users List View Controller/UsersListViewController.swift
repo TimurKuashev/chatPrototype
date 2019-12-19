@@ -74,7 +74,6 @@ private extension UsersListViewController {
     }
     
     @objc private func createChat(_ sender: UIButton?) {
-        self.dismiss(animated: true, completion: nil)
         var temp: Array<String> = []
         temp.reserveCapacity(self.selectedUsersId.count)
         for i in 0..<self.selectedUsersId.count {

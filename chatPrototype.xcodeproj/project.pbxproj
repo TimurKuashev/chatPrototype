@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3885139C216B7C6AE559DAE2 /* Pods_chatPrototype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F313405CC9421AE14CE92E35 /* Pods_chatPrototype.framework */; };
+		4000008423AA0FC100CD177C /* ContextMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4000008323AA0FC100CD177C /* ContextMenuView.swift */; };
+		4000008623AA127100CD177C /* ContextMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4000008523AA127100CD177C /* ContextMenuCell.swift */; };
 		4006636823A3060F00988A0B /* FindedMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636723A3060F00988A0B /* FindedMessagesViewController.swift */; };
 		4006636B23A3134F00988A0B /* SharedImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636A23A3134F00988A0B /* SharedImagesViewController.swift */; };
 		4006636E23A33AE700988A0B /* UsersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636D23A33AE700988A0B /* UsersListViewController.swift */; };
@@ -62,6 +64,8 @@
 
 /* Begin PBXFileReference section */
 		05807087EC07BD42CDAB1302 /* Pods-chatPrototype.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatPrototype.debug.xcconfig"; path = "Target Support Files/Pods-chatPrototype/Pods-chatPrototype.debug.xcconfig"; sourceTree = "<group>"; };
+		4000008323AA0FC100CD177C /* ContextMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuView.swift; sourceTree = "<group>"; };
+		4000008523AA127100CD177C /* ContextMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuCell.swift; sourceTree = "<group>"; };
 		4006636723A3060F00988A0B /* FindedMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindedMessagesViewController.swift; sourceTree = "<group>"; };
 		4006636A23A3134F00988A0B /* SharedImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedImagesViewController.swift; sourceTree = "<group>"; };
 		4006636D23A33AE700988A0B /* UsersListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersListViewController.swift; sourceTree = "<group>"; };
@@ -131,6 +135,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4000008223AA0FAE00CD177C /* Context Menu View */ = {
+			isa = PBXGroup;
+			children = (
+				4000008323AA0FC100CD177C /* ContextMenuView.swift */,
+				4000008523AA127100CD177C /* ContextMenuCell.swift */,
+			);
+			path = "Context Menu View";
+			sourceTree = "<group>";
+		};
 		4006636623A305FE00988A0B /* Finded Messages View Conroller */ = {
 			isa = PBXGroup;
 			children = (
@@ -218,6 +231,7 @@
 		4009448B239644CB005381A4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4000008223AA0FAE00CD177C /* Context Menu View */,
 				4038DC802398EB9C00ABFC24 /* Dialog Bottom Panel View */,
 				4018C95A239788DA006ED81A /* Dialog View */,
 				4055E2232396765900AFA3F8 /* Request Account Credentials View */,
@@ -607,11 +621,13 @@
 				4038DC842398EBE400ABFC24 /* DialogBottomPanelView.swift in Sources */,
 				4038DC772398CE2100ABFC24 /* FirebaseTableNames.swift in Sources */,
 				4055E23123967F6700AFA3F8 /* MainPageModel.swift in Sources */,
+				4000008623AA127100CD177C /* ContextMenuCell.swift in Sources */,
 				40B8B0C923A2440F00C60E9D /* DocumentMessageCell.swift in Sources */,
 				40B8B0D023A2632100C60E9D /* ImageViewerViewController.swift in Sources */,
 				4006636B23A3134F00988A0B /* SharedImagesViewController.swift in Sources */,
 				40BDEE452397E9890023F60C /* CustomPropertiesForUserDefault.swift in Sources */,
 				40BDEE412397E0E70023F60C /* FirebaseAuthService.swift in Sources */,
+				4000008423AA0FC100CD177C /* ContextMenuView.swift in Sources */,
 				4009449223964FC3005381A4 /* View+InstantiateFromXIB.swift in Sources */,
 				4055E21D2396700400AFA3F8 /* FileNamesHelper.swift in Sources */,
 				4009448D23964529005381A4 /* RequestAccountCredentialsView.swift in Sources */,
