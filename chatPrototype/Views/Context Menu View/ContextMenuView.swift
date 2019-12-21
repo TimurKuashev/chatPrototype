@@ -12,7 +12,7 @@ protocol ContextMenuViewDelegate: AnyObject {
     func didSelectItem(at indexPath: IndexPath)
 }
 
-class ContextMenuView: UIView {
+final class ContextMenuView: UIView {
     
     // MARK: - Private Properties
     private let contextMenuCellIdentifier = "ContextMenuCell"
@@ -20,9 +20,13 @@ class ContextMenuView: UIView {
     private var items: Array<(title: String, icon: UIImage?)> = []
     
     private let tableViewWidth: CGFloat = 200
-    private let tableViewHeight: CGFloat = 200
+    private let maxViewHeight: CGFloat = 200
     
     private var tableView: UITableView = UITableView()
+    
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: tableView.contentSize.height)
+    }
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -37,16 +41,24 @@ class ContextMenuView: UIView {
     
     // MARK: - Methods
     private func setupView() {
+        self.layer.borderWidth = 2.0
+        self.layer.borderColor = UIColor.lightGray.cgColor
+        self.layer.cornerRadius = 15
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.backgroundColor = UIColor(123, 123, 123, 0.2).cgColor
         self.addSubview(tableView)
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .clear
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.separatorStyle = .none
         tableView.register(ContextMenuCell.self, forCellReuseIdentifier: contextMenuCellIdentifier)
-        
-        tableView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 10).isActive = true
-        tableView.widthAnchor.constraint(equalToConstant: self.tableViewWidth).isActive = true
-        tableView.heightAnchor.constraint(equalToConstant: self.tableViewHeight).isActive = true
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+            tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
+            tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
+            tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 10),
+            tableView.widthAnchor.constraint(equalToConstant: self.tableViewWidth),
+            heightAnchor.constraint(lessThanOrEqualToConstant: maxViewHeight)
+        ])
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -66,6 +78,8 @@ class ContextMenuView: UIView {
     func addItem(title: String, icon: UIImage?) {
         self.items.append( (title: title, icon: icon) )
         tableView.reloadData()
+        layoutIfNeeded()
+        invalidateIntrinsicContentSize()
     }
     
 }

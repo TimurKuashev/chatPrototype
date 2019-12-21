@@ -67,7 +67,7 @@ extension SharedImagesViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension SharedImagesViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: 100)
+        return CGSize(width: collectionView.bounds.width / 2 - 40, height: 200)
     }
 }
 

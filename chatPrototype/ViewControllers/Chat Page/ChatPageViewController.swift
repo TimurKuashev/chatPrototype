@@ -84,7 +84,6 @@ private extension ChatPageViewController {
             try recordingSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
         } catch { print("Audio error") }
         
-//        lblConversationName.text =
         dialogView.delegate = self
         dialogBottomPanel.delegate = self
         
@@ -101,7 +100,20 @@ private extension ChatPageViewController {
         }
     }
     
+    private func getOpenedContextMenu() -> ContextMenuView? {
+        for subview in self.view.subviews {
+            if let contextMenu = subview as? ContextMenuView {
+                return contextMenu
+            }
+        }
+        return nil
+    }
+    
     @objc private func openSettings(_ sender: UIButton?) {
+        if let showedContextMenu = getOpenedContextMenu() {
+            showedContextMenu.removeFromSuperview()
+            return
+        }
         let contextMenu = ContextMenuView()
         self.view.addSubview(contextMenu)
         contextMenu.attachTo(parent: btnOptions, toLeftSide: false)
@@ -506,17 +518,67 @@ extension ChatPageViewController: LocationManagerDelegate {
 // MARK: - ContextMenuViewDelegate
 extension ChatPageViewController: ContextMenuViewDelegate {
     func didSelectItem(at indexPath: IndexPath) {
-        switch indexPath.section {
+        switch indexPath.row {
         case 0: // Media
-            let vc = SharedImagesViewController()
-            var imagesUrls: [String?] = []
-            dialogView.getImagesUrls(writeSpace: &imagesUrls)
-            vc.imagesUrls = imagesUrls
-            vc.modalPresentationStyle = .fullScreen
-            self.navigationController?.pushViewController(vc, animated: true)
+            let pinterestView = PinterestView()
+            var imagesUrl: [String?] = []
+            dialogView.getImagesUrls(writeSpace: &imagesUrl)
+            var images: [UIImage] = []
+            for url in imagesUrl {
+                if let url = url {
+                    if let image = CacheManager.shared.savedImages[url] {
+                        images.append(image!)
+                    }
+                }
+            }
+            self.view.addSubview(pinterestView)
+            pinterestView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                pinterestView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: 0),
+                pinterestView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0),
+                pinterestView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
+                pinterestView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0)
+            ])
+            pinterestView.set(images: images)
         case 1: // Participants
-            break
+            let partView = ParticipantsListView()
+            self.view.addSubview(partView)
+            partView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                partView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: self.view.bounds.width / 2),
+                partView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
+                partView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 0),
+                partView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
+            ])
+            
+            Database.database().reference().child(FirebaseTableNames.users).observeSingleEvent(of: .value, with: {
+                (snapshot: DataSnapshot) in
+                guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                    return
+                }
+                var users: [UsersTable] = []
+                for key in dictionary.keys {
+                    if let keyData = dictionary[key] as? [String: AnyObject] {
+                        users.append(UsersTable(dictionary: keyData))
+                    }
+                }
+                DispatchQueue.main.async {
+                    partView.set(participants: users)
+                }
+            })
         default: break
         }
+        getOpenedContextMenu()?.removeFromSuperview()
     }
+    
+    
+}
+
+// MARK: - ParticipantsListViewDelegate
+extension ChatPageViewController: ParticipantsListViewDelegate {
+    
+    func hideButtonPressed(buttonOwner: ParticipantsListView) {
+        
+    }
+    
 }

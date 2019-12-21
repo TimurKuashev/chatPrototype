@@ -23,6 +23,7 @@ class ContextMenuCell: UITableViewCell {
     }()
     
     func set(title: String, icon: UIImage?) {
+        self.backgroundColor = .clear
         self.iconView.removeFromSuperview()
         self.addSubview(iconView)
         if let icon = icon {
