@@ -138,7 +138,7 @@ private extension MainPageModel {
     
     // MARK: - Fetch Data
     func fetchUsers() {
-        Database.database().reference().child(FirebaseTableNames.users).observe(.value) {
+        Database.database().reference().child(FirebaseTableNames.users).observeSingleEvent(of: .value) {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
             for key in dictionary.keys {
@@ -147,7 +147,6 @@ private extension MainPageModel {
                 }
             }
             self.delegate?.usersWereFetched()
-            self.delegate?.updateDialogs()
             self.fetchUsersConversations()
         }
     }
@@ -155,15 +154,32 @@ private extension MainPageModel {
     func fetchUsersConversations() {
         guard let myUid = FirebaseAuthService.getUserId() else { return }
         
-        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observe(.childAdded) {
+        Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observeSingleEvent(of: .value) {
             [weak self] (snapshot: DataSnapshot) in
-            guard let self = self else { return }
-            guard let dictionary = snapshot.value as? [String: AnyObject], let convId = dictionary["conversation_id"] as? String else {
-                self.delegate?.updateDialogs()
+            guard let self = self else {
                 return
             }
-            self.usersConversations.append(UsersConversationsTable(dictionary: dictionary))
-            self.fetchConversation(for: convId)
+            guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
+            var fetchedConversationsCount: Int = 0
+            for key in dictionary.keys {
+                guard let keyData = dictionary[key] as? [String: AnyObject],
+                    let convId = keyData["conversation_id"] as? String
+                    else {
+                        continue
+                }
+                self.usersConversations.append(UsersConversationsTable(dictionary: keyData))
+                self.fetchConversation(convId: convId, completion: {
+                    [weak self] in
+                    guard let self = self else {
+                        return
+                    }
+                    self.sortUsersConversations()
+                    fetchedConversationsCount += 1
+                    if fetchedConversationsCount == dictionary.keys.count {
+                        self.delegate?.updateDialogs()
+                    }
+                })
+            }
         }
         
         Database.database().reference().child(FirebaseTableNames.usersConverstaions).child(myUid).observe(.childChanged) {
@@ -178,18 +194,17 @@ private extension MainPageModel {
             self.usersConversations[index] = userConversation
             self.delegate?.updateDialogs()
         }
-
     }
     
-    func fetchConversation(for userConvId: String) {
-        Database.database().reference().child(FirebaseTableNames.conversations).child(userConvId).observeSingleEvent(of: .value) {
+    func fetchConversation(convId: String, completion: @escaping () -> Void) {
+        Database.database().reference().child(FirebaseTableNames.conversations).child(convId).observeSingleEvent(of: .value) {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
-            self.conversations[userConvId] = ConversationsTable(dictionary: dictionary)
-            self.sortUsersConversations()
-            self.delegate?.updateDialogs()
+            self.conversations[convId] = ConversationsTable(dictionary: dictionary)
+            completion()
         }
     }
+    
     
     // MARK: - Sort Data
     func sortUsersConversations() {

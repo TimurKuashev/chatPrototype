@@ -39,6 +39,7 @@ final class MainPageViewController: UIViewController {
             self.navigationController?.setNavigationBarHidden(false, animated: animated)
         }
         dialogsList.reloadData()
+        HudManager.push(to: self.view)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -192,6 +193,7 @@ extension MainPageViewController: MainPageModelDelegate {
     }
     
     func updateDialogs() {
+        HudManager.pop(from: self.view)
         dialogsList.reloadData()
     }
     
