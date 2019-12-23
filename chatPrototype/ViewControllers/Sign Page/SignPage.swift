@@ -26,13 +26,6 @@ final class SignPage: UIViewController {
         initialConfigure()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if (UserDefaults.standard.value(forKey: CustomPropertiesForUserDefaults.isSignIn) as? Bool) == true {
-            goToHomePage()
-        }
-    }
-    
     deinit {
         btnAction.removeTarget(self, action: #selector(signUp(_:)), for: .touchUpInside)
         btnAction.removeTarget(self, action: #selector(signIn(_:)), for: .touchUpInside)
@@ -119,8 +112,10 @@ private extension SignPage {
     
     // MARK: - Sign In/Up
     @objc func signIn(_ sender: UIButton!) {
+        HudManager.showOnFullScreen()
         let enteredData = signInView.getEnteredData()
         guard enteredData.email != nil, enteredData.password != nil else {
+            HudManager.hideFromFullScreen()
             self.presentAlert(title: nil, message: "Bad credentials", actions: [], displayCloseButton: true)
             return
         }
@@ -132,19 +127,30 @@ private extension SignPage {
                 UserDefaults.standard.set(enteredData.email!, forKey: CustomPropertiesForUserDefaults.email)
                 UserDefaults.standard.set(enteredData.password!, forKey: CustomPropertiesForUserDefaults.password)
                 UserDefaults.standard.set(true, forKey: CustomPropertiesForUserDefaults.isSignIn)
-                guard let self = self else { return }
+                guard let self = self else {
+                    HudManager.hideFromFullScreen()
+                    return
+                }
+                HudManager.hideFromFullScreen()
                 self.goToHomePage()
         },
             errorHandler: {
                 [weak self] (error) in
-                guard let self = self else { return }
+                guard let self = self else {
+                    HudManager.hideFromFullScreen()
+                    return
+                }
+                HudManager.hideFromFullScreen()
                 self.presentAlert(title: "Error", message: error!.localizedDescription, actions: [], displayCloseButton: true)
         })
     }
     
     @objc func signUp(_ sender: UIButton!) {
+        
+        HudManager.showOnFullScreen()
         let enteredData = signUpView.getEnteredData()
         guard enteredData.username != nil, enteredData.email != nil, enteredData.password != nil else {
+            HudManager.hideFromFullScreen()
             self.presentAlert(title: nil, message: "Bad credentials", actions: [], displayCloseButton: true)
             return
         }
@@ -153,8 +159,12 @@ private extension SignPage {
             password: enteredData.password!,
             successHandler: {
                 [weak self](result: AuthDataResult?) in
-                guard let self = self else { return }
+                guard let self = self else {
+                    HudManager.hideFromFullScreen()
+                    return
+                }
                 guard let uID = FirebaseAuthService.getUserId() else {
+                    HudManager.hideFromFullScreen()
                     self.presentAlert(title: "Error", message: "Sorry, something went wrong. Please try again later", actions: [], displayCloseButton: true)
                     return
                 }
@@ -173,17 +183,26 @@ private extension SignPage {
                     successHandler: {
                         [weak self](result: AuthDataResult?) in
                         UserDefaults.standard.set(true, forKey: CustomPropertiesForUserDefaults.isSignIn)
-                        guard let self = self else { return }
+                        guard let self = self else {
+                            HudManager.hideFromFullScreen()
+                            return
+                        }
                         self.goToHomePage()
                 },
                     errorHandler: {
                         [weak self] (error) in
-                        guard let self = self else { return }
+                        guard let self = self else {
+                            HudManager.hideFromFullScreen()
+                            return
+                        }
                         self.presentAlert(title: "Error", message: error!.localizedDescription, actions: [], displayCloseButton: true)
                 })
             }, errorHandler: {
                 [weak self] (error) in
-                guard let self = self else { return }
+                guard let self = self else {
+                    HudManager.hideFromFullScreen()
+                    return
+                }
                 self.presentAlert(title: nil, message: error!.localizedDescription, actions: [], displayCloseButton: true)
         })
     }

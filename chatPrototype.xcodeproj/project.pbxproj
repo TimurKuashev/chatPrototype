@@ -10,6 +10,7 @@
 		3885139C216B7C6AE559DAE2 /* Pods_chatPrototype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F313405CC9421AE14CE92E35 /* Pods_chatPrototype.framework */; };
 		4000008423AA0FC100CD177C /* ContextMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4000008323AA0FC100CD177C /* ContextMenuView.swift */; };
 		4000008623AA127100CD177C /* ContextMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4000008523AA127100CD177C /* ContextMenuCell.swift */; };
+		400204EF23B0A4A100846D64 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400204EE23B0A4A100846D64 /* HudView.swift */; };
 		4006636823A3060F00988A0B /* FindedMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636723A3060F00988A0B /* FindedMessagesViewController.swift */; };
 		4006636B23A3134F00988A0B /* SharedImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636A23A3134F00988A0B /* SharedImagesViewController.swift */; };
 		4006636E23A33AE700988A0B /* UsersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636D23A33AE700988A0B /* UsersListViewController.swift */; };
@@ -71,6 +72,7 @@
 		05807087EC07BD42CDAB1302 /* Pods-chatPrototype.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatPrototype.debug.xcconfig"; path = "Target Support Files/Pods-chatPrototype/Pods-chatPrototype.debug.xcconfig"; sourceTree = "<group>"; };
 		4000008323AA0FC100CD177C /* ContextMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuView.swift; sourceTree = "<group>"; };
 		4000008523AA127100CD177C /* ContextMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuCell.swift; sourceTree = "<group>"; };
+		400204EE23B0A4A100846D64 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
 		4006636723A3060F00988A0B /* FindedMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindedMessagesViewController.swift; sourceTree = "<group>"; };
 		4006636A23A3134F00988A0B /* SharedImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedImagesViewController.swift; sourceTree = "<group>"; };
 		4006636D23A33AE700988A0B /* UsersListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersListViewController.swift; sourceTree = "<group>"; };
@@ -152,6 +154,14 @@
 				4000008523AA127100CD177C /* ContextMenuCell.swift */,
 			);
 			path = "Context Menu View";
+			sourceTree = "<group>";
+		};
+		400204ED23B0A49300846D64 /* Hud View */ = {
+			isa = PBXGroup;
+			children = (
+				400204EE23B0A4A100846D64 /* HudView.swift */,
+			);
+			path = "Hud View";
 			sourceTree = "<group>";
 		};
 		4006636623A305FE00988A0B /* Finded Messages View Conroller */ = {
@@ -241,6 +251,7 @@
 		4009448B239644CB005381A4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				400204ED23B0A49300846D64 /* Hud View */,
 				409781E323ADFFD200EBA599 /* Pinterest View */,
 				4089682A23AB64C600010413 /* Participants List View */,
 				4000008223AA0FAE00CD177C /* Context Menu View */,
@@ -668,6 +679,7 @@
 				409781E923AE142800EBA599 /* PinterestCell.swift in Sources */,
 				4009448D23964529005381A4 /* RequestAccountCredentialsView.swift in Sources */,
 				402665F4239E6EA4002721E9 /* CacheManager.swift in Sources */,
+				400204EF23B0A4A100846D64 /* HudView.swift in Sources */,
 				407C84962396A23C00B4F7E0 /* UIViewController+PresentAlert.swift in Sources */,
 				409F3EF8239A893500333FDB /* LaunchScreenViewController.swift in Sources */,
 				405B6F9F239A4A9F008A4807 /* SignPage.swift in Sources */,
