@@ -13,6 +13,7 @@ protocol DialogViewDelegate: AnyObject {
     func onImageClicked(message: MessagesTable)
     func onTextClicked(message: MessagesTable)
     func dialogStateChanged(lastMesage: MessagesTable?)
+    func longPressOn(message: MessagesTable)
 }
 
 class DialogView: UIView {
@@ -60,6 +61,22 @@ private extension DialogView {
         messagesCollectionView.register(UINib(nibName: CellIdentifiers.imageMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.imageMessageCell)
         messagesCollectionView.register(UINib(nibName: CellIdentifiers.documentMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.documentMessageCell)
         messagesCollectionView.register(VoiceMessageCell.self, forCellWithReuseIdentifier: CellIdentifiers.voiceMessageCell)
+        
+        let longPressGesRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressTriggered(_:)) )
+        messagesCollectionView.addGestureRecognizer(longPressGesRecognizer)
+    }
+    
+    @objc private func longPressTriggered(_ gesture: UILongPressGestureRecognizer) {
+        guard gesture.state == .began else {
+            return
+        }
+        
+        let p = gesture.location(in: self.messagesCollectionView)
+        guard let indexPath = self.messagesCollectionView.indexPathForItem(at: p) else {
+            return
+        }
+        // let cell = self.messagesCollectionView.cellForItem(at: indexPath)
+        self.delegate?.longPressOn(message: self.dataSource.messages[indexPath.row])
     }
     
 }
@@ -69,7 +86,6 @@ extension DialogView: DialogViewDataSourceDelegate {
     func newVoiceMessageComes() {
         
     }
-    
     
     func newImageMessageComes(stringImageUrl: String?) {
         CacheManager.shared.loadAndSaveData(
@@ -132,8 +148,8 @@ extension DialogView: UICollectionViewDelegate {
         switch self.dataSource.messages[indexPath.section].type {
         case .image:
             self.delegate?.onImageClicked(message: dataSource.messages[indexPath.section])
-        case .text:
-            self.delegate?.onTextClicked(message: dataSource.messages[indexPath.section])
+//        case .text:
+//            self.delegate?.onTextClicked(message: dataSource.messages[indexPath.section])
         default: break
         }
     }

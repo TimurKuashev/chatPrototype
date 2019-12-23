@@ -24,7 +24,6 @@ final class PinterestCell: UICollectionViewCell {
     
     private func setupView() {
         self.layer.cornerRadius = 20
-//        self.backgroundColor = UIColor(161, 167, 171, 0.7)
         self.backgroundColor = UIColor(255, 255, 255, 0.8)
         self.layer.cornerRadius = 15
         self.addSubview(displayedImage)

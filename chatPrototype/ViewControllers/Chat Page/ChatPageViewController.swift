@@ -149,6 +149,37 @@ private extension ChatPageViewController {
 // MARK: - DialogViewDelegate
 extension ChatPageViewController: DialogViewDelegate {
     
+    func longPressOn(message: MessagesTable) {
+        switch message.type {
+        default:
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            let removeAction = UIAlertAction(title: "Remove", style: .default) {
+                [weak self] (action: UIAlertAction) in
+                defer {
+                    DispatchQueue.main.async {
+                        alertController.dismiss(animated: true, completion: nil)
+                    }
+                }
+                guard let self = self else { return }
+                guard let convId = self.chatInfo.conversationId else { return }
+                Database.database().reference().child(FirebaseTableNames.messages).child(convId).child(message.keyInDatabase).removeValue()
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .default) {
+                _ in
+                DispatchQueue.main.async {
+                    alertController.dismiss(animated: true, completion: nil)
+                }
+            }
+            
+            alertController.addAction(removeAction)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true)
+            break
+        }
+    }
+    
     func onImageClicked(message: MessagesTable) {
         guard let imageUrl = message.imageURL, let image = CacheManager.shared.savedImages[imageUrl] else {
             return
@@ -316,7 +347,7 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
             return
         }
         guard self.chatInfo.participantsId.count > 0 else {
-            self.presentAlert(title: "Error", message: "Sorry, but we the find your chat partner id. Please, restart this dialgo", actions: [], displayCloseButton: true)
+            self.presentAlert(title: "Error", message: "Sorry, but we the can't find your chat partner id. Please, restart this dialgo", actions: [], displayCloseButton: true)
             return
         }
         
