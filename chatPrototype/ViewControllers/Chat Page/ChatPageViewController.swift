@@ -20,7 +20,7 @@ protocol ChatPageDelegate: AnyObject {
 final class ChatPageViewController: UIViewController {
     
     // MARK: - @IBOutlet & Private Properties
-    @IBOutlet private var lblConversationName: UILabel!
+    @IBOutlet private var participantView: ParticipantView!
     @IBOutlet private var btnOptions: UIButton!
     @IBOutlet private var dialogView: DialogView!
     @IBOutlet private var dialogBottomPanel: DialogBottomPanelView!
@@ -76,14 +76,13 @@ final class ChatPageViewController: UIViewController {
 private extension ChatPageViewController {
     
     func initialConfigure() {
-        
         self.recordingSession = AVAudioSession.sharedInstance()
         do {
             try recordingSession.setCategory(AVAudioSession.Category(rawValue: AVAudioSession.Category.playAndRecord.rawValue), mode: AVAudioSession.Mode.spokenAudio)
             try recordingSession.setActive(true)
             try recordingSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
         } catch { print("Audio error") }
-        
+        participantView.autoFill()
         dialogView.delegate = self
         dialogBottomPanel.delegate = self
         

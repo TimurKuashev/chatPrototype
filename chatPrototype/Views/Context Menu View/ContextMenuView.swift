@@ -47,7 +47,7 @@ final class ContextMenuView: UIView {
         self.layer.shadowColor = UIColor.black.cgColor
         self.layer.backgroundColor = UIColor(123, 123, 123, 0.2).cgColor
         self.addSubview(tableView)
-        tableView.backgroundColor = .clear
+        tableView.backgroundColor = .white
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.register(ContextMenuCell.self, forCellReuseIdentifier: contextMenuCellIdentifier)

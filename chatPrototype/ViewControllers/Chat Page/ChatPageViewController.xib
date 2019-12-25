@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,7 +14,7 @@
                 <outlet property="btnOptions" destination="dNz-xs-CET" id="D4M-ai-kWI"/>
                 <outlet property="dialogBottomPanel" destination="FZB-aF-OxJ" id="9DZ-ey-52h"/>
                 <outlet property="dialogView" destination="qUD-tk-uJK" id="edF-Ut-Pz9"/>
-                <outlet property="lblConversationName" destination="F9L-m0-NWI" id="byI-Tf-09u"/>
+                <outlet property="participantView" destination="nXB-u8-Lzi" id="JUa-wk-hMW"/>
                 <outlet property="scrollView" destination="kAH-G5-kxq" id="IXW-Dx-s00"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -37,35 +37,22 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3kJ-RL-XJ1" userLabel="Content View">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IEA-U7-CHJ" userLabel="Header View">
-                                    <rect key="frame" x="0.0" y="44" width="414" height="80"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Conversation Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F9L-m0-NWI" userLabel="Label Conversation Name">
-                                            <rect key="frame" x="20" y="25" width="266" height="30"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dNz-xs-CET" userLabel="Button Show Settings Menu">
-                                            <rect key="frame" x="336" y="22" width="58" height="36"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                            <state key="normal" title="Button">
-                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </state>
-                                        </button>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nXB-u8-Lzi" customClass="ParticipantView" customModule="chatPrototype" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="52" width="296" height="70"/>
+                                    <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <constraints>
-                                        <constraint firstItem="F9L-m0-NWI" firstAttribute="leading" secondItem="IEA-U7-CHJ" secondAttribute="leading" constant="20" id="5Pp-9s-rHK"/>
-                                        <constraint firstAttribute="trailing" secondItem="dNz-xs-CET" secondAttribute="trailing" constant="20" id="7gC-7c-6lH"/>
-                                        <constraint firstAttribute="height" constant="80" id="8aX-Ox-HGJ"/>
-                                        <constraint firstItem="dNz-xs-CET" firstAttribute="centerY" secondItem="F9L-m0-NWI" secondAttribute="centerY" id="Crt-pG-i8w"/>
-                                        <constraint firstItem="F9L-m0-NWI" firstAttribute="centerY" secondItem="IEA-U7-CHJ" secondAttribute="centerY" id="ZV1-aH-w71"/>
-                                        <constraint firstItem="dNz-xs-CET" firstAttribute="leading" secondItem="F9L-m0-NWI" secondAttribute="trailing" constant="50" id="k6X-Gz-MvN"/>
+                                        <constraint firstAttribute="height" constant="70" id="bgi-xD-wuH"/>
                                     </constraints>
                                 </view>
+                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dNz-xs-CET" userLabel="Button Show Settings Menu">
+                                    <rect key="frame" x="336" y="69" width="58" height="36"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                    <state key="normal" title="Button">
+                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    </state>
+                                </button>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qUD-tk-uJK" customClass="DialogView" customModule="chatPrototype" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="124" width="414" height="672"/>
+                                    <rect key="frame" x="0.0" y="142" width="414" height="654"/>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FZB-aF-OxJ" customClass="DialogBottomPanelView" customModule="chatPrototype" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="796" width="414" height="100"/>
@@ -76,15 +63,18 @@
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
+                                <constraint firstAttribute="trailing" secondItem="dNz-xs-CET" secondAttribute="trailing" constant="20" id="0M7-sw-meJ"/>
                                 <constraint firstAttribute="trailing" secondItem="qUD-tk-uJK" secondAttribute="trailing" id="3Nh-XQ-lrr"/>
                                 <constraint firstItem="qUD-tk-uJK" firstAttribute="leading" secondItem="3kJ-RL-XJ1" secondAttribute="leading" id="9RW-rr-Loy"/>
                                 <constraint firstItem="FZB-aF-OxJ" firstAttribute="top" secondItem="qUD-tk-uJK" secondAttribute="bottom" id="CdP-re-NyM"/>
                                 <constraint firstItem="FZB-aF-OxJ" firstAttribute="leading" secondItem="3kJ-RL-XJ1" secondAttribute="leading" id="HpU-jn-na9"/>
+                                <constraint firstItem="nXB-u8-Lzi" firstAttribute="leading" secondItem="3kJ-RL-XJ1" secondAttribute="leading" id="Iac-V4-vnc"/>
+                                <constraint firstItem="nXB-u8-Lzi" firstAttribute="top" secondItem="3kJ-RL-XJ1" secondAttribute="topMargin" id="Kq9-7F-g4D"/>
+                                <constraint firstItem="dNz-xs-CET" firstAttribute="centerY" secondItem="nXB-u8-Lzi" secondAttribute="centerY" id="Mwn-Ti-c3t"/>
+                                <constraint firstItem="qUD-tk-uJK" firstAttribute="top" secondItem="nXB-u8-Lzi" secondAttribute="bottom" constant="20" id="RW3-qB-rbw"/>
                                 <constraint firstAttribute="trailing" secondItem="FZB-aF-OxJ" secondAttribute="trailing" id="TgR-Yb-AEj"/>
-                                <constraint firstItem="IEA-U7-CHJ" firstAttribute="leading" secondItem="3kJ-RL-XJ1" secondAttribute="leading" id="UXd-ad-kp2"/>
+                                <constraint firstItem="dNz-xs-CET" firstAttribute="leading" secondItem="nXB-u8-Lzi" secondAttribute="trailing" constant="40" id="alK-aA-goC"/>
                                 <constraint firstAttribute="bottom" secondItem="FZB-aF-OxJ" secondAttribute="bottom" id="huz-6X-oMS"/>
-                                <constraint firstAttribute="trailing" secondItem="IEA-U7-CHJ" secondAttribute="trailing" id="mHD-bE-LrE"/>
-                                <constraint firstItem="qUD-tk-uJK" firstAttribute="top" secondItem="IEA-U7-CHJ" secondAttribute="bottom" id="tNs-8E-FDT"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -106,7 +96,6 @@
                 <constraint firstItem="At4-8o-paL" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="jfb-EL-myV"/>
                 <constraint firstItem="kAH-G5-kxq" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="mam-0R-7cX"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="kAH-G5-kxq" secondAttribute="trailing" id="p8N-eY-U7J"/>
-                <constraint firstItem="IEA-U7-CHJ" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="pfj-oG-Nsb"/>
                 <constraint firstItem="At4-8o-paL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="wZs-PL-fyS"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
