@@ -39,7 +39,6 @@ final class MainPageViewController: UIViewController {
             self.navigationController?.setNavigationBarHidden(false, animated: animated)
         }
         dialogsList.reloadData()
-        HudManager.push(to: self.view)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -53,6 +52,7 @@ final class MainPageViewController: UIViewController {
 private extension MainPageViewController {
     
     private func initialConfigure() {
+        HudManager.push(to: self.view)
         model.delegate = self
         
         btnSearch.addTarget(self, action: #selector(btnSearchTapped(_:)), for: .touchUpInside)
@@ -151,7 +151,10 @@ extension MainPageViewController: UICollectionViewDelegate {
         chatVC.chatInfo = (chatInfo.userConvId, chatInfo.conversationId, chatInfo.participantsId)
         chatVC.delegate = self
         chatVC.modalPresentationStyle = .fullScreen
-        self.navigationController?.pushViewController(chatVC, animated: true)
+//        self.navigationController?.pushViewController(chatVC, animated: true)
+        let temp = LocationViewController()
+        self.navigationController?.pushViewController(temp, animated: true)
+//        self.present(temp, animated: true)
     }
 }
 

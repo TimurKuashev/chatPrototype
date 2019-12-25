@@ -11,4 +11,6 @@ target 'chatPrototype' do
   pod 'Firebase/Database'
   pod 'Firebase/Messaging'
   pod 'Firebase/Storage'
+  pod 'GooglePlaces'
+  pod 'GoogleMaps'
 end

@@ -9,6 +9,8 @@
 import UIKit
 import Firebase
 import FirebaseMessaging
+import GooglePlaces
+import GoogleMaps
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
@@ -19,7 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
-        
+        GMSPlacesClient.provideAPIKey("AIzaSyAYRcdsgv34qbbEmLw8zuT2TEccqjd_DEQ")
+        GMSServices.provideAPIKey("AIzaSyAYRcdsgv34qbbEmLw8zuT2TEccqjd_DEQ")
+
         self.window = UIWindow(frame: UIScreen.main.bounds)
         let nav1 = UINavigationController()
         

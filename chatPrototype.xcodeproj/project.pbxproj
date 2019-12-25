@@ -11,6 +11,7 @@
 		4000008423AA0FC100CD177C /* ContextMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4000008323AA0FC100CD177C /* ContextMenuView.swift */; };
 		4000008623AA127100CD177C /* ContextMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4000008523AA127100CD177C /* ContextMenuCell.swift */; };
 		400204EF23B0A4A100846D64 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400204EE23B0A4A100846D64 /* HudView.swift */; };
+		400204F223B0D95100846D64 /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400204F123B0D95100846D64 /* LocationViewController.swift */; };
 		4006636823A3060F00988A0B /* FindedMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636723A3060F00988A0B /* FindedMessagesViewController.swift */; };
 		4006636B23A3134F00988A0B /* SharedImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636A23A3134F00988A0B /* SharedImagesViewController.swift */; };
 		4006636E23A33AE700988A0B /* UsersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636D23A33AE700988A0B /* UsersListViewController.swift */; };
@@ -60,6 +61,7 @@
 		409F3EF6239A75C200333FDB /* UIColor+NewColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F3EF5239A75C200333FDB /* UIColor+NewColors.swift */; };
 		409F3EF8239A893500333FDB /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F3EF7239A893500333FDB /* LaunchScreenViewController.swift */; };
 		409F3EFA239A8B1B00333FDB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 409F3EF9239A8B1B00333FDB /* Main.storyboard */; };
+		40A22B0023B26310000D513E /* ParticipantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A22AFF23B26310000D513E /* ParticipantView.swift */; };
 		40B8B0C523A203A800C60E9D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B8B0C423A203A800C60E9D /* LocationManager.swift */; };
 		40B8B0C923A2440F00C60E9D /* DocumentMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B8B0C723A2440F00C60E9D /* DocumentMessageCell.swift */; };
 		40B8B0CA23A2440F00C60E9D /* DocumentMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B8B0C823A2440F00C60E9D /* DocumentMessageCell.xib */; };
@@ -73,6 +75,7 @@
 		4000008323AA0FC100CD177C /* ContextMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuView.swift; sourceTree = "<group>"; };
 		4000008523AA127100CD177C /* ContextMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuCell.swift; sourceTree = "<group>"; };
 		400204EE23B0A4A100846D64 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
+		400204F123B0D95100846D64 /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
 		4006636723A3060F00988A0B /* FindedMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindedMessagesViewController.swift; sourceTree = "<group>"; };
 		4006636A23A3134F00988A0B /* SharedImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedImagesViewController.swift; sourceTree = "<group>"; };
 		4006636D23A33AE700988A0B /* UsersListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersListViewController.swift; sourceTree = "<group>"; };
@@ -125,6 +128,7 @@
 		409F3EF5239A75C200333FDB /* UIColor+NewColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+NewColors.swift"; sourceTree = "<group>"; };
 		409F3EF7239A893500333FDB /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
 		409F3EF9239A8B1B00333FDB /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		40A22AFF23B26310000D513E /* ParticipantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantView.swift; sourceTree = "<group>"; };
 		40B8B0C423A203A800C60E9D /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		40B8B0C723A2440F00C60E9D /* DocumentMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentMessageCell.swift; sourceTree = "<group>"; };
 		40B8B0C823A2440F00C60E9D /* DocumentMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DocumentMessageCell.xib; sourceTree = "<group>"; };
@@ -162,6 +166,14 @@
 				400204EE23B0A4A100846D64 /* HudView.swift */,
 			);
 			path = "Hud View";
+			sourceTree = "<group>";
+		};
+		400204F023B0D93C00846D64 /* Location Viewer */ = {
+			isa = PBXGroup;
+			children = (
+				400204F123B0D95100846D64 /* LocationViewController.swift */,
+			);
+			path = "Location Viewer";
 			sourceTree = "<group>";
 		};
 		4006636623A305FE00988A0B /* Finded Messages View Conroller */ = {
@@ -236,6 +248,7 @@
 		4009448623964445005381A4 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				400204F023B0D93C00846D64 /* Location Viewer */,
 				4006636623A305FE00988A0B /* Finded Messages View Conroller */,
 				4006636923A3133A00988A0B /* Shared Images View Controller */,
 				4006636C23A33AD300988A0B /* Users List View Controller */,
@@ -251,6 +264,7 @@
 		4009448B239644CB005381A4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				40A22AFE23B262F4000D513E /* Participant View */,
 				400204ED23B0A49300846D64 /* Hud View */,
 				409781E323ADFFD200EBA599 /* Pinterest View */,
 				4089682A23AB64C600010413 /* Participants List View */,
@@ -463,6 +477,14 @@
 			path = "New Main Page";
 			sourceTree = "<group>";
 		};
+		40A22AFE23B262F4000D513E /* Participant View */ = {
+			isa = PBXGroup;
+			children = (
+				40A22AFF23B26310000D513E /* ParticipantView.swift */,
+			);
+			path = "Participant View";
+			sourceTree = "<group>";
+		};
 		40B8B0C323A2039700C60E9D /* Location Manager */ = {
 			isa = PBXGroup;
 			children = (
@@ -525,6 +547,7 @@
 				4009446C23964336005381A4 /* Frameworks */,
 				4009446D23964336005381A4 /* Resources */,
 				7EE950EF5EC998D3CE00ADBB /* [CP] Embed Pods Frameworks */,
+				F807C9E4CFDE11C02072525F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -632,6 +655,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		F807C9E4CFDE11C02072525F /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-chatPrototype/Pods-chatPrototype-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-chatPrototype/Pods-chatPrototype-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-chatPrototype/Pods-chatPrototype-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -643,6 +683,7 @@
 				4055E22A239678D300AFA3F8 /* DialogPreviewCell.swift in Sources */,
 				4055E221239674AD00AFA3F8 /* MainPageViewController.swift in Sources */,
 				4018C97023978D92006ED81A /* DialogViewDataSource.swift in Sources */,
+				40A22B0023B26310000D513E /* ParticipantView.swift in Sources */,
 				4006636823A3060F00988A0B /* FindedMessagesViewController.swift in Sources */,
 				4006636E23A33AE700988A0B /* UsersListViewController.swift in Sources */,
 				4018C9582397873C006ED81A /* ChatPageViewController.swift in Sources */,
@@ -654,6 +695,7 @@
 				4009447323964336005381A4 /* AppDelegate.swift in Sources */,
 				4018C95C239788EC006ED81A /* DialogView.swift in Sources */,
 				4018C96823978ACE006ED81A /* ImageMessageCell.swift in Sources */,
+				400204F223B0D95100846D64 /* LocationViewController.swift in Sources */,
 				401921A6239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift in Sources */,
 				409781E523AE000500EBA599 /* PinterestLayout.swift in Sources */,
 				4018C96C23978AED006ED81A /* TextMessageCell.swift in Sources */,
