@@ -11,6 +11,6 @@ target 'chatPrototype' do
   pod 'Firebase/Database'
   pod 'Firebase/Messaging'
   pod 'Firebase/Storage'
-  pod 'GooglePlaces'
-  pod 'GoogleMaps'
+  pod 'GooglePlaces' ,'~> 3.7.0'
+  pod 'GoogleMaps' ,'~> 3.7.0'
 end

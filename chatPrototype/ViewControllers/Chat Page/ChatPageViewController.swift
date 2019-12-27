@@ -190,10 +190,14 @@ extension ChatPageViewController: DialogViewDelegate {
     }
     
     func onTextClicked(message: MessagesTable) {
-        guard let conversationId = self.chatInfo.conversationId else {
+        guard let message = message.text else {
             return
         }
-        Database.database().reference().child(FirebaseTableNames.messages).child(conversationId).child(message.keyInDatabase).removeValue()
+        let links = LinkDetecter.getLinks(in: message)
+        guard links.count > 0 else {
+            return
+        }
+        
     }
     
     func dialogStateChanged(lastMesage: MessagesTable?) {
@@ -501,6 +505,23 @@ private extension ChatPageViewController {
     
     func shareCurrentLocation() {
         self.locationManager.requestLocation()
+    }
+    
+}
+
+extension ChatPageViewController: LocationViewControllerDelegate {
+    
+    func sendLocation(coordinates: CLLocationCoordinate2D) {
+        
+        var messageData: [String: Any] = [
+            "createdAt": Date().timeIntervalSince1970.description,
+            "sender": FirebaseAuthService.getUserId() ?? "Error",
+            "isSeen": "false",
+            "type": "location",
+            "text": "\(coordinates.latitude) + \(coordinates.longitude)"
+        ]
+        self.send(message: messageData)
+        
     }
     
 }

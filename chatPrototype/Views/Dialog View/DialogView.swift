@@ -40,7 +40,6 @@ class DialogView: UIView {
         dataSource.loadDataWith(conversationId: id)
     }
     
-    
     func getImagesUrls(writeSpace: inout [String?]) {
         for message in dataSource.messages {
             writeSpace.append(message.imageURL)
@@ -57,7 +56,8 @@ private extension DialogView {
         messagesCollectionView.delegate = self
         dataSource.delegate = self
         messagesCollectionView.dataSource = dataSource
-        messagesCollectionView.register(UINib(nibName: CellIdentifiers.textMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.textMessageCell)
+        (messagesCollectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        messagesCollectionView.register(TextMessageCell.self, forCellWithReuseIdentifier: String(describing: TextMessageCell.self))
         messagesCollectionView.register(UINib(nibName: CellIdentifiers.imageMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.imageMessageCell)
         messagesCollectionView.register(UINib(nibName: CellIdentifiers.documentMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.documentMessageCell)
         messagesCollectionView.register(VoiceMessageCell.self, forCellWithReuseIdentifier: CellIdentifiers.voiceMessageCell)
@@ -141,15 +141,17 @@ extension DialogView: DialogViewDataSourceDelegate {
 extension DialogView: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width - 30, height: 60)
+        let size = CGSize(width: collectionView.bounds.width - 30, height: 10)
+        return size
+//        return collectionView.sizeThatFits(size)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch self.dataSource.messages[indexPath.section].type {
         case .image:
             self.delegate?.onImageClicked(message: dataSource.messages[indexPath.section])
-//        case .text:
-//            self.delegate?.onTextClicked(message: dataSource.messages[indexPath.section])
+        case .text:
+            self.delegate?.onTextClicked(message: dataSource.messages[indexPath.section])
         default: break
         }
     }

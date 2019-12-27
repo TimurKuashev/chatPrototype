@@ -1,0 +1,5 @@
+xcuserdata/
+Pods/
+fastlane/
+.DS_Store
+.idea/

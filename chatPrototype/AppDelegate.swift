@@ -19,10 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     let gcmMessageIDKey = "gcm.message_id"
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         FirebaseApp.configure()
-        GMSPlacesClient.provideAPIKey("AIzaSyAYRcdsgv34qbbEmLw8zuT2TEccqjd_DEQ")
-        GMSServices.provideAPIKey("AIzaSyAYRcdsgv34qbbEmLw8zuT2TEccqjd_DEQ")
+        GMSPlacesClient.provideAPIKey("AIzaSyBVTvU93ZrpjYOeVAzRVqO5oLpY7w0yXJc")
+        GMSServices.provideAPIKey("AIzaSyBVTvU93ZrpjYOeVAzRVqO5oLpY7w0yXJc")
 
         self.window = UIWindow(frame: UIScreen.main.bounds)
         let nav1 = UINavigationController()
