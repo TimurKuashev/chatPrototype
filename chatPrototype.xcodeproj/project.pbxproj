@@ -11,7 +11,7 @@
 		4000008423AA0FC100CD177C /* ContextMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4000008323AA0FC100CD177C /* ContextMenuView.swift */; };
 		4000008623AA127100CD177C /* ContextMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4000008523AA127100CD177C /* ContextMenuCell.swift */; };
 		400204EF23B0A4A100846D64 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400204EE23B0A4A100846D64 /* HudView.swift */; };
-		400204F223B0D95100846D64 /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400204F123B0D95100846D64 /* LocationViewController.swift */; };
+		400204F223B0D95100846D64 /* LocationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400204F123B0D95100846D64 /* LocationPickerViewController.swift */; };
 		4006636823A3060F00988A0B /* FindedMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636723A3060F00988A0B /* FindedMessagesViewController.swift */; };
 		4006636B23A3134F00988A0B /* SharedImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636A23A3134F00988A0B /* SharedImagesViewController.swift */; };
 		4006636E23A33AE700988A0B /* UsersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006636D23A33AE700988A0B /* UsersListViewController.swift */; };
@@ -22,6 +22,7 @@
 		4009448D23964529005381A4 /* RequestAccountCredentialsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4009448C23964529005381A4 /* RequestAccountCredentialsView.swift */; };
 		4009448F239646CF005381A4 /* RequestAccountCredentialsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4009448E239646CF005381A4 /* RequestAccountCredentialsView.xib */; };
 		4009449223964FC3005381A4 /* View+InstantiateFromXIB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4009449123964FC3005381A4 /* View+InstantiateFromXIB.swift */; };
+		400F7C0F23B5EBD400A4228D /* LocationMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400F7C0E23B5EBD400A4228D /* LocationMessageCell.swift */; };
 		4018C9582397873C006ED81A /* ChatPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018C9562397873C006ED81A /* ChatPageViewController.swift */; };
 		4018C9592397873C006ED81A /* ChatPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4018C9572397873C006ED81A /* ChatPageViewController.xib */; };
 		4018C95C239788EC006ED81A /* DialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018C95B239788EC006ED81A /* DialogView.swift */; };
@@ -75,7 +76,7 @@
 		4000008323AA0FC100CD177C /* ContextMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuView.swift; sourceTree = "<group>"; };
 		4000008523AA127100CD177C /* ContextMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuCell.swift; sourceTree = "<group>"; };
 		400204EE23B0A4A100846D64 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
-		400204F123B0D95100846D64 /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
+		400204F123B0D95100846D64 /* LocationPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerViewController.swift; sourceTree = "<group>"; };
 		4006636723A3060F00988A0B /* FindedMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindedMessagesViewController.swift; sourceTree = "<group>"; };
 		4006636A23A3134F00988A0B /* SharedImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedImagesViewController.swift; sourceTree = "<group>"; };
 		4006636D23A33AE700988A0B /* UsersListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersListViewController.swift; sourceTree = "<group>"; };
@@ -88,6 +89,7 @@
 		4009448C23964529005381A4 /* RequestAccountCredentialsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestAccountCredentialsView.swift; sourceTree = "<group>"; };
 		4009448E239646CF005381A4 /* RequestAccountCredentialsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RequestAccountCredentialsView.xib; sourceTree = "<group>"; };
 		4009449123964FC3005381A4 /* View+InstantiateFromXIB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InstantiateFromXIB.swift"; sourceTree = "<group>"; };
+		400F7C0E23B5EBD400A4228D /* LocationMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMessageCell.swift; sourceTree = "<group>"; };
 		4018C9562397873C006ED81A /* ChatPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPageViewController.swift; sourceTree = "<group>"; };
 		4018C9572397873C006ED81A /* ChatPageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatPageViewController.xib; sourceTree = "<group>"; };
 		4018C95B239788EC006ED81A /* DialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogView.swift; sourceTree = "<group>"; };
@@ -168,12 +170,12 @@
 			path = "Hud View";
 			sourceTree = "<group>";
 		};
-		400204F023B0D93C00846D64 /* Location Viewer */ = {
+		400204F023B0D93C00846D64 /* Location Picker */ = {
 			isa = PBXGroup;
 			children = (
-				400204F123B0D95100846D64 /* LocationViewController.swift */,
+				400204F123B0D95100846D64 /* LocationPickerViewController.swift */,
 			);
-			path = "Location Viewer";
+			path = "Location Picker";
 			sourceTree = "<group>";
 		};
 		4006636623A305FE00988A0B /* Finded Messages View Conroller */ = {
@@ -248,7 +250,7 @@
 		4009448623964445005381A4 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				400204F023B0D93C00846D64 /* Location Viewer */,
+				400204F023B0D93C00846D64 /* Location Picker */,
 				4006636623A305FE00988A0B /* Finded Messages View Conroller */,
 				4006636923A3133A00988A0B /* Shared Images View Controller */,
 				4006636C23A33AD300988A0B /* Users List View Controller */,
@@ -287,6 +289,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		400F7C0D23B5EBC500A4228D /* Location Message Cell */ = {
+			isa = PBXGroup;
+			children = (
+				400F7C0E23B5EBD400A4228D /* LocationMessageCell.swift */,
+			);
+			path = "Location Message Cell";
+			sourceTree = "<group>";
+		};
 		4018C95523978710006ED81A /* Chat Page */ = {
 			isa = PBXGroup;
 			children = (
@@ -310,6 +320,7 @@
 		4018C95F23978A47006ED81A /* Message Cells */ = {
 			isa = PBXGroup;
 			children = (
+				400F7C0D23B5EBC500A4228D /* Location Message Cell */,
 				4006636F23A3767D00988A0B /* Voice Message Cell */,
 				40B8B0C623A243F000C60E9D /* Document Message Cell */,
 				4018C96523978A90006ED81A /* Image Message Cell */,
@@ -695,7 +706,7 @@
 				40FB3DEE23B3612700B3D92A /* LinkDetecter.swift in Sources */,
 				4018C95C239788EC006ED81A /* DialogView.swift in Sources */,
 				4018C96823978ACE006ED81A /* ImageMessageCell.swift in Sources */,
-				400204F223B0D95100846D64 /* LocationViewController.swift in Sources */,
+				400204F223B0D95100846D64 /* LocationPickerViewController.swift in Sources */,
 				401921A6239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift in Sources */,
 				409781E523AE000500EBA599 /* PinterestLayout.swift in Sources */,
 				4018C96C23978AED006ED81A /* TextMessageCell.swift in Sources */,
@@ -715,6 +726,7 @@
 				40BDEE452397E9890023F60C /* CustomPropertiesForUserDefault.swift in Sources */,
 				40BDEE412397E0E70023F60C /* FirebaseAuthService.swift in Sources */,
 				409781E723AE10ED00EBA599 /* PinterestView.swift in Sources */,
+				400F7C0F23B5EBD400A4228D /* LocationMessageCell.swift in Sources */,
 				4000008423AA0FC100CD177C /* ContextMenuView.swift in Sources */,
 				4009449223964FC3005381A4 /* View+InstantiateFromXIB.swift in Sources */,
 				4055E21D2396700400AFA3F8 /* FileNamesHelper.swift in Sources */,

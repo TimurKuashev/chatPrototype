@@ -45,12 +45,6 @@ final class ChatPageViewController: UIViewController {
         return picker
     }()
     
-    private lazy var locationManager: LocationManager = {
-        let locManager = LocationManager()
-        locManager.delegate = self
-        return locManager
-    }()
-    
     private var recordingSession: AVAudioSession!
     private var audioRecorder: AVAudioRecorder!
     private var audioPlayer: AVAudioPlayer!
@@ -237,7 +231,7 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
             [weak self](action: UIAlertAction) in
             defer { attachmentMenuController.dismiss(animated: true, completion: nil) }
             guard let self = self else { return }
-            self.shareCurrentLocation()
+            self.shareSelectedLocation()
         })
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: {
@@ -503,17 +497,19 @@ private extension ChatPageViewController {
         }
     }
     
-    func shareCurrentLocation() {
-        self.locationManager.requestLocation()
+    func shareSelectedLocation() {
+        let locationPickerVC = LocationPickerViewController()
+        locationPickerVC.delegate = self
+        self.navigationController?.pushViewController(locationPickerVC, animated: true)
     }
     
 }
 
-extension ChatPageViewController: LocationViewControllerDelegate {
+extension ChatPageViewController: LocationPickerViewControllerDelegate {
     
     func sendLocation(coordinates: CLLocationCoordinate2D) {
         
-        var messageData: [String: Any] = [
+        let messageData: [String: Any] = [
             "createdAt": Date().timeIntervalSince1970.description,
             "sender": FirebaseAuthService.getUserId() ?? "Error",
             "isSeen": "false",
@@ -521,7 +517,6 @@ extension ChatPageViewController: LocationViewControllerDelegate {
             "text": "\(coordinates.latitude) + \(coordinates.longitude)"
         ]
         self.send(message: messageData)
-        
     }
     
 }

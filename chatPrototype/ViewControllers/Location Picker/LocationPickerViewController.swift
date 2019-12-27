@@ -1,5 +1,5 @@
 //
-//  LocationViewController.swift
+//  LocationPickerViewController.swift
 //  chatPrototype
 //
 //  Created by Timur Kuashev on 23.12.2019.
@@ -9,20 +9,23 @@
 import UIKit
 import GoogleMaps
 
-protocol LocationViewControllerDelegate: AnyObject {
+protocol LocationPickerViewControllerDelegate: AnyObject {
     func sendLocation(coordinates: CLLocationCoordinate2D)
 }
 
-class LocationViewController: UIViewController {
+class LocationPickerViewController: UIViewController {
     
+    // MARK: - Properties
     private var mapView: GMSMapView!
-    private var locManager = LocationManager()
     private lazy var btnAttachMyLocation: UIButton = {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.backgroundColor = .white
         btn.setTitleColor(.black, for: .normal)
         btn.layer.cornerRadius = 15
+        btn.layer.borderColor = UIColor.red.cgColor
+        btn.layer.borderWidth = 1.5
+        btn.layer.shadowColor = UIColor.black.cgColor
         btn.setTitle("Send location", for: .normal)
         return btn
     }()
@@ -37,8 +40,10 @@ class LocationViewController: UIViewController {
         return iv
     }()
     
-    weak var delegate: LocationViewControllerDelegate?
+    private var locManager = LocationManager()
+    weak var delegate: LocationPickerViewControllerDelegate?
     
+    // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         initialConfigure()
@@ -53,17 +58,16 @@ class LocationViewController: UIViewController {
     
     @objc private func sendLocationPressed(_ sender: UIButton) {
         self.delegate?.sendLocation(coordinates: mapView.camera.target)
-        print(mapView.camera.target)
     }
     
 }
 
-extension LocationViewController: LocationManagerDelegate {
+// MARK: - LocationManagerDelegate
+extension LocationPickerViewController: LocationManagerDelegate {
     
     func currentLocationFetchingSuccess(location: CLLocationCoordinate2D) {
-        print(location)
         DispatchQueue.main.async {
-            let camera = GMSCameraPosition.camera(withLatitude: location.latitude, longitude: location.longitude, zoom: 6.0)
+            let camera = GMSCameraPosition.camera(withLatitude: location.latitude, longitude: location.longitude, zoom: 20)
             self.mapView = GMSMapView(frame: CGRect.zero, camera: camera)
             self.view.addSubview(self.mapView)
             self.view.addSubview(self.btnAttachMyLocation)
@@ -86,7 +90,7 @@ extension LocationViewController: LocationManagerDelegate {
             ])
             // Creates a marker in the center of the map.
             let marker = GMSMarker()
-            marker.position = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+            marker.position = location
             marker.title = "You"
             marker.snippet = "Current Location"
             marker.map = self.mapView
@@ -95,7 +99,7 @@ extension LocationViewController: LocationManagerDelegate {
     }
     
     func currentLocationFetchingFail(error: Error?) {
-        print(error!)
+        self.presentAlert(title: "Error", message: error?.localizedDescription ?? "Some error occurs", actions: [], displayCloseButton: true)
     }
     
 }

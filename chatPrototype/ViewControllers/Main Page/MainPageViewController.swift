@@ -151,9 +151,7 @@ extension MainPageViewController: UICollectionViewDelegate {
         chatVC.chatInfo = (chatInfo.userConvId, chatInfo.conversationId, chatInfo.participantsId)
         chatVC.delegate = self
         chatVC.modalPresentationStyle = .fullScreen
-//        self.navigationController?.pushViewController(chatVC, animated: true)
-        let temp = LocationViewController()
-        self.navigationController?.pushViewController(temp, animated: true)
+        self.navigationController?.pushViewController(chatVC, animated: true)
     }
 }
 
