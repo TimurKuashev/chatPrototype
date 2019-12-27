@@ -82,10 +82,10 @@ final class DialogBottomPanelView: UIView {
         if (tvTypeMessage.text.count == 0) {
             if isRecordActive == true {
                 btnSendMessage.setTitle(nil, for: .normal)
-                btnSendMessage.setImage(UIImage(named: "icon_stopRecord"), for: .normal)
+                btnSendMessage.setImage(UIImage(named: "icon_stopRecordVoiceMessage"), for: .normal)
             } else {
                 btnSendMessage.setTitle(nil, for: .normal)
-                btnSendMessage.setImage(UIImage(named: "icon_startRecord"), for: .normal)
+                btnSendMessage.setImage(UIImage(named: "icon_startRecordVoiceMessage"), for: .normal)
             }
         } else {
             btnSendMessage.setTitle("Send", for: .normal)

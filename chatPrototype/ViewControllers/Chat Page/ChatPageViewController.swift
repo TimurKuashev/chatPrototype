@@ -76,7 +76,7 @@ private extension ChatPageViewController {
             try recordingSession.setActive(true)
             try recordingSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
         } catch { print("Audio error") }
-        participantView.autoFill()
+        participantView.autoFill(byUserId: chatInfo.participantsId.first)
         dialogView.delegate = self
         dialogBottomPanel.delegate = self
         
@@ -289,7 +289,7 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
         let fileUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("recording.mp4")
         do {
             let voiceMessageRowData = try Data(contentsOf: fileUrl)
-            let voiceMessageName = UUID().uuidString
+            let voiceMessageName = UUID().uuidString + ".mp3"
             let ref = Storage.storage().reference().child(FirebaseTableNames.voiceMessages).child(voiceMessageName)
             ref.putData(voiceMessageRowData, metadata: nil) {
                 [weak self] (metadata, error) in
@@ -392,7 +392,7 @@ extension ChatPageViewController: UIImagePickerControllerDelegate, UINavigationC
         defer { picker.dismiss(animated: true, completion: nil) }
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             DispatchQueue.global(qos: .background).async {
-                let imageName = UUID().uuidString
+                let imageName = UUID().uuidString + "." + ((info[UIImagePickerController.InfoKey.imageURL] as? URL)?.pathExtension ?? "jpeg")
                 let ref = Storage.storage().reference().child(FirebaseTableNames.imageMessages).child(imageName)
                 
                 if let uploadData = pickedImage.jpegData(compressionQuality: 0.2) {
@@ -437,7 +437,7 @@ extension ChatPageViewController: UIDocumentPickerDelegate {
         if FileManager.default.fileExists(atPath: stringUrl) {
             do {
                 let uploadData = try Data(contentsOf: urls[0])
-                let documentName = UUID().uuidString
+                let documentName = UUID().uuidString + "." + urls[0].pathExtension
                 let ref = Storage.storage().reference().child(FirebaseTableNames.documentMessages).child(documentName)
                 ref.putData(uploadData, metadata: nil, completion: {
                     [weak self] (metadata, error) in

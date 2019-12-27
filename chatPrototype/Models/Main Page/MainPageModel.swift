@@ -89,6 +89,11 @@ extension MainPageModel {
         if let convId = self.usersConversations[dialogPosition].conversationId {
             if var ids = self.conversations[convId]?.participants {
                 ids.removeAll(where: { $0 == FirebaseAuthService.getUserId() } )
+                if ids.isEmpty == true {
+                    if let myId = FirebaseAuthService.getUserId() {
+                        ids.append(myId)
+                    }
+                }
                 return (userConvId, convId, ids)
             }
         }
