@@ -132,7 +132,10 @@ extension MainPageViewController: UICollectionViewDataSource {
             return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.dialogPreviewCell, for: indexPath)
         }
         let data = model.dataForPreviewOfTheDialog(dialogPosition: indexPath.section)
-        cell.setup(chatPartnerName: data.participantName, lastMessage: data.lastMesageText ?? "No messages", lastMessageDate: data.lastMessageDate ?? "Null Date")
+        guard data.participantsIds.count > 0 else {
+            return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.dialogPreviewCell, for: indexPath)
+        }
+        cell.setup(participantId: data.participantsIds.first!, lastMessage: data.lastMesageText ?? "No messages", lastMessageDate: data.lastMessageDate ?? "Null Date")
         return cell
     }
     

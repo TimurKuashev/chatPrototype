@@ -10,8 +10,7 @@ import UIKit
 
 class ParticipantsListCell: UITableViewCell {
     
-    private var lblUsername = UILabel()
-    private var userAvatar = UIImageView()
+    private var participantView: ParticipantView = ParticipantView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -26,21 +25,18 @@ class ParticipantsListCell: UITableViewCell {
     private func setupView() {
         self.backgroundColor = .clear
         self.layer.borderWidth = 0.0
-        self.addSubview(lblUsername)
-        lblUsername.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(participantView)
+        participantView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            lblUsername.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor, constant: 0),
-            lblUsername.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
-            lblUsername.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor, constant: 0),
-            lblUsername.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor, constant: 0)
+            participantView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor, constant: 0),
+            participantView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
+            participantView.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor, constant: 0),
+            participantView.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor, constant: 0)
         ])
-        lblUsername.textColor = .white
-        lblUsername.font = UIFont(name: "Times New Roman", size: 25)
-        
     }
     
-    func set(username: String?) {
-        self.lblUsername.text = username ?? "Unknown"
+    func set(userId: String?) {
+        participantView.autoFill()
     }
     
 }

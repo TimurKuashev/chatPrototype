@@ -52,27 +52,24 @@ extension MainPageModel {
         return users.count
     }
     
-    func dataForPreviewOfTheDialog(dialogPosition: Int) -> (participantName: String, lastMesageText: String?, lastMessageDate: String?) {
-        var participantName: String = String()
+    func dataForPreviewOfTheDialog(dialogPosition: Int) -> (participantsIds: [String?], lastMesageText: String?, lastMessageDate: String?) {
+        var participantsIds: [String?] = []
         guard self.usersConversations.count > dialogPosition else {
-            return (users[dialogPosition].username ?? participantName, nil, nil)
+            return ([users[dialogPosition].id], nil, nil)
         }
-        guard let myUsername = self.users.first(where: { $0.id == FirebaseAuthService.getUserId() } )?.username else {
-            return (users[dialogPosition].username ?? participantName, nil, nil)
-        }
+//        guard let myId = FirebaseAuthService.getUserId() else {
+//            return ([users[dialogPosition].id], nil, nil)
+//        }
         
         if let conv = self.conversations[self.usersConversations[dialogPosition].conversationId ?? "some doesn't existing key"] {
             for participantId in conv.participants {
-                if let username = self.users.first(where: { $0.id == participantId })?.username {
-                    guard username != myUsername else { continue }
-                    participantName += username + " "
+                if let userId = self.users.first(where: { $0.id == participantId })?.id {
+                    participantsIds.append(userId)
                 }
             }
         }
-        if participantName.isEmpty == true {
-            participantName.append(myUsername)
-        }
-        return (participantName, self.usersConversations[dialogPosition].lastMessage, self.usersConversations[dialogPosition].updatedAt)
+        
+        return (participantsIds, self.usersConversations[dialogPosition].lastMessage, self.usersConversations[dialogPosition].updatedAt)
     }
     
     func getUsers() -> [UsersTable] {
@@ -159,7 +156,10 @@ private extension MainPageModel {
             guard let self = self else {
                 return
             }
-            guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
+            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                self.delegate?.updateDialogs()
+                return
+            }
             var fetchedConversationsCount: Int = 0
             for key in dictionary.keys {
                 guard let keyData = dictionary[key] as? [String: AnyObject],
@@ -199,7 +199,13 @@ private extension MainPageModel {
     func fetchConversation(convId: String, completion: @escaping () -> Void) {
         Database.database().reference().child(FirebaseTableNames.conversations).child(convId).observeSingleEvent(of: .value) {
             [weak self] (snapshot: DataSnapshot) in
-            guard let self = self, let dictionary = snapshot.value as? [String: AnyObject] else { return }
+            guard let self = self else {
+                return
+            }
+            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                self.delegate?.updateDialogs()
+                return
+            }
             self.conversations[convId] = ConversationsTable(dictionary: dictionary)
             completion()
         }

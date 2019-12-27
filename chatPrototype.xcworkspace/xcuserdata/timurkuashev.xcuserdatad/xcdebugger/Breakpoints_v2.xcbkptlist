@@ -23,16 +23,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "25BFF4C7-7138-4A42-AB09-29BC65C3DBE5"
+            uuid = "625B1D1F-7073-475D-A47B-64BBD301C513"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "chatPrototype/Views/Dialog View/Message Cells/Text Message Cell/TextMessageCell.swift"
+            filePath = "chatPrototype/Models/Main Page/MainPageModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
-            landmarkName = "moveToLeftSide()"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "dataForPreviewOfTheDialog(dialogPosition:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

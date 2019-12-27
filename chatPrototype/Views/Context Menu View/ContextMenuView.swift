@@ -44,7 +44,8 @@ final class ContextMenuView: UIView {
         self.layer.borderWidth = 2.0
         self.layer.borderColor = UIColor.lightGray.cgColor
         self.layer.cornerRadius = 15
-        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.masksToBounds = true
+//        self.layer.shadowColor = UIColor.black.cgColor
         self.layer.backgroundColor = UIColor.white.cgColor
         self.addSubview(tableView)
         tableView.backgroundColor = .white

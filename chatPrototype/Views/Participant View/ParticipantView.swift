@@ -81,10 +81,11 @@ extension ParticipantView {
         userAvatar.image = avatar ?? UIImage(named: "empty_user_avatar")
     }
     
-    func autoFill() {
+    func autoFill(byUserId userId: String? = nil) {
         HudManager.push(to: self)
         self.userAvatar.image = UIImage(named: "empty_user_avatar")
-        fetchUserInfo(completion: {
+        let id = userId ?? FirebaseAuthService.getUserId()
+        fetchUserInfo(userId: id) {
             [weak self] (username: String?, status: String?) in
             guard let self = self else {
                 return
@@ -92,15 +93,15 @@ extension ParticipantView {
             HudManager.pop(from: self)
             self.lblUsername.text = username ?? ""
             self.lblUserStatus.text = status ?? ""
-        })
+        }
     }
     
-    private func fetchUserInfo(completion: @escaping (_ username: String?, _ status: String?) -> Void) {
-        guard let myId = FirebaseAuthService.getUserId() else {
+    private func fetchUserInfo(userId: String?, completion: @escaping (_ username: String?, _ status: String?) -> Void) {
+        guard let userId = userId else {
             completion(nil, nil)
             return
         }
-        Database.database().reference().child(FirebaseTableNames.users).child(myId).observeSingleEvent(of: .value) {
+        Database.database().reference().child(FirebaseTableNames.users).child(userId).observeSingleEvent(of: .value) {
             (snapshot: DataSnapshot) in
             guard let dictionary = snapshot.value as? [String: AnyObject] else {
                 completion(nil, nil)

@@ -15,10 +15,10 @@ final class TextMessageCell: UICollectionViewCell {
     private var tvMessage: UITextView = {
         let iv = UITextView()
         iv.backgroundColor = .clear
-        iv.isSelectable = true
+        iv.isSelectable = false
         iv.isScrollEnabled = false
         iv.isEditable = false
-        iv.textColor = .white
+        iv.textColor = .black
         iv.dataDetectorTypes = UIDataDetectorTypes.link
         iv.font = UIFont(name: "Times New Roman", size: 16)
         iv.textContainer.lineBreakMode = .byWordWrapping
@@ -41,8 +41,10 @@ final class TextMessageCell: UICollectionViewCell {
      */
     /// Leading constraint of the customContentView
     private var leadingConstraint: NSLayoutConstraint?
+    private var leadingConstraintWithSpace: NSLayoutConstraint?
     /// Trailing constraint of the customContentView
     private var trailingConstraint: NSLayoutConstraint?
+    private var trailingConstraintWithSpace: NSLayoutConstraint?
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -58,10 +60,12 @@ final class TextMessageCell: UICollectionViewCell {
     // MARK: - Methods
     private func setupCell() {
         self.addSubview(customContentView)
-        customContentView.backgroundColor = .black
+//        customContentView.backgroundColor = .black
         customContentView.addSubview(tvMessage)
         tvMessage.delegate = self
         
+        self.leadingConstraintWithSpace = customContentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30)
+        self.trailingConstraintWithSpace = customContentView.leadingAnchor.constraint(equalTo: self.trailingAnchor, constant: 30)
         self.leadingConstraint = customContentView.leadingAnchor.constraint(equalTo: self.leadingAnchor)
         self.trailingConstraint = customContentView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         NSLayoutConstraint.activate([
@@ -73,12 +77,15 @@ final class TextMessageCell: UICollectionViewCell {
             // tvMessage
             tvMessage.topAnchor.constraint(equalTo: customContentView.topAnchor, constant: 5),
             customContentView.trailingAnchor.constraint(equalTo: tvMessage.trailingAnchor, constant: 10),
-            customContentView.leadingAnchor.constraint(equalTo: tvMessage.leadingAnchor, constant: 10),
+            tvMessage.leadingAnchor.constraint(equalTo: customContentView.leadingAnchor, constant: 10),
             tvMessage.bottomAnchor.constraint(equalTo: customContentView.bottomAnchor, constant: 5)
         ])
     }
     
     func set(message: MessagesTable) {
+        if LinkDetecter.getLinks(in: message.text ?? "").count != 0 {
+            tvMessage.isSelectable = true
+        }
         tvMessage.text = message.text
         if message.sender == FirebaseAuthService.getUserId() {
             moveToRightSide()
@@ -87,26 +94,26 @@ final class TextMessageCell: UICollectionViewCell {
         }
         tvMessage.sizeToFit()
         self.layoutIfNeeded()
-        if message.isSeen == true {
-            self.backgroundColor = .green
-        } else {
-            self.backgroundColor = .orange
-        }
+//        if message.isSeen == true {
+//            self.backgroundColor = .green
+//        } else {
+//            self.backgroundColor = .orange
+//        }
     }
     
     private func moveToLeftSide() {
         trailingConstraint?.isActive = false
-//        tvMessage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 1).isActive = true
+        self.trailingConstraintWithSpace?.isActive = true
+        self.leadingConstraintWithSpace?.isActive = false
         leadingConstraint?.isActive = true
-//        tvMessage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 1).isActive = false
         tvMessage.textAlignment = .left
     }
     
     private func moveToRightSide() {
         leadingConstraint?.isActive = false
-//        tvMessage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 1).isActive = true
+        self.leadingConstraintWithSpace?.isActive = true
+        self.trailingConstraintWithSpace?.isActive = false
         trailingConstraint?.isActive = true
-//        tvMessage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 1).isActive = false
         tvMessage.textAlignment = .right
     }
     

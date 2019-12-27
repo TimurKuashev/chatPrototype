@@ -133,7 +133,9 @@ private extension ChatPageViewController {
         if let convId = self.chatInfo.conversationId {
             return convId
         } else {
-            return Database.database().reference().child(FirebaseTableNames.conversations).childByAutoId().key
+            let convId = Database.database().reference().child(FirebaseTableNames.conversations).childByAutoId().key
+            dialogView.setConversation(id: convId)
+            return convId
         }
     }
     
@@ -227,7 +229,7 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
             self.selectFile()
         })
         
-        let sendCurrentLocationAction = UIAlertAction(title: "Current Location", style: .default, handler: {
+        let sendCurrentLocationAction = UIAlertAction(title: "Location", style: .default, handler: {
             [weak self](action: UIAlertAction) in
             defer { attachmentMenuController.dismiss(animated: true, completion: nil) }
             guard let self = self else { return }
