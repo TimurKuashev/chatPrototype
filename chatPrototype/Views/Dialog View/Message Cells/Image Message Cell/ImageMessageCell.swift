@@ -9,15 +9,37 @@
 import UIKit
 
 class ImageMessageCell: UICollectionViewCell {
-
-    @IBOutlet private var ivImage: UIImageView!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    private var ivImage: UIImageView = {
+        let iv = UIImageView()
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        return iv
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
     }
     
-    func set(image: UIImage?) {
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+    
+    private func setupView() {
+        self.addSubview(ivImage)
+        NSLayoutConstraint.activate([
+            ivImage.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            ivImage.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            ivImage.topAnchor.constraint(equalTo: self.topAnchor),
+            ivImage.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        ])
+    }
+    
+    func set(image: UIImage?, size: CGSize) {
         self.ivImage.image = image
+        ivImage.heightAnchor.constraint(equalToConstant: size.height).isActive = true
+        ivImage.widthAnchor.constraint(equalToConstant: size.width).isActive = true
     }
     
 }

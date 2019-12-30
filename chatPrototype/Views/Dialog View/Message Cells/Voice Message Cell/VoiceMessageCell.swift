@@ -14,8 +14,9 @@ class VoiceMessageCell: UICollectionViewCell {
     private var audioPlayer: AVAudioPlayer!
     private var btnPlay: UIButton = {
         let btn = UIButton()
-        btn.setImage(UIImage(named: "icon_startVoiceMessage"), for: .normal)
+        btn.setImage(UIImage(named: "icon_playVoiceMessage"), for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
+        HudManager.push(to: btn)
         return btn
     }()
     
@@ -41,7 +42,7 @@ class VoiceMessageCell: UICollectionViewCell {
     @objc private func onMessageClicked(_ sender: UIButton?) {
         if (audioPlayer.isPlaying == true) {
             self.audioPlayer.pause()
-            self.btnPlay.setImage(UIImage(named: "icon_startVoiceMessage"), for: .normal)
+            self.btnPlay.setImage(UIImage(named: "icon_playVoiceMessage"), for: .normal)
         } else {
             self.audioPlayer.prepareToPlay()
             self.audioPlayer.play()
@@ -53,6 +54,7 @@ class VoiceMessageCell: UICollectionViewCell {
         do {
             try self.audioPlayer = AVAudioPlayer(data: audioData)
             audioPlayer.delegate = self
+            HudManager.pop(from: btnPlay)
         } catch {
             print("Не удалось создать аудиоплеер на дате")
         }

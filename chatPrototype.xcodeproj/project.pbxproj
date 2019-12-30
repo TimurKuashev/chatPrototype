@@ -28,7 +28,6 @@
 		4018C95C239788EC006ED81A /* DialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018C95B239788EC006ED81A /* DialogView.swift */; };
 		4018C95E23978919006ED81A /* DialogView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4018C95D23978919006ED81A /* DialogView.xib */; };
 		4018C96823978ACE006ED81A /* ImageMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018C96623978ACE006ED81A /* ImageMessageCell.swift */; };
-		4018C96923978ACE006ED81A /* ImageMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4018C96723978ACE006ED81A /* ImageMessageCell.xib */; };
 		4018C96C23978AED006ED81A /* TextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018C96A23978AED006ED81A /* TextMessageCell.swift */; };
 		4018C97023978D92006ED81A /* DialogViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018C96F23978D92006ED81A /* DialogViewDataSource.swift */; };
 		401921A6239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401921A5239CD4D60048BD71 /* UINavigationController+PushVCCompletion.swift */; };
@@ -95,7 +94,6 @@
 		4018C95B239788EC006ED81A /* DialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogView.swift; sourceTree = "<group>"; };
 		4018C95D23978919006ED81A /* DialogView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DialogView.xib; sourceTree = "<group>"; };
 		4018C96623978ACE006ED81A /* ImageMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageCell.swift; sourceTree = "<group>"; };
-		4018C96723978ACE006ED81A /* ImageMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageMessageCell.xib; sourceTree = "<group>"; };
 		4018C96A23978AED006ED81A /* TextMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessageCell.swift; sourceTree = "<group>"; };
 		4018C96F23978D92006ED81A /* DialogViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewDataSource.swift; sourceTree = "<group>"; };
 		4018C9712397A790006ED81A /* chatPrototype.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = chatPrototype.entitlements; sourceTree = "<group>"; };
@@ -341,7 +339,6 @@
 			isa = PBXGroup;
 			children = (
 				4018C96623978ACE006ED81A /* ImageMessageCell.swift */,
-				4018C96723978ACE006ED81A /* ImageMessageCell.xib */,
 			);
 			path = "Image Message Cell";
 			sourceTree = "<group>";
@@ -609,7 +606,6 @@
 			files = (
 				40824CCC23B4F85600906DD9 /* GoogleService-Info.plist in Resources */,
 				4009447F23964337005381A4 /* LaunchScreen.storyboard in Resources */,
-				4018C96923978ACE006ED81A /* ImageMessageCell.xib in Resources */,
 				4038DC822398EBBF00ABFC24 /* DialogBottomPanelView.xib in Resources */,
 				4018C9592397873C006ED81A /* ChatPageViewController.xib in Resources */,
 				4009447C23964337005381A4 /* Assets.xcassets in Resources */,

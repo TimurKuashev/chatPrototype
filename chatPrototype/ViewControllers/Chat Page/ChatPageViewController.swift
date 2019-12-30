@@ -93,7 +93,7 @@ private extension ChatPageViewController {
         }
     }
     
-    private func getOpenedContextMenu() -> ContextMenuView? {
+    func getOpenedContextMenu() -> ContextMenuView? {
         for subview in self.view.subviews {
             if let contextMenu = subview as? ContextMenuView {
                 return contextMenu
@@ -129,7 +129,7 @@ private extension ChatPageViewController {
         })
     }
     
-    private func getConversationId() -> String? {
+    func getConversationId() -> String? {
         if let convId = self.chatInfo.conversationId {
             return convId
         } else {
@@ -137,6 +137,13 @@ private extension ChatPageViewController {
             dialogView.setConversation(id: convId)
             return convId
         }
+    }
+    
+    func setDataObservesIfNeed() {
+        guard let convId = self.chatInfo.conversationId else {
+            return
+        }
+        self.dialogView.setConversation(id: convId)
     }
     
 }
@@ -289,7 +296,7 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
         let fileUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("recording.mp4")
         do {
             let voiceMessageRowData = try Data(contentsOf: fileUrl)
-            let voiceMessageName = UUID().uuidString + ".mp3"
+            let voiceMessageName = UUID().uuidString /*+ ".mp3" */
             let ref = Storage.storage().reference().child(FirebaseTableNames.voiceMessages).child(voiceMessageName)
             ref.putData(voiceMessageRowData, metadata: nil) {
                 [weak self] (metadata, error) in
@@ -381,6 +388,7 @@ extension ChatPageViewController: DialogBottomPanelViewDelegate {
         if self.chatInfo.conversationId == nil {
             self.chatInfo.conversationId = convId
         }
+        self.setDataObservesIfNeed()
     }
     
 }
@@ -392,7 +400,7 @@ extension ChatPageViewController: UIImagePickerControllerDelegate, UINavigationC
         defer { picker.dismiss(animated: true, completion: nil) }
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             DispatchQueue.global(qos: .background).async {
-                let imageName = UUID().uuidString + "." + ((info[UIImagePickerController.InfoKey.imageURL] as? URL)?.pathExtension ?? "jpeg")
+                let imageName = UUID().uuidString /*+ "." + ((info[UIImagePickerController.InfoKey.imageURL] as? URL)?.pathExtension ?? "jpeg") */
                 let ref = Storage.storage().reference().child(FirebaseTableNames.imageMessages).child(imageName)
                 
                 if let uploadData = pickedImage.jpegData(compressionQuality: 0.2) {
@@ -437,7 +445,7 @@ extension ChatPageViewController: UIDocumentPickerDelegate {
         if FileManager.default.fileExists(atPath: stringUrl) {
             do {
                 let uploadData = try Data(contentsOf: urls[0])
-                let documentName = UUID().uuidString + "." + urls[0].pathExtension
+                let documentName = UUID().uuidString /*+ "." + urls[0].pathExtension*/
                 let ref = Storage.storage().reference().child(FirebaseTableNames.documentMessages).child(documentName)
                 ref.putData(uploadData, metadata: nil, completion: {
                     [weak self] (metadata, error) in

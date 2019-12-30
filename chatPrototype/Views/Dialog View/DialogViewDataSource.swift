@@ -21,7 +21,7 @@ final class DialogViewDataSource: NSObject {
     // MARK: - Properties
     private(set) var messages: [MessagesTable] = []
     weak var delegate: DialogViewDataSourceDelegate?
-    
+    private var isObservesSetUpped: Bool = false
     // MARK: - Methods
     override init() {
         super.init()
@@ -32,8 +32,8 @@ final class DialogViewDataSource: NSObject {
     }
     
     func loadDataWith(conversationId: String?) {
-        guard let convId = conversationId else { return }
-        
+        guard let convId = conversationId, isObservesSetUpped == false else { return }
+        isObservesSetUpped = true
         Database.database().reference().child(FirebaseTableNames.messages).child(convId).observe(.childAdded) {
             [weak self] (snapshot: DataSnapshot) in
             guard let self = self, var dictionary = snapshot.value as? [String: AnyObject] else { return }
@@ -136,10 +136,11 @@ extension DialogViewDataSource: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.imageMessageCell, for: indexPath) as? ImageMessageCell else {
                 return collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.documentMessageCell, for: indexPath)
             }
+            let imageSize = CGSize(width: 200, height: 200)
             if let image = CacheManager.shared.savedImages[messages[indexPath.section].imageURL ?? "qwerty"] {
-                cell.set(image: image)
+                cell.set(image: image, size: imageSize)
             } else {
-                cell.set(image: UIImage(named: "empty_image"))
+                cell.set(image: UIImage(named: "empty_image"), size: imageSize)
             }
             return cell
         case .location:

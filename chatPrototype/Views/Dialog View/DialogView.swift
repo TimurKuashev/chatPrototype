@@ -56,9 +56,9 @@ private extension DialogView {
         messagesCollectionView.delegate = self
         dataSource.delegate = self
         messagesCollectionView.dataSource = dataSource
-        (messagesCollectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+//        (messagesCollectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         messagesCollectionView.register(TextMessageCell.self, forCellWithReuseIdentifier: String(describing: TextMessageCell.self))
-        messagesCollectionView.register(UINib(nibName: CellIdentifiers.imageMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.imageMessageCell)
+        messagesCollectionView.register(ImageMessageCell.self, forCellWithReuseIdentifier: String(describing: ImageMessageCell.self))
         messagesCollectionView.register(UINib(nibName: CellIdentifiers.documentMessageCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.documentMessageCell)
         messagesCollectionView.register(VoiceMessageCell.self, forCellWithReuseIdentifier: CellIdentifiers.voiceMessageCell)
         
@@ -141,8 +141,20 @@ extension DialogView: DialogViewDataSourceDelegate {
 extension DialogView: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = CGSize(width: collectionView.bounds.width - 30, height: 10)
-        return size
+        switch self.dataSource.messages[indexPath.section].type {
+        case .image:
+            return CGSize(width: 200, height: 200)
+        case .document:
+            return CGSize(width: 80, height: 80)
+        case .location:
+            return CGSize(width: 200, height: 150)
+        case .voice:
+            return CGSize(width: 150, height: 60)
+        default:
+            return CGSize(width: collectionView.bounds.width - 30, height: 100)
+        }
+//        let size = CGSize(width: collectionView.bounds.width - 30, height: 10)
+//        return size
 //        return collectionView.sizeThatFits(size)
     }
     
